@@ -88,8 +88,7 @@ void adj_list_graph<T>::add_edge(const T &v1, const T &v2){
 
 template <typename T>
 bool adj_list_graph<T>::contains(const T &v) const{
-	//return std::equal(adj_list.find(v), std::unordered_map<T, std::vector<T>>::end);
-	return true;
+	return adj_list.find(v) != adj_list.end();
 }
 
 #endif // ADJ_LIST_GRAPH_H_INCLUDED
