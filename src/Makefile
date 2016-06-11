@@ -10,7 +10,7 @@ OTHER_OBJECTS=solver.o performance.o test.o
 
 all: $(EXECUTABLES)
 
-$(FRAME_WORK_TEST): $(addsuffix .o, $(FRAME_WORK_TEST)) framework/graph.h framework/ady_list_graph.h
+$(FRAME_WORK_TEST): $(addsuffix .o, $(FRAME_WORK_TEST)) framework/graph.h framework/adj_list_graph.h
 	$(CC) $(CFLAGS) $(addsuffix .o, $(FRAME_WORK_TEST)) -o $@
 
 test: $(addprefix test,$(EXECUTABLES_BASE)) $(FRAME_WORK_TEST)
