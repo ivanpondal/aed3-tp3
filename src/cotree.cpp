@@ -1,34 +1,55 @@
 #include <vector>
 #include <stack>
 #include <iostream>
+#include <graph.h>
 
 using namespace std;
 
 enum cotree_operation {join, disj_union};
+enum cotree_node_type {temporal, operation, vertex};
 
 class cotree {
 
 };
 
 class cotree_node {
- public:
-    bool         is_leaf;
+ private:
     cotree_node* parent;
     cotree_node* right_child;
     cotree_node* left_child;
+    
+ public:
+    cotree_node* get_parent();
+    cotree_node* get_right_child();
+    cotree_node* get_left_child();
+    virtual cotree_node_type get_type();
 
     cotree_node() :
         parent(NULL),
         right_child(NULL),
         left_child(NULL),
-        is_leaf(true)
     {}
+
+    cotree_node* get_parent() {
+        return parent;
+    }
+    cotree_node* get_right_child() {
+        return right_child;
+    }
+    cotree_node* get_left_child() {
+        return left_child;
+    }
+
 };
 
 class cotree_node_temporal : public cotree_node {
  public:
     vector<bool> vertices;
     int ind_cograph_size;
+
+    cotree_node_type get_type() {
+        return temporal;
+    }
 };
 
 class cotree_node_operation : public cotree_node {
@@ -37,14 +58,18 @@ class cotree_node_operation : public cotree_node {
     int ind_cograph_size;
     int ind_cograph_edge_count;
 
-    cotree_node_operation() {
-        is_leaf = false;
+    cotree_node_type get_type() {
+        return operation;
     }
 };
 
-class cotree_node_leaf : public cotree_node {
+class cotree_node_vertex : public cotree_node {
  public:
     int vertex;
+
+    cotree_node_type get_type() {
+        return vertex;
+    }
 };
 
 typedef vector<vector<int>> graph;
