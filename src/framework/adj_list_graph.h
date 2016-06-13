@@ -16,6 +16,8 @@ class adj_list_graph: public graph<T>{
 		void add_node(const T &v);
 		void add_edge(const T &v1, const T &v2);
 		bool contains(const T &v) const;
+		std::vector<T> nodes() const;
+		adj_list_graph<T>* complement() const;
 		friend std::istream &operator>>(std::istream &input, adj_list_graph &g){
 			input >> g.n_val >> g.m_val;
 
@@ -33,6 +35,7 @@ class adj_list_graph: public graph<T>{
 		unsigned int n_val;
 		unsigned int m_val;
 		std::unordered_map<T, std::vector<T>> adj_list;
+		std::vector<T> node_list;
 };
 
 template <typename T>
@@ -76,6 +79,7 @@ bool adj_list_graph<T>::adjacent(const T &v1, const T &v2) const{
 template <typename T>
 void adj_list_graph<T>::add_node(const T &v){
 	adj_list.insert(std::make_pair(v, std::vector<int>()));
+	node_list.push_back(v);
 	n_val++;
 }
 
@@ -91,5 +95,38 @@ bool adj_list_graph<T>::contains(const T &v) const{
 	//return std::equal(adj_list.find(v), std::unordered_map<T, std::vector<T>>::end);
 	return true;
 }
+
+template <typename T>
+std::vector<T> adj_list_graph<T>::nodes() const {
+	return node_list;
+}
+
+template <typename T>
+adj_list_graph<T>* adj_list_graph<T>::complement() const{
+	adj_list_graph<T>* ret = new adj_list_graph<T>();
+
+	for (typename std::vector<T>::const_iterator it1 = node_list.begin();
+		it1 != node_list.end();
+		it1++)
+	{
+		T current_node1 = *it1;
+		ret->add_node(current_node1);
+		for (typename std::vector<T>::const_iterator it2 = node_list.begin();
+			it2 != node_list.end();
+			it2++)
+		{
+			T current_node2 = *it2;
+			if (current_node1 != current_node2 &&
+				! adjacent(current_node1, current_node2))
+			{
+				ret->add_edge(current_node1, current_node2);
+			}
+		}
+
+	}
+
+	return ret;
+};
+
 
 #endif // ADJ_LIST_GRAPH_H_INCLUDED
