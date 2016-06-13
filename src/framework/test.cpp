@@ -1,9 +1,9 @@
 #include "../mini_test.h"
-#include "ady_list_graph.h"
+#include "adj_list_graph.h"
 #include <sstream>
 
-void test_ady_list_graph_add_nodes(){
-	ady_list_graph<int> g;
+void test_adj_list_graph_add_nodes(){
+	adj_list_graph<int> g;
 
 	ASSERT_EQ(g.n(), 0);
 
@@ -16,8 +16,8 @@ void test_ady_list_graph_add_nodes(){
 	ASSERT_EQ(g.n(), 2);
 }
 
-void test_ady_list_graph_add_edges(){
-	ady_list_graph<int> g;
+void test_adj_list_graph_add_edges(){
+	adj_list_graph<int> g;
 
 	ASSERT_EQ(g.m(), 0);
 
@@ -34,8 +34,8 @@ void test_ady_list_graph_add_edges(){
 	ASSERT(g.adjacent(4, 2));
 }
 
-void test_ady_list_graph_neighbours(){
-	ady_list_graph<int> g;
+void test_adj_list_graph_neighbours(){
+	adj_list_graph<int> g;
 
 	g.add_node(4);
 	g.add_node(2);
@@ -54,8 +54,8 @@ void test_ady_list_graph_neighbours(){
 	ASSERT(g.neighbours(4) == expected);
 }
 
-void test_ady_list_graph_degree(){
-	ady_list_graph<int> g;
+void test_adj_list_graph_degree(){
+	adj_list_graph<int> g;
 
 	g.add_node(4);
 	g.add_node(2);
@@ -69,8 +69,8 @@ void test_ady_list_graph_degree(){
 	ASSERT_EQ(g.degree(2), 2);
 }
 
-void test_ady_list_graph_istream(){
-	ady_list_graph<int> g;
+void test_adj_list_graph_istream(){
+	adj_list_graph<int> g;
 
 	std::stringstream iss;
 	iss << "5 4\n1 2\n2 3\n3 4\n3 5";
@@ -89,10 +89,24 @@ void test_ady_list_graph_istream(){
 	ASSERT(g.neighbours(3) == expected);
 }
 
+void test_adj_list_graph_contains(){
+	adj_list_graph<int> g;
+
+	g.add_node(4);
+	g.add_node(2);
+	g.add_node(3);
+
+	ASSERT(g.contains(4));
+	ASSERT(g.contains(2));
+	ASSERT(g.contains(3));
+	ASSERT(!g.contains(7));
+}
+
 int main(){
-	RUN_TEST(test_ady_list_graph_add_nodes);
-	RUN_TEST(test_ady_list_graph_add_edges);
-	RUN_TEST(test_ady_list_graph_neighbours);
-	RUN_TEST(test_ady_list_graph_degree);
-	RUN_TEST(test_ady_list_graph_istream);
+	RUN_TEST(test_adj_list_graph_add_nodes);
+	RUN_TEST(test_adj_list_graph_add_edges);
+	RUN_TEST(test_adj_list_graph_neighbours);
+	RUN_TEST(test_adj_list_graph_degree);
+	RUN_TEST(test_adj_list_graph_istream);
+	RUN_TEST(test_adj_list_graph_contains);
 }

@@ -40,3 +40,8 @@ ElRetornoDelJediSolver
 
 # Compiled Latex files
 *informe.pdf
+
+# CLion
+src/CMakeLists.txt
+*.xml
+*.iml

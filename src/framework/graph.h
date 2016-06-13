@@ -14,6 +14,7 @@ class graph{
 		virtual bool adjacent(const T &v1, const T &v2) const = 0;
 		virtual void add_node(const T &v) = 0;
 		virtual void add_edge(const T &v1, const T &v2) = 0;
+		virtual bool contains(const T &v) const = 0;
 };
 
 #endif // GRAPH_H_INCLUDED
