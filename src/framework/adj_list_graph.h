@@ -8,6 +8,7 @@ template <typename T>
 class adj_list_graph: public graph<T>{
 	public:
 		adj_list_graph();
+		~adj_list_graph();
 		unsigned int n() const;
 		unsigned int m() const;
 		const std::vector<T> &neighbours(const T &v) const;
@@ -16,6 +17,7 @@ class adj_list_graph: public graph<T>{
 		void add_node(const T &v);
 		void add_edge(const T &v1, const T &v2);
 		bool contains(const T &v) const;
+		adj_list_graph<T> *clone() const;
 		friend std::istream &operator>>(std::istream &input, adj_list_graph &g){
 			input >> g.n_val >> g.m_val;
 
@@ -39,6 +41,10 @@ template <typename T>
 adj_list_graph<T>::adj_list_graph(){
 	n_val = 0;
 	m_val = 0;
+}
+
+template <typename T>
+adj_list_graph<T>::~adj_list_graph(){
 }
 
 template <typename T>
@@ -89,6 +95,11 @@ void adj_list_graph<T>::add_edge(const T &v1, const T &v2){
 template <typename T>
 bool adj_list_graph<T>::contains(const T &v) const{
 	return adj_list.find(v) != adj_list.end();
+}
+
+template <typename T>
+adj_list_graph<T> *adj_list_graph<T>::clone() const{
+	return new adj_list_graph<T>(*this);
 }
 
 #endif // ADJ_LIST_GRAPH_H_INCLUDED
