@@ -127,6 +127,18 @@ void test_adj_list_graph_clone(){
 	delete g_clone;
 }
 
+void test_adj_list_graph_vertices(){
+	adj_list_graph<int> g;
+
+	g.add_node(4);
+	g.add_node(2);
+	g.add_node(3);
+
+	std::vector<int> expected = {4, 2, 3};
+
+	ASSERT(g.get_vertices() == expected);
+}
+
 int main(){
 	RUN_TEST(test_adj_list_graph_add_nodes);
 	RUN_TEST(test_adj_list_graph_add_edges);
@@ -135,4 +147,5 @@ int main(){
 	RUN_TEST(test_adj_list_graph_istream);
 	RUN_TEST(test_adj_list_graph_contains);
 	RUN_TEST(test_adj_list_graph_clone);
+	RUN_TEST(test_adj_list_graph_vertices);
 }

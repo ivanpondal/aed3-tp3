@@ -19,6 +19,7 @@ class graph{
 		virtual graph<T> *clone() const = 0;
 		virtual void join(const graph<T>& g) = 0;
 		virtual void unite(const graph<T>& g) = 0;
+		virtual const std::vector<T> &get_vertices() const = 0;
 };
 
 #endif // GRAPH_H_INCLUDED

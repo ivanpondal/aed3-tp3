@@ -20,6 +20,7 @@ class adj_list_graph: public graph<T>{
 		graph<T> *clone() const;
 		void join(const graph<T>& g);
 		void unite(const graph<T>& g);
+		const std::vector<T> &get_vertices() const;
 		friend std::istream &operator>>(std::istream &input, adj_list_graph &g){
 			input >> g.n_val >> g.m_val;
 
@@ -37,6 +38,7 @@ class adj_list_graph: public graph<T>{
 		unsigned int n_val;
 		unsigned int m_val;
 		std::unordered_map<T, std::vector<T>> adj_list;
+		std::vector<T> vertices_list;
 };
 
 template <typename T>
@@ -84,6 +86,7 @@ bool adj_list_graph<T>::adjacent(const T &v1, const T &v2) const{
 template <typename T>
 void adj_list_graph<T>::add_node(const T &v){
 	adj_list.insert(std::make_pair(v, std::vector<int>()));
+	vertices_list.push_back(v);
 	n_val++;
 }
 
@@ -113,4 +116,11 @@ template <typename T>
 void adj_list_graph<T>::unite(const graph<T>& g){
 	// MAXI COMPLETAME
 }
+
+
+template <typename T>
+const std::vector<T> &adj_list_graph<T>::get_vertices() const{
+	return vertices_list;
+}
+
 #endif // ADJ_LIST_GRAPH_H_INCLUDED
