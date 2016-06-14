@@ -112,7 +112,7 @@ void test_adj_list_graph_clone(){
 	g.add_edge(4, 2);
 	g.add_edge(3, 2);
 
-	adj_list_graph<int> *g_clone = g.clone();
+	graph<int> *g_clone = g.clone();
 
 	ASSERT(g_clone->contains(4));
 	ASSERT(g_clone->contains(2));

@@ -17,7 +17,9 @@ class adj_list_graph: public graph<T>{
 		void add_node(const T &v);
 		void add_edge(const T &v1, const T &v2);
 		bool contains(const T &v) const;
-		adj_list_graph<T> *clone() const;
+		graph<T> *clone() const;
+		void join(const graph<T>& g);
+		void unite(const graph<T>& g);
 		friend std::istream &operator>>(std::istream &input, adj_list_graph &g){
 			input >> g.n_val >> g.m_val;
 
@@ -98,8 +100,17 @@ bool adj_list_graph<T>::contains(const T &v) const{
 }
 
 template <typename T>
-adj_list_graph<T> *adj_list_graph<T>::clone() const{
+graph<T> *adj_list_graph<T>::clone() const{
 	return new adj_list_graph<T>(*this);
 }
 
+template <typename T>
+void adj_list_graph<T>::join(const graph<T>& g){
+	// MAXI COMPLETAME
+}
+
+template <typename T>
+void adj_list_graph<T>::unite(const graph<T>& g){
+	// MAXI COMPLETAME
+}
 #endif // ADJ_LIST_GRAPH_H_INCLUDED
