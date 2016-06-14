@@ -102,6 +102,43 @@ void test_adj_list_graph_contains(){
 	ASSERT(!g.contains(7));
 }
 
+void test_adj_list_graph_clone(){
+	adj_list_graph<int> g;
+
+	g.add_node(4);
+	g.add_node(2);
+	g.add_node(3);
+
+	g.add_edge(4, 2);
+	g.add_edge(3, 2);
+
+	graph<int> *g_clone = g.clone();
+
+	ASSERT(g_clone->contains(4));
+	ASSERT(g_clone->contains(2));
+	ASSERT(g_clone->contains(3));
+
+	ASSERT(g_clone->adjacent(4, 2));
+	ASSERT(g_clone->adjacent(3, 2));
+
+	ASSERT_EQ(g_clone->n(), 3);
+	ASSERT_EQ(g_clone->m(), 2);
+
+	delete g_clone;
+}
+
+void test_adj_list_graph_vertices(){
+	adj_list_graph<int> g;
+
+	g.add_node(4);
+	g.add_node(2);
+	g.add_node(3);
+
+	std::vector<int> expected = {4, 2, 3};
+
+	ASSERT(g.get_vertices() == expected);
+}
+
 int main(){
 	RUN_TEST(test_adj_list_graph_add_nodes);
 	RUN_TEST(test_adj_list_graph_add_edges);
@@ -109,4 +146,6 @@ int main(){
 	RUN_TEST(test_adj_list_graph_degree);
 	RUN_TEST(test_adj_list_graph_istream);
 	RUN_TEST(test_adj_list_graph_contains);
+	RUN_TEST(test_adj_list_graph_clone);
+	RUN_TEST(test_adj_list_graph_vertices);
 }

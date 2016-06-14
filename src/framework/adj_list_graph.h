@@ -8,6 +8,7 @@ template <typename T>
 class adj_list_graph: public graph<T>{
 	public:
 		adj_list_graph();
+		~adj_list_graph();
 		unsigned int n() const;
 		unsigned int m() const;
 		const std::vector<T> &neighbours(const T &v) const;
@@ -16,7 +17,10 @@ class adj_list_graph: public graph<T>{
 		void add_node(const T &v);
 		void add_edge(const T &v1, const T &v2);
 		bool contains(const T &v) const;
-		std::vector<T> nodes() const;
+		graph<T> *clone() const;
+		void join(const graph<T>& g);
+		void unite(const graph<T>& g);
+		const std::vector<T> &get_vertices() const;
 		adj_list_graph<T>* complement() const;
 		friend std::istream &operator>>(std::istream &input, adj_list_graph &g){
 			input >> g.n_val >> g.m_val;
@@ -35,13 +39,17 @@ class adj_list_graph: public graph<T>{
 		unsigned int n_val;
 		unsigned int m_val;
 		std::unordered_map<T, std::vector<T>> adj_list;
-		std::vector<T> node_list;
+		std::vector<T> vertices_list;
 };
 
 template <typename T>
 adj_list_graph<T>::adj_list_graph(){
 	n_val = 0;
 	m_val = 0;
+}
+
+template <typename T>
+adj_list_graph<T>::~adj_list_graph(){
 }
 
 template <typename T>
@@ -79,7 +87,7 @@ bool adj_list_graph<T>::adjacent(const T &v1, const T &v2) const{
 template <typename T>
 void adj_list_graph<T>::add_node(const T &v){
 	adj_list.insert(std::make_pair(v, std::vector<int>()));
-	node_list.push_back(v);
+	vertices_list.push_back(v);
 	n_val++;
 }
 
@@ -92,27 +100,42 @@ void adj_list_graph<T>::add_edge(const T &v1, const T &v2){
 
 template <typename T>
 bool adj_list_graph<T>::contains(const T &v) const{
-	//return std::equal(adj_list.find(v), std::unordered_map<T, std::vector<T>>::end);
-	return true;
+	return adj_list.find(v) != adj_list.end();
 }
 
 template <typename T>
-std::vector<T> adj_list_graph<T>::nodes() const {
-	return node_list;
+graph<T> *adj_list_graph<T>::clone() const{
+	return new adj_list_graph<T>(*this);
+}
+
+template <typename T>
+void adj_list_graph<T>::join(const graph<T>& g){
+	// MAXI COMPLETAME
+}
+
+template <typename T>
+void adj_list_graph<T>::unite(const graph<T>& g){
+	// MAXI COMPLETAME
+}
+
+
+template <typename T>
+const std::vector<T> &adj_list_graph<T>::get_vertices() const{
+	return vertices_list;
 }
 
 template <typename T>
 adj_list_graph<T>* adj_list_graph<T>::complement() const{
 	adj_list_graph<T>* ret = new adj_list_graph<T>();
 
-	for (typename std::vector<T>::const_iterator it1 = node_list.begin();
-		it1 != node_list.end();
+	for (typename std::vector<T>::const_iterator it1 = vertices_list.begin();
+		it1 != vertices_list.end();
 		it1++)
 	{
 		T current_node1 = *it1;
 		ret->add_node(current_node1);
-		for (typename std::vector<T>::const_iterator it2 = node_list.begin();
-			it2 != node_list.end();
+		for (typename std::vector<T>::const_iterator it2 = vertices_list.begin();
+			it2 != vertices_list.end();
 			it2++)
 		{
 			T current_node2 = *it2;
