@@ -1,30 +1,24 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <chrono>        // medición de tiempos de ejecución
 #include <iostream>      // cout, cin, <<
 #include <fstream>       // open, close, <<
 #include <iomanip>       // stoi
 #include <unistd.h>      // getopt
 #include <vector>        // vector
 
-// Medición de tiempos
-static std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
-void start_timer();
-double stop_timer();
-
 // Imprimir ayuda por pantalla
-void mostrar_ayuda(char* path_ejecutable);
+void show_help(char* bin_path);
 
 // Funciones principales
 extern bool verbose;
-void correr_solucion();
-void correr_tests_unitarios();
-void correr_pruebas_performance();
+void run_solution();
+void run_unit_tests();
+void run_experimentation();
 
 // Compara dos vectores
 template <typename T>
-bool compararVectores(const std::vector<T> v1, const std::vector<T> v2) {
+bool compare_vectors(const std::vector<T> v1, const std::vector<T> v2) {
     if (v1.size() != v2.size()) {
         return false;
     } else {

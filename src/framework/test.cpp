@@ -1,5 +1,5 @@
 #include "../mini_test.h"
-#include "adj_list_graph.h"
+#include "test.h"
 #include <sstream>
 
 void test_adj_list_graph_add_nodes(){
@@ -139,7 +139,17 @@ void test_adj_list_graph_vertices(){
 	ASSERT(g.get_vertices() == expected);
 }
 
+void test_adj_list_n_incremental_experiment(){
+	// load min, max, discard, repetitions, samples and initial subject values
+	incremental_experiment_input_int< adj_list_graph<int>> input_exp(1, 100000, 0, 60, 1000, adj_list_graph<int>());
+
+	adj_list_n_incremental_experiment exp;
+
+	exp.run(input_exp);
+}
+
 int main(){
+	// adj_list_graph tests
 	RUN_TEST(test_adj_list_graph_add_nodes);
 	RUN_TEST(test_adj_list_graph_add_edges);
 	RUN_TEST(test_adj_list_graph_neighbours);
@@ -148,4 +158,7 @@ int main(){
 	RUN_TEST(test_adj_list_graph_contains);
 	RUN_TEST(test_adj_list_graph_clone);
 	RUN_TEST(test_adj_list_graph_vertices);
+
+	// experiment tests
+	RUN_TEST(test_adj_list_n_incremental_experiment);
 }
