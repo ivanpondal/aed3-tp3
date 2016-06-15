@@ -10,6 +10,11 @@ class incremental_experiment_input_int: public incremental_experiment_input<int,
 		                                 discard_val, repetitions_val, samples_val, subject_val){
 		}
 
+		~incremental_experiment_input_int(){};
+
+		incremental_experiment_input<int, S> *clone() const{
+			return new incremental_experiment_input_int<S>(*this);
+		}
 	private:
 		int calculate_delta() const{
 			return (this->get_max() - this->get_min()) / this->get_samples();

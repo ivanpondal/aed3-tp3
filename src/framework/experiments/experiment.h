@@ -4,7 +4,8 @@
 template <typename IN>
 class experiment{
 	public:
-		virtual void run(IN &input) = 0;
+		virtual void init(const IN *input) = 0;
+		virtual void run() = 0;
 };
 
 #endif // EXPERIMENT_H_INCLUDED

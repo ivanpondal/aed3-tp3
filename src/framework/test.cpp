@@ -143,9 +143,25 @@ void test_adj_list_n_incremental_experiment(){
 	// load min, max, discard, repetitions, samples and initial subject values
 	incremental_experiment_input_int< adj_list_graph<int>> input_exp(1, 100000, 0, 60, 1000, adj_list_graph<int>());
 
-	adj_list_n_incremental_experiment exp;
+	adj_list_n_incremental_experiment exp(&input_exp);
 
-	exp.run(input_exp);
+	exp.run();
+}
+
+void test_adj_list_n_incremental_experiment_suite(){
+	// load min, max, discard, repetitions, samples and initial subject values
+	incremental_experiment_input_int< adj_list_graph<int>> exp1_input(1, 100000, 0, 60, 1000, adj_list_graph<int>());
+	incremental_experiment_input_int< adj_list_graph<int>> exp2_input(1, 100, 20, 60, 50, adj_list_graph<int>());
+
+	adj_list_n_incremental_experiment exp1 = adj_list_n_incremental_experiment(&exp1_input);
+	adj_list_n_incremental_experiment exp2 = adj_list_n_incremental_experiment(&exp2_input);
+
+	experiment_suite< incremental_experiment_input<int, adj_list_graph<int>>> exp_suite;
+
+	exp_suite.add(&exp1);
+	exp_suite.add(&exp2);
+
+	exp_suite.run();
 }
 
 int main(){
@@ -161,4 +177,5 @@ int main(){
 
 	// experiment tests
 	RUN_TEST(test_adj_list_n_incremental_experiment);
+	RUN_TEST(test_adj_list_n_incremental_experiment_suite);
 }
