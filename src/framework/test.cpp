@@ -156,7 +156,7 @@ void test_adj_list_n_incremental_experiment_suite(){
 	adj_list_n_incremental_experiment exp1 = adj_list_n_incremental_experiment(&exp1_input);
 	adj_list_n_incremental_experiment exp2 = adj_list_n_incremental_experiment(&exp2_input);
 
-	experiment_suite< incremental_experiment_input<int, adj_list_graph<int>>> exp_suite;
+	experiment_suite exp_suite;
 
 	exp_suite.add(&exp1);
 	exp_suite.add(&exp2);

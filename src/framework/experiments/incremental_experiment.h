@@ -10,7 +10,7 @@
 #include <cmath>
 
 template <typename T, typename S>
-class incremental_experiment: public experiment<incremental_experiment_input<T, S>>{
+class incremental_experiment: public experiment{
 	public:
 		incremental_experiment(const incremental_experiment_input<T, S> *input);
 		~incremental_experiment();
