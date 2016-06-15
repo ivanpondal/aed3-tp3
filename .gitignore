@@ -26,9 +26,6 @@
 *.exe
 *.out
 *.app
-UnaNuevaEsperanzaSolver
-ElImperioContraatacaSolver
-ElRetornoDelJediSolver
 
 # Latex
 *.aux
@@ -45,3 +42,7 @@ ElRetornoDelJediSolver
 src/CMakeLists.txt
 *.xml
 *.iml
+
+# Sublime Text
+aed3-tp3.sublime-project
+aed3-tp3.sublime-workspace
