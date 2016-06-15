@@ -227,18 +227,22 @@ cotree_node* generate_cotree(const graph<int>& g) {
 
     graph<int>* gc = g.complement();
 
-    enum child_type {left, right, none};
-    typedef tuple<subgraph, cotree_node_operation*, child_type> pending_node;
+    enum direction {left, right, none};
+    struct pending_node {
+        subgraph sg;
+        cotree_node_operation* parent;
+        direction child_type;
+    };
 
-    pending_node start(subgraph(g.n()), NULL, none);
+    pending_node start = {subgraph(g.n()), NULL, none};
     stack<pending_node> to_expand;
     stack<cotree_node_operation*> to_compute_size;
     to_expand.push(start);
 
     while (! to_expand.empty()) {
-        subgraph current_subgraph = get<0>(to_expand.top());
-        cotree_node_operation* current_parent = get<1>(to_expand.top());
-        child_type current_child_type = get<2>(to_expand.top());
+        subgraph current_subgraph = to_expand.top().sg;
+        cotree_node_operation* current_parent = to_expand.top().parent;
+        direction current_child_type = to_expand.top().child_type;
         to_expand.pop();
 
         cotree_operation op;
@@ -278,7 +282,7 @@ cotree_node* generate_cotree(const graph<int>& g) {
         }
         else {
             // If it is an operation
-            pending_node cc1_node(cc1, new_node, left);
+            pending_node cc1_node = {cc1, new_node, left};
             to_expand.push(cc1_node);
         }
 
@@ -290,7 +294,7 @@ cotree_node* generate_cotree(const graph<int>& g) {
         }
         else {
             // If it is an operation
-            pending_node cc2_node(cc2, new_node, right);
+            pending_node cc2_node = {cc2, new_node, right};
             to_expand.push(cc2_node);
         }
     }
@@ -339,3 +343,74 @@ cotree_node* generate_cotree(const graph<int>& g) {
 
     return ret;
 }
+
+vector<info_cotree_node> vectorize(cotree_node* cotree) {
+    vector<info_cotree_node> ret;
+    if (cotree->get_type() == leaf) {
+        ret = {{cotree, -1, -1}};
+    } else {
+        cotree_node_operation* cotree_root = (cotree_node_operation*) cotree;
+        int i = cotree_root->get_node_count() * 2 - 1;
+        ret = vector<info_cotree_node>(i);
+
+        enum direction {left, right, none};
+        struct pending_node {
+            cotree_node* addr;
+            int parent_index;
+            direction child_type;
+        };
+
+        stack<pending_node> to_explore;
+        to_explore.push({cotree, -1, none});
+
+        while (! to_explore.empty()) {
+            cotree_node* current_node = to_explore.top().addr;
+            int current_parent_index = to_explore.top().parent_index;
+            direction current_child_type = to_explore.top().child_type;
+            to_explore.pop();
+            i--;
+
+            if (current_node->get_type() == leaf) {
+                ret[i] = {current_node, -1, -1};
+            } else {
+                to_explore.push({current_node->get_left_child(), i, left});
+                to_explore.push({current_node->get_right_child(), i, right});
+                ret[i] = {current_node, -1, -1};
+            }
+
+            if (current_parent_index != -1) {
+                if (current_child_type == left) {
+                    ret[current_parent_index].left_child_index = i;
+                } else if (current_child_type == right) {
+                    ret[current_parent_index].right_child_index = i;
+                }
+            }
+        }
+    }
+
+    return ret;
+}
+
+// int main() {
+//     adj_list_graph<int>* g = new adj_list_graph<int>();
+//     g->add_node(0);
+//     g->add_node(1);
+//     g->add_node(2);
+//     g->add_node(3);
+//     g->add_node(4);
+//     g->add_node(5);
+//     g->add_edge(0, 1);
+//     g->add_edge(0, 2);
+//     g->add_edge(1, 2);
+//     g->add_edge(4, 5);
+
+//     cotree_node* cot = generate_cotree(*g);
+//     cout << (*cot) << endl;
+
+//     vectorize(cot);
+
+//     delete cot;
+//     delete g;
+
+//     return 0;
+// }

@@ -115,5 +115,13 @@ class cotree_node_leaf : public cotree_node {
 // Generates a cotree from a graph (requires graph to be cograph)
 cotree_node* generate_cotree(const graph<int>&);
 
+// Constructs a vector out of a cotree using BFS
+struct info_cotree_node {
+    cotree_node* node;
+    int left_child_index;
+    int right_child_index;
+};
+
+std::vector<info_cotree_node> vectorize(cotree_node* cotree);
 
 #endif
