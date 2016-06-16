@@ -5,7 +5,7 @@
 #include <stack>
 #include <iostream>
 
-#include "../framework/graph.h"
+#include "../framework/structures/graph.h"
 
 /*
 **  Exercise 3

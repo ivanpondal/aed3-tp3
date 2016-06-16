@@ -1,6 +1,6 @@
 #include "ej3.h"
 
-#include "../framework/adj_list_graph.h"
+#include "../framework/structures/adj_list_graph.h"
 
 using namespace std;
 
