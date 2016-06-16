@@ -56,6 +56,7 @@
 \newcommand{\ord}{\ensuremath{\operatorname{O}}}
 \newcommand{\nat}{\ensuremath{\mathbb{N}}}
 \newcommand{\acr}[1]{\lowercase{\textsc{#1}}}
+\newcommand{\comp}{\ensuremath{^{\operatorname{C}}}}
 
 % Lemas, definiciones, etc.
 \theoremstyle{plain}
@@ -86,7 +87,7 @@
 
 \begin{document}
 \materia{Algoritmos y Estructuras de Datos III}
-\submateria{Primer Cuatrimestre de 2016}
+\submateria{Primer cuatrimestre de 2016}
 \titulo{Trabajo Práctico III}
 %\subtitulo{Grupo: }
 \integrante{Franco Frizzo}{013/14}{francofrizzo@gmail.com}
@@ -100,6 +101,9 @@
 
 \newpage
 \tableofcontents
+
+% Mostrar paper principal en bibliografía aunque no sea citado
+\nocite{ehrlich}
 
 \newpage
 \input{intro}
@@ -124,6 +128,10 @@
 
 \newpage
 \input{ej7}
+
+\newpage
+\bibliographystyle{unsrt}
+\bibliography{informe}
 
 \newpage
 \appendix
