@@ -160,5 +160,5 @@ int main(){
 	RUN_TEST(test_adj_list_graph_vertices);
 
 	// experiment tests
-	RUN_TEST(test_adj_list_n_incremental_experiment);
+//	RUN_TEST(test_adj_list_n_incremental_experiment);
 }
