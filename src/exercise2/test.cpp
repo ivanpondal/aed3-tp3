@@ -26,9 +26,9 @@ void test_k_1() {
     g1.add_node(2);
     g1.add_edge(1, 2);
 
-    g2.add_node(1);
-    g2.add_node(2);
-    g2.add_edge(1, 2);
+    g2.add_node(3);
+    g2.add_node(4);
+    g2.add_edge(3, 4);
 
 
     graph<int> *maxComSub = mcs(&g1, &g2);
