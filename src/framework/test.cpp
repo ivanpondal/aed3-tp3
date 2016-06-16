@@ -184,6 +184,20 @@ void test_adj_list_n_incremental_experiment_suite(){
 	exp_suite.run();
 }
 
+void test_graph_factory_int_random(){
+	graph_factory_int g_f;
+	adj_list_graph<int> g;
+	float epsilon = 0.01;
+	float edge_proportion = 0;
+
+	g_f.add_n_random_vertices(&g, 100, 0.5);
+
+	edge_proportion = g.m()*1.0f / ((g.n()*(g.n() - 1))/2);
+
+	ASSERT_EQ(g.n(), 100);
+	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
+}
+
 int main(){
 	// adj_list_graph tests
 	RUN_TEST(test_adj_list_graph_add_nodes);
@@ -199,4 +213,7 @@ int main(){
 	// experiment tests
 	RUN_TEST(test_adj_list_n_incremental_experiment);
 	RUN_TEST(test_adj_list_n_incremental_experiment_suite);
+
+	// utils tests
+	RUN_TEST(test_graph_factory_int_random);
 }
