@@ -23,6 +23,21 @@ class graph{
 };
 
 template <typename T>
+std::ostream &operator<<(std::ostream &output, graph<T> &g){
+	T tmp_node_val = T();
+	for(unsigned int n = 0; n < g.get_vertices().size(); n++){
+		tmp_node_val = g.get_vertices()[n];
+		output << tmp_node_val << ":";
+		for(unsigned int i = 0; i < g.neighbours(tmp_node_val).size(); i++){
+			output << " " << g.neighbours(tmp_node_val)[i];
+		}
+		output << std::endl;
+	}
+
+	return output;
+}
+
+template <typename T>
 std::istream &operator>>(std::istream &input, graph<T> &g){
 	int m = 0;
 	input >> m >> m;

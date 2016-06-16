@@ -89,6 +89,26 @@ void test_adj_list_graph_istream(){
 	ASSERT(g.neighbours(3) == expected);
 }
 
+void test_adj_list_graph_ostream(){
+	adj_list_graph<int> g;
+
+	g.add_node(4);
+	g.add_node(2);
+	g.add_node(6);
+	g.add_node(7);
+
+	g.add_edge(4, 2);
+	g.add_edge(2, 6);
+	g.add_edge(6, 4);
+	g.add_edge(6, 7);
+
+	std::stringstream oss;
+	oss << g;
+	const char* expected = "4: 2 6\n2: 4 6\n6: 2 4 7\n7: 6\n";
+
+	ASSERT_EQ(oss.str().c_str(), expected);
+}
+
 void test_adj_list_graph_contains(){
 	adj_list_graph<int> g;
 
@@ -171,6 +191,7 @@ int main(){
 	RUN_TEST(test_adj_list_graph_neighbours);
 	RUN_TEST(test_adj_list_graph_degree);
 	RUN_TEST(test_adj_list_graph_istream);
+	RUN_TEST(test_adj_list_graph_ostream);
 	RUN_TEST(test_adj_list_graph_contains);
 	RUN_TEST(test_adj_list_graph_clone);
 	RUN_TEST(test_adj_list_graph_vertices);
