@@ -20,6 +20,9 @@ class graph{
 		virtual void join(const graph<T> &g) = 0;
 		virtual void unite(const graph<T> &g) = 0;
 		virtual const std::vector<T> &get_vertices() const = 0;
+		graph<T> &operator=(const graph<T> &g);
+	private:
+		virtual void clear();
 };
 
 template <typename T>
@@ -58,4 +61,24 @@ std::istream &operator>>(std::istream &input, graph<T> &g){
 	return input;
 }
 
+template <typename T>
+graph<T> &graph<T>::operator=(const graph<T> &g){
+	clear();
+
+	for(unsigned int n = 0; n < g.get_vertices().size(); n++){
+		add_node(g.get_vertices()[n]);
+	}
+
+	T tmp_val = T();
+	for(unsigned int n = 0; n < get_vertices().size(); n++){
+		tmp_val = get_vertices()[n];
+		for(unsigned int i = 0; i < g.neighbours(tmp_val).size(); i++){
+			if(!adjacent(tmp_val, g.neighbours(tmp_val)[i])){
+				add_edge(tmp_val, g.neighbours(tmp_val)[i]);
+			}
+		}
+	}
+
+	return *this;
+}
 #endif // GRAPH_H_INCLUDED

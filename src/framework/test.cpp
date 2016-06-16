@@ -159,6 +159,35 @@ void test_adj_list_graph_vertices(){
 	ASSERT(g.get_vertices() == expected);
 }
 
+void test_adj_list_graph_assignment(){
+	adj_list_graph<int> g;
+	g.add_node(7);
+	g.add_node(4);
+	g.add_node(3);
+	g.add_edge(7, 3);
+	graph<int>* g_base = &g;
+
+	adj_list_graph<int> g_tmp;
+	g_tmp.add_node(1);
+	g_tmp.add_node(2);
+	g_tmp.add_node(3);
+	g_tmp.add_edge(1, 2);
+	g_tmp.add_edge(2, 3);
+	graph<int>* g_base_tmp = &g_tmp;
+
+	(*g_base) = *g_base_tmp;
+
+	ASSERT(g.contains(1));
+	ASSERT(g.contains(2));
+	ASSERT(g.contains(3));
+
+	ASSERT_EQ(g.n(), 3);
+	ASSERT_EQ(g.m(), 2);
+
+	ASSERT(g.adjacent(1, 2));
+	ASSERT(g.adjacent(2, 3));
+}
+
 void test_adj_list_n_incremental_experiment(){
 	// load min, max, discard, repetitions, samples and initial subject values
 	incremental_experiment_input_int< adj_list_graph<int>> input_exp(1, 100000, 0, 60, 1000, adj_list_graph<int>());
@@ -209,6 +238,7 @@ int main(){
 	RUN_TEST(test_adj_list_graph_contains);
 	RUN_TEST(test_adj_list_graph_clone);
 	RUN_TEST(test_adj_list_graph_vertices);
+	RUN_TEST(test_adj_list_graph_assignment);
 
 	// experiment tests
 	RUN_TEST(test_adj_list_n_incremental_experiment);
