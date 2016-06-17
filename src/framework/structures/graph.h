@@ -22,7 +22,7 @@ class graph{
 		virtual const std::vector<T> &get_vertices() const = 0;
 		graph<T> &operator=(const graph<T> &g);
 	private:
-		virtual void clear();
+		virtual void clear() = 0;
 };
 
 template <typename T>

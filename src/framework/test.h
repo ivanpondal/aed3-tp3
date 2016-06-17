@@ -1,6 +1,9 @@
 #ifndef TEST_H_
 #define TEST_H_
 
+#include <sstream>
+
+#include "../mini_test.h"
 #include "experiments/incremental_experiment.h"
 #include "experiments/experiment_suite.h"
 #include "experiments/input/incremental_experiment_input_int.h"

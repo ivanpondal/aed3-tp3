@@ -111,7 +111,6 @@ const std::vector<T> &adj_list_graph<T>::get_vertices() const{
 	return vertices_list;
 }
 
-
 template <typename T>
 void adj_list_graph<T>::clear(){
 	n_val = 0;
@@ -119,4 +118,5 @@ void adj_list_graph<T>::clear(){
 	adj_list.clear();
 	vertices_list.clear();
 }
+
 #endif // ADJ_LIST_GRAPH_H_INCLUDED

@@ -1,6 +1,5 @@
 #include "../mini_test.h"
 #include "test.h"
-#include <sstream>
 
 void test_adj_list_graph_add_nodes(){
 	adj_list_graph<int> g;
