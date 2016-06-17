@@ -1,86 +1,136 @@
 #include "ej3.h"
+#include "../framework/structures/adj_list_graph.h"
 
 using namespace std;
 
-
-graph solver ( graph & g1 , graph & g2 ){
-	if ( g2.n >= g1.n ){
-		return g1;
+graph<int>* solver(graph<int>& g1, graph<int>& g2) {
+	if (g2.n() >= g1.n()) {
+		return &g1;
 	}
-	// Calculate co tree
-	vector<cotree_node> vec_co_tree; = cotree(g1);
-	// Calculate solve
 
-	vector< vector < pair<int,vector<int> > > > dp ;
+	// Calculate cotree
+	cotree_node* cotree = generate_cotree(g1);
+	vector<info_cotree_node> vec_cotree = vectorize(cotree);
 
-	dp = vector< vector< pair < int, vector<int> > > >(g1->n,
-		vector< pair < int, char > > ( vec_co_tree.size() ,
-		make_pair (0,vector<int>)));
+	// Calculate solution
+	struct subsolution {
+		int edge_count;
+		vector<int> vertices;
+	};
 
-	for (int j = vec_co_tree.size() - 1; j > 0; ++i){
-		for (int i = 0; i < g1->n; ++i){
+	vector<vector<subsolution>> dp(
+		vec_cotree.size(),
+		vector<subsolution>(g2.n() + 1)
+	);
 
-			info_cotree_node info =  vec_co_tree[j];
-			// si pido 0 nodes
-			if (i == 0){
-				dp[0][j] = make_pair(0,vector<int>);
-			 
-			} else{
+	for (uint i = 0; i < vec_cotree.size(); i++) {
+		info_cotree_node current_info = vec_cotree[i];
+
+		for (uint j = 0; j <= g2.n(); j++) {
+			// si pido 0 nodos
+			if (j == 0) {
+				dp[i][j] = {0, vector<int>()};
+			}
+			else {
 				// si es una hoja
-				if (info.node->get_type() == vertex ){
-					cotree_node_vertex n = (*cotree_node_vertex)  info.node;
-					// TO_DO: cast info.nodo (cotree_node) to cotree_node_vertex 
-					//si  pido 1 node
-					if (i == 1){
-						dp[i][1] = make_pair(0,vector<int>(n->vertex));
-					}else{
-						dp[i][1] = make_pair(-1,vector<int>());
+				if (current_info.node->get_type() == leaf) {
+					cotree_node_leaf* current_node =
+						(cotree_node_leaf*) current_info.node;
+
+					// si pido 1 nodo
+					if (j == 1) {
+						dp[i][j] = {0, {current_node->get_vertex()}};
 					}
-				}else{
-					// TO_DO: cast info.nodo (cotree_node) to cotree_node_operation 
-					cotree_node_operation n = (*cotree_node_operation)   info.node;
-					// si le pido más nodes de los q tiene co-tree
-					if (i > n->ind_cograph_size){
-						dp[i][j] = make_pair(-1,vector<int>());
-					// si pido exactamete la cantidad de nodes tiene el co-tree
-					}else if ( i == n->ind_cograph_size ){
-						int k = n->get_left_child()->ind_cograph_edge_count;
-						dp[i][j] = merge_nodes(dp,i,j,k,n);
-					}else {
-						// pruebo combinando tomando de 1 a j y de j  a 1 en los hijos del co-tree 
-						for (int k = 1; k < j; ++k){
-							// si es un caso valido
-							if (dp[n->left_child][k].first != -1 && )dp[n->right_child][k].first != -1){
-								pair<int,vector<int> new_merge = merge_nodes(dp,i,j,k,n);
-								if(new_merge.first >= dp[i][j].first){
-									dp[i][j] = new_merge;
-									
+					else {
+						dp[i][j] = {-1, vector<int>()};
+					}
+				}
+				else {
+					cotree_node_operation* current_node =
+						(cotree_node_operation*) current_info.node;
+
+					// si le pido más nodos de los que tiene el cotree
+					if (j > current_node->get_vertex_count()) {
+						dp[i][j] = {-1, vector<int>()};
+					}
+					// si pido exactamente la cantidad de nodos que tiene el cotree
+					else if (j == current_node->get_vertex_count()) {
+						uint left_vertex_count =
+							current_node->get_left_child()->get_vertex_count();
+						uint right_vertex_count =
+							current_node->get_right_child()->get_vertex_count();
+
+						subsolution left_subsolution =
+							dp[current_info.left_child_index][left_vertex_count];
+						subsolution right_subsolution =
+							dp[current_info.right_child_index][right_vertex_count];
+
+						int current_edge_count;
+						if (current_node->get_operation() == join) {
+							current_edge_count = left_subsolution.edge_count +
+								right_subsolution.edge_count +
+								left_vertex_count * right_vertex_count;
+						}
+						else {
+							current_edge_count = left_subsolution.edge_count +
+								right_subsolution.edge_count;
+						}
+
+						vector<int> current_vertices = left_subsolution.vertices;
+						current_vertices.insert(
+							current_vertices.end(),
+							right_subsolution.vertices.begin(),
+							right_subsolution.vertices.end()
+						);
+						dp[i][j] = {current_edge_count, current_vertices};
+					}
+					else {
+						// pruebo combinando tomando de 1 a i y de i a 1 en
+						// los hijos del co-tree
+						int best_edge_count = -1;
+
+						for (uint k = 0; k <= j; k++) {
+							subsolution left_subsolution =
+								dp[current_info.left_child_index][j - k];
+							subsolution right_subsolution =
+								dp[current_info.right_child_index][k];
+
+							int current_edge_count;
+							// si es un caso válido
+							if (left_subsolution.edge_count != -1
+								&& right_subsolution.edge_count != -1)
+							{
+								if (current_node->get_operation() == join) {
+									current_edge_count =
+										left_subsolution.edge_count +
+										right_subsolution.edge_count +
+										k * (j - k);
+								}
+								else {
+									current_edge_count =
+										left_subsolution.edge_count +
+										right_subsolution.edge_count;
+								}
+
+								if (current_edge_count > best_edge_count) {
+									best_edge_count = current_edge_count;
+									vector<int> current_vertices =
+										left_subsolution.vertices;
+									current_vertices.insert(
+										current_vertices.end(),
+										right_subsolution.vertices.begin(),
+										right_subsolution.vertices.end()
+									);
+									dp[i][j] =
+										{current_edge_count, current_vertices};
 								}
 							}
-
-
 						}
 					}
 				}
-
-			} 
+			}
 		}
-		vector <int> vec_solve_nodes = dp[0][g1->n].second;
 	}
 
-	pair<int,vector<int> > merge_nodes( vector < vector < pair<int,vector<int> > > >  &dp 
-												, int i, int j, int k, cotree_node_operation &n  ){
-		vector <int> nodes = dp[n->right_child][k];
-		vector <int> other_nodes = dp[n->left_child][j - k];
-		
-		int edges = (nodes.size() + other_nodes.size());
-
-		if (n->cotree_operation == join){
-			edges +=  nodes.size() * other_nodes.size();
-		}
-		nodes.insert (nodes.end(),other_nodes.begin(),other_nodes.end());
-		return make_pair(edges,nodes);
-
-
-	}
+	vector<int> solution_vertices = dp[vec_cotree.size() - 1][g2.n()].vertices;
 }

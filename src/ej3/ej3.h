@@ -20,12 +20,12 @@
 
 class subgraph {
  private:
-    int node_count_val;
+    uint vertex_count_val;
     std::vector<bool> vertices;
  public:
     subgraph();
-    subgraph(int graph_size);
-    subgraph(std::vector<int> v, int graph_size);
+    subgraph(uint graph_size);
+    subgraph(std::vector<int> v, uint graph_size);
     subgraph(std::vector<bool> v);
 
     // Yields a random vertex that belongs to the subgraph
@@ -35,7 +35,7 @@ class subgraph {
     std::vector<int> get_vertices() const;
 
     // Returns the amount of nodes that conform the subgraph
-    int node_count() const;
+    uint vertex_count() const;
 
     // Decides if a certain node belongs to the subgraph
     bool contains(int vertex) const;
@@ -64,13 +64,15 @@ class cotree_node {
     
  public:
     cotree_node();
-    ~cotree_node();
+    virtual ~cotree_node();
 
     cotree_node* get_right_child() const;
     cotree_node* get_left_child() const;
     void set_right_child(cotree_node*);
     void set_left_child(cotree_node*);
     virtual cotree_node_type get_type() const = 0;
+    virtual uint get_vertex_count() const = 0;
+    virtual uint get_edge_count() const = 0;
 
     friend std::ostream& operator<<(std::ostream& os, const cotree_node& n);
 };
@@ -81,8 +83,8 @@ enum cotree_operation {join, disj_union};
 class cotree_node_operation : public cotree_node {
  private:
     cotree_operation op;
-    int node_count;
-    int edge_count;
+    uint vertex_count;
+    uint edge_count;
  public:
     cotree_node_operation();
     cotree_node_operation(cotree_operation op);
@@ -94,10 +96,10 @@ class cotree_node_operation : public cotree_node {
 
     cotree_node_type get_type() const;
     cotree_operation get_operation() const;
-    int get_node_count() const;
-    int get_edge_count() const;
-    void set_node_count(int count);
-    void set_edge_count(int count);
+    uint get_vertex_count() const;
+    uint get_edge_count() const;
+    void set_vertex_count(uint count);
+    void set_edge_count(uint count);
 };
 
 
@@ -110,6 +112,8 @@ class cotree_node_leaf : public cotree_node {
 
     cotree_node_type get_type() const;
     int get_vertex() const;
+    uint get_vertex_count() const;
+    uint get_edge_count() const;
 };
 
 // Generates a cotree from a graph (requires graph to be cograph)
@@ -123,5 +127,24 @@ struct info_cotree_node {
 };
 
 std::vector<info_cotree_node> vectorize(cotree_node* cotree);
+
+// Print a vector
+template <typename T>
+std::ostream& operator <<(std::ostream& os, const std::vector<T>& v) {
+    os << "[";
+    bool first = true;
+    for (typename std::vector<T>::const_iterator it = v.begin();
+        it != v.end(); ++it)
+    {
+        if (! first) {
+            os << ", ";
+        } else {
+            first = false;
+        }
+        os << *it;
+    }
+    os << "]";
+    return os;
+}
 
 #endif

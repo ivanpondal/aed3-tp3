@@ -13,14 +13,14 @@ using namespace std;
 
 subgraph::subgraph() {}
 
-subgraph::subgraph(int graph_size) :
-    node_count_val(graph_size)
+subgraph::subgraph(uint graph_size) :
+    vertex_count_val(graph_size)
 {
     vertices = vector<bool>(graph_size, true);
 }
 
-subgraph::subgraph(vector<int> v, int graph_size) {
-    node_count_val = v.size();
+subgraph::subgraph(vector<int> v, uint graph_size) {
+    vertex_count_val = v.size();
     vertices = vector<bool>(graph_size, false);
     for (vector<int>::iterator it = v.begin(); it != v.end(); it++) {
         vertices[*it] = true;
@@ -28,17 +28,17 @@ subgraph::subgraph(vector<int> v, int graph_size) {
 }
 
 subgraph::subgraph(vector<bool> v) : vertices(v) {
-    node_count_val = 0;
+    vertex_count_val = 0;
     for (vector<bool>::iterator it = v.begin(); it != v.end(); it++) {
         if (*it) {
-            node_count_val++;
+            vertex_count_val++;
         }
     }
 }
 
 int subgraph::get_vertex() const {
     int res = -1;
-    for (int i = 0; i < vertices.size(); i++) {
+    for (uint i = 0; i < vertices.size(); i++) {
         if (vertices[i]) {
             res = i;
             break;
@@ -49,14 +49,14 @@ int subgraph::get_vertex() const {
 
 vector<int> subgraph::get_vertices() const {
     vector<int> ret;
-    for (int i = 0; i < vertices.size(); i++) {
+    for (uint i = 0; i < vertices.size(); i++) {
         ret.push_back(i);
     }
     return ret;
 }
 
-int subgraph::node_count() const {
-    return node_count_val;
+uint subgraph::vertex_count() const {
+    return vertex_count_val;
 }
 
 bool subgraph::contains(int vertex) const {
@@ -64,10 +64,10 @@ bool subgraph::contains(int vertex) const {
 }
 
 void subgraph::substract(const subgraph& h) {
-    for (uint i; i < vertices.size(); i++) {
+    for (uint i = 0; i < vertices.size(); i++) {
         if (vertices[i] && h.vertices[i]) {
             vertices[i] = false;
-            node_count_val--;
+            vertex_count_val--;
         }
     }
 }
@@ -85,7 +85,7 @@ subgraph subgraph::find_connected_comp(const graph<int>& g) const {
         int current_vertex = to_explore.top();
         to_explore.pop();
         vector<int> neigh = g.neighbours(current_vertex);
-        for (int i = 0; i < neigh.size(); i++) {
+        for (uint i = 0; i < neigh.size(); i++) {
             int neigh_vertex = neigh[i];
             if (vertices[neigh_vertex] && !marked[neigh_vertex]) {
                 marked[neigh_vertex] = true;
@@ -100,7 +100,7 @@ subgraph subgraph::find_connected_comp(const graph<int>& g) const {
 ostream& operator<<(ostream& os, subgraph const& h) {
     bool first = true;
     os << "[";
-    for (int i = 0; i < h.vertices.size(); i++) {
+    for (uint i = 0; i < h.vertices.size(); i++) {
         if (h.vertices[i]) {
             if (!first) {
                 os << ", ";
@@ -187,19 +187,19 @@ cotree_operation cotree_node_operation::get_operation() const {
     return op;
 }
 
-int cotree_node_operation::get_node_count() const {
-    return node_count;
+uint cotree_node_operation::get_vertex_count() const {
+    return vertex_count;
 }
 
-int cotree_node_operation::get_edge_count() const {
+uint cotree_node_operation::get_edge_count() const {
     return edge_count;
 }
 
-void cotree_node_operation::set_node_count(int count) {
-    node_count = count;
+void cotree_node_operation::set_vertex_count(uint count) {
+    vertex_count = count;
 }
 
-void cotree_node_operation::set_edge_count(int count) {
+void cotree_node_operation::set_edge_count(uint count) {
     edge_count = count;
 }
 
@@ -214,6 +214,14 @@ cotree_node_type cotree_node_leaf::get_type() const {
 
 int cotree_node_leaf::get_vertex() const {
     return vertex;
+}
+
+uint cotree_node_leaf::get_vertex_count() const {
+    return 1;
+}
+
+uint cotree_node_leaf::get_edge_count() const {
+    return 0;
 }
 
 
@@ -248,7 +256,7 @@ cotree_node* generate_cotree(const graph<int>& g) {
         cotree_operation op;
         subgraph cc1 = current_subgraph.find_connected_comp(g);
 
-        if (cc1.node_count() == current_subgraph.node_count()) {
+        if (cc1.vertex_count() == current_subgraph.vertex_count()) {
             cc1 = current_subgraph.find_connected_comp(*gc);
             op = join;
         }
@@ -275,7 +283,7 @@ cotree_node* generate_cotree(const graph<int>& g) {
         }
 
         // Left child
-        if (cc1.node_count() == 1) {
+        if (cc1.vertex_count() == 1) {
             // If it is a leaf
             cotree_node* cc1_node = new cotree_node_leaf(cc1.get_vertex());
             new_node->set_left_child(cc1_node);
@@ -287,7 +295,7 @@ cotree_node* generate_cotree(const graph<int>& g) {
         }
 
         // Right child
-        if (cc2.node_count() == 1) {
+        if (cc2.vertex_count() == 1) {
             // If it is a leaf
             cotree_node* cc2_node = new cotree_node_leaf(cc2.get_vertex());
             new_node->set_right_child(cc2_node);
@@ -308,32 +316,32 @@ cotree_node* generate_cotree(const graph<int>& g) {
         to_compute_size.pop();
 
         // Left child size
-        int left_child_node_count = 1;
+        int left_child_vertex_count = 1;
         int left_child_edge_count = 0;
         if (current_node->get_left_child()->get_type() == operation) {
             cotree_node_operation* left_child =
                       (cotree_node_operation*) current_node->get_left_child();
-            left_child_node_count = left_child->get_node_count();
+            left_child_vertex_count = left_child->get_vertex_count();
             left_child_edge_count = left_child->get_edge_count();
         }
 
         // Right child size
-        int right_child_node_count = 1;
+        int right_child_vertex_count = 1;
         int right_child_edge_count = 0;
         if (current_node->get_right_child()->get_type() == operation) {
             cotree_node_operation* right_child =
                       (cotree_node_operation*) current_node->get_right_child();
-            right_child_node_count = right_child->get_node_count();
+            right_child_vertex_count = right_child->get_vertex_count();
             right_child_edge_count = right_child->get_edge_count();
         }
 
-        current_node->set_node_count(
-            left_child_node_count + right_child_node_count);
+        current_node->set_vertex_count(
+            left_child_vertex_count + right_child_vertex_count);
 
         if (current_node->get_operation() == join) {
             current_node->set_edge_count(
                 left_child_edge_count + right_child_edge_count +
-                (left_child_node_count * right_child_node_count));
+                (left_child_vertex_count * right_child_vertex_count));
         }
         else if (current_node->get_operation() == disj_union) {
             current_node->set_edge_count(
@@ -350,7 +358,7 @@ vector<info_cotree_node> vectorize(cotree_node* cotree) {
         ret = {{cotree, -1, -1}};
     } else {
         cotree_node_operation* cotree_root = (cotree_node_operation*) cotree;
-        int i = cotree_root->get_node_count() * 2 - 1;
+        int i = cotree_root->get_vertex_count() * 2 - 1;
         ret = vector<info_cotree_node>(i);
 
         enum direction {left, right, none};
