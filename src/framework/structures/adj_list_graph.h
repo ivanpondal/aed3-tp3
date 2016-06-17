@@ -22,6 +22,7 @@ class adj_list_graph: public graph<T>{
 		void unite(const graph<T> &g);
 		const std::vector<T> &get_vertices() const;
 	private:
+		void clear();
 		unsigned int n_val;
 		unsigned int m_val;
 		std::unordered_map<T, std::vector<T>> adj_list;
@@ -108,6 +109,14 @@ void adj_list_graph<T>::unite(const graph<T> &g){
 template <typename T>
 const std::vector<T> &adj_list_graph<T>::get_vertices() const{
 	return vertices_list;
+}
+
+template <typename T>
+void adj_list_graph<T>::clear(){
+	n_val = 0;
+	m_val = 0;
+	adj_list.clear();
+	vertices_list.clear();
 }
 
 #endif // ADJ_LIST_GRAPH_H_INCLUDED
