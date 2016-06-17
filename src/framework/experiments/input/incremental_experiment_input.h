@@ -16,6 +16,8 @@ class incremental_experiment_input{
 			this->subject_val = subject_val;
 		};
 
+		virtual ~incremental_experiment_input(){};
+
 		void init(){
 			delta_val = calculate_delta();
 		}
@@ -55,6 +57,8 @@ class incremental_experiment_input{
 		S &set_subject(const S &subject_val){
 			this.subject_val = subject_val;
 		}
+
+		virtual incremental_experiment_input<T, S> *clone() const = 0;
 	private:
 		virtual T calculate_delta() const = 0;
 		T min_val;
