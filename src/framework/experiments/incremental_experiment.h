@@ -17,7 +17,6 @@ class incremental_experiment: public experiment{
 		void init(const incremental_experiment_input<T, S> *input);
 		void run();
 	private:
-		virtual const char *get_experiment_name() const = 0;
 		virtual void load_instance(incremental_experiment_input<T, S> *input) = 0;
 		virtual void solve_instance(incremental_experiment_input<T, S> *input) = 0;
 		void print_results();
@@ -73,7 +72,7 @@ template <typename T, typename S>
 void incremental_experiment<T, S>::print_results(){
 	std::ofstream output_file;
 
-	output_file.open(get_experiment_name());
+	output_file.open(input->get_exp_name());
 
 	for(unsigned i = 0; i < times_vec.size(); i++){
 		T x = times_vec[i].first;
