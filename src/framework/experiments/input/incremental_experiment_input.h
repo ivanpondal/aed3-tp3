@@ -6,7 +6,8 @@ class incremental_experiment_input{
 	public:
 		incremental_experiment_input(const T &min_val, const T &max_val,
 		                             int discard_val, int repetitions_val,
-		                             int samples_val, const S &subject_val){
+		                             int samples_val, const S &subject_val,
+		                             const char *exp_name){
 			this->min_val = min_val;
 			this->max_val = max_val;
 			this->inc_val = min_val;
@@ -14,6 +15,7 @@ class incremental_experiment_input{
 			this->repetitions_val = repetitions_val;
 			this->samples_val = samples_val;
 			this->subject_val = subject_val;
+			this->exp_name = exp_name;
 		};
 
 		virtual ~incremental_experiment_input(){};
@@ -58,6 +60,10 @@ class incremental_experiment_input{
 			this.subject_val = subject_val;
 		}
 
+		const char *get_exp_name() const{
+			return exp_name;
+		}
+
 		virtual incremental_experiment_input<T, S> *clone() const = 0;
 	private:
 		virtual T calculate_delta() const = 0;
@@ -69,6 +75,7 @@ class incremental_experiment_input{
 		int repetitions_val;
 		int samples_val;
 		S subject_val;
+		const char *exp_name;
 };
 
 #endif // INCREMENTAL_EXPERIMENT_INPUT_H_INCLUDED
