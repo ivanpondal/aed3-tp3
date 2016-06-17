@@ -2,10 +2,14 @@
 #define TEST_H_
 
 #include "experiments/incremental_experiment.h"
+#include "experiments/experiment_suite.h"
 #include "experiments/input/incremental_experiment_input_int.h"
 #include "structures/adj_list_graph.h"
+#include "utils/graph_factory_int.h"
 
 class adj_list_n_incremental_experiment: public incremental_experiment<int, adj_list_graph<int>>{
+	public:
+		adj_list_n_incremental_experiment(const incremental_experiment_input<int, adj_list_graph<int>> *input): incremental_experiment(input){};
 	private:
 		const char *get_experiment_name() const;
 		void load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);

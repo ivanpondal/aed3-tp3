@@ -18,22 +18,9 @@ class adj_list_graph: public graph<T>{
 		void add_edge(const T &v1, const T &v2);
 		bool contains(const T &v) const;
 		graph<T> *clone() const;
-		void join(const graph<T>& g);
-		void unite(const graph<T>& g);
+		void join(const graph<T> &g);
+		void unite(const graph<T> &g);
 		const std::vector<T> &get_vertices() const;
-		friend std::istream &operator>>(std::istream &input, adj_list_graph &g){
-			input >> g.n_val >> g.m_val;
-
-			T tmp_a, tmp_b;
-
-			for(unsigned int i = 0; i < g.m_val; i++){
-				input >> tmp_a >> tmp_b;
-				g.adj_list[tmp_a].push_back(tmp_b);
-				g.adj_list[tmp_b].push_back(tmp_a);
-			}
-
-			return input;
-		};
 	private:
 		unsigned int n_val;
 		unsigned int m_val;
@@ -108,12 +95,12 @@ graph<T> *adj_list_graph<T>::clone() const{
 }
 
 template <typename T>
-void adj_list_graph<T>::join(const graph<T>& g){
+void adj_list_graph<T>::join(const graph<T> &g){
 	// MAXI COMPLETAME
 }
 
 template <typename T>
-void adj_list_graph<T>::unite(const graph<T>& g){
+void adj_list_graph<T>::unite(const graph<T> &g){
 	// MAXI COMPLETAME
 }
 

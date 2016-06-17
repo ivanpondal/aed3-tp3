@@ -89,6 +89,26 @@ void test_adj_list_graph_istream(){
 	ASSERT(g.neighbours(3) == expected);
 }
 
+void test_adj_list_graph_ostream(){
+	adj_list_graph<int> g;
+
+	g.add_node(4);
+	g.add_node(2);
+	g.add_node(6);
+	g.add_node(7);
+
+	g.add_edge(4, 2);
+	g.add_edge(2, 6);
+	g.add_edge(6, 4);
+	g.add_edge(6, 7);
+
+	std::stringstream oss;
+	oss << g;
+	const char* expected = "4: 2 6\n2: 4 6\n6: 2 4 7\n7: 6\n";
+
+	ASSERT_EQ(oss.str().c_str(), expected);
+}
+
 void test_adj_list_graph_contains(){
 	adj_list_graph<int> g;
 
@@ -143,9 +163,39 @@ void test_adj_list_n_incremental_experiment(){
 	// load min, max, discard, repetitions, samples and initial subject values
 	incremental_experiment_input_int< adj_list_graph<int>> input_exp(1, 100000, 0, 60, 1000, adj_list_graph<int>());
 
-	adj_list_n_incremental_experiment exp;
+	adj_list_n_incremental_experiment exp(&input_exp);
 
-	exp.run(input_exp);
+	exp.run();
+}
+
+void test_adj_list_n_incremental_experiment_suite(){
+	// load min, max, discard, repetitions, samples and initial subject values
+	incremental_experiment_input_int< adj_list_graph<int>> exp1_input(1, 100000, 0, 60, 1000, adj_list_graph<int>());
+	incremental_experiment_input_int< adj_list_graph<int>> exp2_input(1, 100, 20, 60, 50, adj_list_graph<int>());
+
+	adj_list_n_incremental_experiment exp1 = adj_list_n_incremental_experiment(&exp1_input);
+	adj_list_n_incremental_experiment exp2 = adj_list_n_incremental_experiment(&exp2_input);
+
+	experiment_suite exp_suite;
+
+	exp_suite.add(&exp1);
+	exp_suite.add(&exp2);
+
+	exp_suite.run();
+}
+
+void test_graph_factory_int_random(){
+	graph_factory_int g_f;
+	adj_list_graph<int> g;
+	float epsilon = 0.01;
+	float edge_proportion = 0;
+
+	g_f.add_n_random_vertices(&g, 100, 0.5);
+
+	edge_proportion = g.m()*1.0f / ((g.n()*(g.n() - 1))/2);
+
+	ASSERT_EQ(g.n(), 100);
+	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
 }
 
 int main(){
@@ -155,10 +205,15 @@ int main(){
 	RUN_TEST(test_adj_list_graph_neighbours);
 	RUN_TEST(test_adj_list_graph_degree);
 	RUN_TEST(test_adj_list_graph_istream);
+	RUN_TEST(test_adj_list_graph_ostream);
 	RUN_TEST(test_adj_list_graph_contains);
 	RUN_TEST(test_adj_list_graph_clone);
 	RUN_TEST(test_adj_list_graph_vertices);
 
 	// experiment tests
-//	RUN_TEST(test_adj_list_n_incremental_experiment);
+	RUN_TEST(test_adj_list_n_incremental_experiment);
+	RUN_TEST(test_adj_list_n_incremental_experiment_suite);
+
+	// utils tests
+	RUN_TEST(test_graph_factory_int_random);
 }

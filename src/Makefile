@@ -17,11 +17,11 @@ OTHER_OBJECTS_DIR=$(foreach exe,$(EXECUTABLES_BASE),$(addprefix $(exe)/,$(OTHER_
 # framework variables
 FRAMEWORK_DIR=framework/
 FRAMEWORK_FOLDERS=experiments experiments/input structures utils
-FRAMEWORK_EXPERIMENTS_HEADERS=experiment.h incremental_experiment.h \
+FRAMEWORK_EXPERIMENTS_HEADERS=experiment.h incremental_experiment.h experiment_suite.h \
                               incremental_experiment_input.h incremental_experiment_input_int.h
 FRAMEWORK_STRUCTURES_HEADERS=graph.h adj_list_graph.h
-FRAMEWORK_UTILS_HEADERS=chronometer.h
-FRAMEWORK_OBJECTS=utils/chronometer.o
+FRAMEWORK_UTILS_HEADERS=chronometer.h graph_factory.h graph_factory_int.h
+FRAMEWORK_OBJECTS=utils/chronometer.o utils/graph_factory_int.o experiments/experiment_suite.o
 FRAMEWORK_OBJECTS_DIR=$(addprefix $(FRAMEWORK_DIR),$(FRAMEWORK_OBJECTS))
 FRAMEWORK_TEST_OBJECT=$(FRAMEWORK_DIR)test.o
 FRAMEWORK_TEST_EXECUTABLE=$(FRAMEWORK_DIR)test_framework
@@ -43,7 +43,7 @@ test: $(FRAMEWORK_TEST_EXECUTABLE)
 $(FRAMEWORK_TEST_OBJECT): $(subst .o,.h,$(FRAMEWORK_TEST_OBJECT)) \
                 $(FRAMEWORK_UTILS_HEADERS) $(FRAMEWORK_STRUCTURES_HEADERS) $(FRAMEWORK_EXPERIMENTS_HEADERS)
 
-$(FRAMEWORK_TEST_EXECUTABLE): $(FRAMEWORK_TEST_OBJECT) $(FRAMEWORK_OBJECTS_DIR)
+$(FRAMEWORK_TEST_EXECUTABLE): $(FRAMEWORK_OBJECTS_DIR) $(FRAMEWORK_TEST_OBJECT)
 	$(CC) $(CFLAGS) -o $@ $^
 
 $(MAIN_OBJECT): $(subst .o,.h,$(MAIN_OBJECT))
