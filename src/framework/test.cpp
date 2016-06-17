@@ -213,12 +213,12 @@ void test_adj_list_n_incremental_experiment_suite(){
 }
 
 void test_graph_factory_int_random(){
-	graph_factory_int g_f;
+	element_generator_int e_gen;
 	adj_list_graph<int> g;
 	float epsilon = 0.01;
 	float edge_proportion = 0;
 
-	g_f.add_n_random_vertices(&g, 100, 0.5);
+	graph_factory<int>::add_n_random_vertices(g, e_gen, 100, 0.5);
 
 	edge_proportion = g.m()*1.0f / ((g.n()*(g.n() - 1))/2);
 

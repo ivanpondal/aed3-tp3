@@ -20,8 +20,9 @@ FRAMEWORK_FOLDERS=experiments experiments/input structures utils
 FRAMEWORK_EXPERIMENTS_HEADERS=experiment.h incremental_experiment.h experiment_suite.h \
                               incremental_experiment_input.h incremental_experiment_input_int.h
 FRAMEWORK_STRUCTURES_HEADERS=graph.h adj_list_graph.h
-FRAMEWORK_UTILS_HEADERS=chronometer.h graph_factory.h graph_factory_int.h
-FRAMEWORK_OBJECTS=utils/chronometer.o utils/graph_factory_int.o experiments/experiment_suite.o
+FRAMEWORK_UTILS_HEADERS=chronometer.h graph_factory.h element_generator.h element_generator_int.h
+FRAMEWORK_OBJECTS=utils/chronometer.o utils/element_generator_int.o \
+                  experiments/experiment_suite.o
 FRAMEWORK_OBJECTS_DIR=$(addprefix $(FRAMEWORK_DIR),$(FRAMEWORK_OBJECTS))
 FRAMEWORK_TEST_OBJECT=$(FRAMEWORK_DIR)test.o
 FRAMEWORK_TEST_EXECUTABLE=$(FRAMEWORK_DIR)test_framework
