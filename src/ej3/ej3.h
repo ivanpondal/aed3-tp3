@@ -128,23 +128,4 @@ struct info_cotree_node {
 
 std::vector<info_cotree_node> vectorize(cotree_node* cotree);
 
-// Print a vector
-template <typename T>
-std::ostream& operator <<(std::ostream& os, const std::vector<T>& v) {
-    os << "[";
-    bool first = true;
-    for (typename std::vector<T>::const_iterator it = v.begin();
-        it != v.end(); ++it)
-    {
-        if (! first) {
-            os << ", ";
-        } else {
-            first = false;
-        }
-        os << *it;
-    }
-    os << "]";
-    return os;
-}
-
 #endif

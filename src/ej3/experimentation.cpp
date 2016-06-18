@@ -1,16 +1,12 @@
-#include <graph.h>
+#include "../main.h"
+#include "./ej3.h"
+#include "../framework/structures/adj_list_graph.h"
 
-using namespace std;
+/*
+**  Exercise 3
+**  Experimentation
+*/
 
-adj_list_graph random-co-graph(int n){
-	adj_list_graph<int> g = new adj_list_graph();
-	
-	while(){
-		
-		i++;
-
-
-		i++;
-	}
-
+void run_experimentation() {
+    std::cout << "Nothing here yet :/" << std::endl;
 }
