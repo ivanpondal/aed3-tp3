@@ -24,6 +24,7 @@ class graph{
 		virtual void unite(const graph<T> &g, element_generator<T> &ele_g) = 0;
 		virtual const std::vector<T> &get_vertices() const = 0;
 		virtual graph<T>* complement() const = 0;
+		virtual graph<T>* induced_supgraph(std::vector<int> subgraph_vertices) const = 0;
 		graph<T> &operator=(const graph<T> &g);
 	private:
 		virtual void clear() = 0;
