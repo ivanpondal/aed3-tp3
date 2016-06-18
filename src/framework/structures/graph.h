@@ -11,7 +11,7 @@ template <typename T>
 class graph{
 	public:
 		virtual ~graph(){};
-		virtual unsigned int n() const = 0;
+			virtual unsigned int n() const = 0;
 		virtual unsigned int m() const = 0;
 		virtual const std::vector<T> &neighbours(const T &v) const = 0;
 		virtual unsigned int degree(const T &v) const = 0;

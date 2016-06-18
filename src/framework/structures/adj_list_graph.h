@@ -2,6 +2,7 @@
 #define ADJ_LIST_GRAPH_H_
 
 #include <unordered_map>
+#include <vector>
 #include "graph.h"
 
 template <typename T>

@@ -15,7 +15,7 @@ int main (int argc, char* argv[]) {
 
     // Parsea las opciones recibidas
     char opt;
-    while ((opt = getopt(argc, argv, "htvp:")) != -1) {
+    while ((opt = getopt(argc, argv, "htve:")) != -1) {
         switch (opt) {
             case 'h': { // mostrar ayuda
                 show_help(argv[0]);
@@ -67,7 +67,7 @@ void show_help(char* bin_path) {
     cout << "  Opciones:" << endl;
     cout << "    -h          Muestra este texto de ayuda" << endl;
     cout << "    -t          Ejecuta los tests unitarios provistos para el algoritmo" << endl;
-    cout << "    -p <seed>   Ejecuta las pruebas de performance diseñadas para el algoritmo" << endl;
+    cout << "    -e <seed>   Ejecuta las pruebas de performance diseñadas para el algoritmo" << endl;
 }
 
 // Funciones de entrada/salida

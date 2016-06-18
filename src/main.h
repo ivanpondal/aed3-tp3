@@ -9,7 +9,7 @@
 #include <unordered_set> // unordered_set
 
 #include "framework/structures/graph.h"
-
+#include "framework/utils/element_generator.h"
 extern bool verbose;
 
 // Imprimir ayuda por pantalla
