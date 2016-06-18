@@ -18,8 +18,8 @@ class adj_list_graph: public graph<T>{
 		void add_edge(const T &v1, const T &v2);
 		bool contains(const T &v) const;
 		graph<T> *clone() const;
-		void join(const graph<T> &g);
-		void unite(const graph<T> &g);
+		void join(const graph<T> &g, element_generator<T> &e_gen);
+		void unite(const graph<T> &g, element_generator<T> &e_gen);
 		const std::vector<T> &get_vertices() const;
 		adj_list_graph<T>* complement() const;
 	private:
@@ -97,13 +97,67 @@ graph<T> *adj_list_graph<T>::clone() const{
 }
 
 template <typename T>
-void adj_list_graph<T>::join(const graph<T> &g){
-	// MAXI COMPLETAME
+void adj_list_graph<T>::join(const graph<T> &g,  element_generator<T> &e_gen){
+	std::unordered_map<T,T> g2_to_g1;
+	// union
+	for (int i = 0; i < g.n(); ++i){
+		T v = g.get_vertices()[i];
+		T new_v = e_gen.generate(*this);
+		g2_to_g1.insert(std::make_pair(v, new_v ));
+		add_node(new_v);
+	}
+	for (int i = 0; i < g.n(); ++i){
+		T v = g.get_vertices()[i];
+		T v_in_g1 = g2_to_g1.at(v);
+		std::vector<T> neighbours = g.neighbours(v);
+		for (int j = 0; j < neighbours.size(); ++j){
+			T neighbour_v_in_g1 = g2_to_g1.at(neighbours[j]);
+			if ( ( v_in_g1 != neighbour_v_in_g1 ) && (! adjacent(v_in_g1, neighbour_v_in_g1) ) ){
+				add_edge(v_in_g1,neighbour_v_in_g1);
+			}	
+		}
+	}
+	// add others egdes 
+	for (int i = 0; i < g.n(); ++i){
+		T v_g2 = g.get_vertices()[i];
+		T v_g2_in_g1 = g2_to_g1.at(v_g2);
+		for (int j = 0; j < n(); ++j){
+			T v_g1 = get_vertices()[j];
+			if(g2_to_g1.find(v_g1) == g2_to_g1.end()){
+				if ( ( v_g2_in_g1 != v_g1 ) && (! adjacent(v_g2_in_g1, v_g1) ) ){
+					add_edge(v_g2_in_g1,v_g1);
+				}
+			}
+		}
+	}
+
+
+
 }
 
 template <typename T>
-void adj_list_graph<T>::unite(const graph<T> &g){
-	// MAXI COMPLETAME
+void adj_list_graph<T>::unite(const graph<T> &g,  element_generator<T> &e_gen){
+	std::unordered_map<T,T> g2_to_g1;
+	// add new nodes
+	for (int i = 0; i < g.n(); ++i){
+		T v = g.get_vertices()[i];
+		T new_v = e_gen.generate(*this);
+		g2_to_g1.insert(std::make_pair(v, new_v ));
+		add_node(new_v);
+	}
+	// add news edge
+	for (int i = 0; i < g.n(); ++i){
+		T v = g.get_vertices()[i];
+		T v_in_g1 = g2_to_g1.at(v);
+		std::vector<T> neighbours = g.neighbours(v);
+		for (int j = 0; j < neighbours.size(); ++j){
+			T neighbour_v_in_g1 = g2_to_g1.at(neighbours[j]);
+			if ( ( v_in_g1 != neighbour_v_in_g1 ) && (! adjacent(v_in_g1, neighbour_v_in_g1) ) ){
+				add_edge(v_in_g1,neighbour_v_in_g1);
+			}
+			
+		}
+	}
 }
 
 

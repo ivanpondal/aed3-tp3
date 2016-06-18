@@ -158,6 +158,60 @@ void test_adj_list_graph_vertices(){
 	ASSERT(g.get_vertices() == expected);
 }
 
+void test_adj_list_graph_unite(){
+	adj_list_graph<int> g_1;
+	adj_list_graph<int> g_2;
+	g_1.add_node(1);
+	g_1.add_node(2);
+	g_1.add_node(3);
+	g_2.add_node(4);
+	g_2.add_node(5);
+	g_2.add_node(6);
+	g_2.add_edge(4,5);
+	g_2.add_edge(5,6);
+	g_2.add_edge(6,4);
+	element_generator_int e_gen;
+	g_1.unite(g_2,e_gen);
+	std::vector<int> expected = {1, 2, 3, 4, 6, 8};
+	ASSERT(g_1.adjacent(4, 6));
+	ASSERT(g_1.adjacent(4, 8));
+	ASSERT(g_1.adjacent(6, 4));
+	ASSERT(g_1.adjacent(6, 8));
+	ASSERT(g_1.adjacent(8, 4));
+	ASSERT(g_1.adjacent(8, 6));
+	ASSERT(g_1.get_vertices() == expected);
+}
+
+void test_adj_list_graph_join(){
+	adj_list_graph<int> g_1;
+	adj_list_graph<int> g_2;
+	g_1.add_node(1);
+	g_1.add_node(2);
+	g_1.add_node(3);
+	g_2.add_node(4);
+	g_2.add_node(5);
+	g_2.add_node(6);
+	g_2.add_edge(4,5);
+	g_2.add_edge(5,6);
+	g_2.add_edge(6,4);
+	element_generator_int e_gen;
+	g_1.join(g_2,e_gen);
+	std::vector<int> expected = {1, 2, 3, 4, 6, 8};
+	ASSERT(g_1.adjacent(4, 6));
+	ASSERT(g_1.adjacent(4, 8));
+	ASSERT(g_1.adjacent(6, 8));
+	ASSERT(g_1.adjacent(1, 4));
+	ASSERT(g_1.adjacent(1, 6));
+	ASSERT(g_1.adjacent(1, 8));
+	ASSERT(g_1.adjacent(2, 4));
+	ASSERT(g_1.adjacent(2, 6));
+	ASSERT(g_1.adjacent(2, 8));
+	ASSERT(g_1.adjacent(3, 4));
+	ASSERT(g_1.adjacent(3, 6));
+	ASSERT(g_1.adjacent(3, 8));
+	ASSERT(g_1.get_vertices() == expected);
+}
+
 void test_adj_list_graph_assignment(){
 	adj_list_graph<int> g;
 	g.add_node(7);
@@ -226,7 +280,9 @@ void test_graph_factory_int_random(){
 	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
 }
 
+
 int main(){
+
 	// adj_list_graph tests
 	RUN_TEST(test_adj_list_graph_add_nodes);
 	RUN_TEST(test_adj_list_graph_add_edges);
@@ -238,6 +294,8 @@ int main(){
 	RUN_TEST(test_adj_list_graph_clone);
 	RUN_TEST(test_adj_list_graph_vertices);
 	RUN_TEST(test_adj_list_graph_assignment);
+	RUN_TEST(test_adj_list_graph_unite);
+	RUN_TEST(test_adj_list_graph_join);
 
 	// experiment tests
 	RUN_TEST(test_adj_list_n_incremental_experiment);
