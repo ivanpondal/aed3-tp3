@@ -7,9 +7,12 @@
 #include <unistd.h>      // getopt
 #include <vector>        // vector
 #include <unordered_set> // unordered_set
+#include <utility>
 
 #include "framework/structures/graph.h"
 #include "framework/utils/element_generator.h"
+#include "framework/structures/adj_list_graph.h"
+
 extern bool verbose;
 
 // Imprimir ayuda por pantalla

@@ -10,7 +10,6 @@ bool verbose = false;
 
 int main (int argc, char* argv[]) {
     // Configuración de la ejecución
-    bool verbose = false;
     mode exec_mode = solver;
 
     // Parsea las opciones recibidas

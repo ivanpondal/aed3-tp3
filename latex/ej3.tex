@@ -83,6 +83,114 @@ grafos son operaciones asociativas.
 \end{figure}
 
 \subsection{Resolución algorítmica}
+Sean $G_1 = K_{N_1}$ un grafo completo de $N_1$ nodos (que tendrá por lo tanto
+$M_1 = \frac{N_1 \times (N_1 - 1)}{2}$ aristas), y $G_2$ un cografo con $N_2$
+nodos y $M_2$ aristas. A la hora de resolver el problema de encontrar el \acr
+{MCS} entre $G_1$ y $G_2$, pueden distinguirse estos dos casos:
+\begin{enumerate}
+    \item $N_1 \geq N_2$. Dado que $G_1$ es un grafo completo, todo
+    subgrafo que tenga $N_1$ o menos aristas, y en particular $G_2$,
+    es isomorfo a algún subgrafo de $G_1$. Como, trivialmente, $G_2$ es
+    isomorfo a sí mismo, basta tomar $G_2$ como solución del problema.
+    \item $N_1 < N_2$. En este caso, sea $H$ un grafo isomorfo a algún
+    subgrafo de $G_2$; $H$ resultará isomorfo a algún subgrafo de $G_1$ si
+    y solo si su cantidad de nodos es menor o igual que $N_1$. Si $H$ tiene
+    menos de $N_1$ nodos, puede extenderse a algún grafo $\tilde{H} \supseteq
+    H$ que tenga $N_1$ nodos y también sea isomorfo a un subgrafo de $G_2$.
+    Es directo que $\tilde{H}$ resulta isomorfo a algún subgrafo de $G_1$ y
+    que su cantidad de aristas es mayor o igual que la de $H$. Entonces, si
+    $H$ era solución óptima de \acr{MCS}, claramente $\tilde{H}$ también lo
+    es. De esto se sigue que para resolver este caso del problema, basta con
+    tomar un subgrafo de $G_2$ que tenga exactamente $N_1$ nodos y maximice la
+    cantidad de aristas.
+\end{enumerate}
+
+Dado que la resolución del primer caso es trivial, durante el resto de esta
+sección se asumirá que $N_1 < N_2$. Se llamará $K = N_1$, $G = G_2$, $N = N_2$
+y $M = M_2$, y se explicará la solución planteada al problema de encontrar un
+subgrafo de un cografo $G$ que tenga exactamente $K$ vértices y cantidad de
+aristas máxima.
+
+En general, el problema de determinar para un grafo dado el subgrafo con
+determinada cantidad de vértices que maximice la cantidad de aristas es
+NP-completo, y por lo tanto, no se conoce un algoritmo eficiente para
+resolverlo. No obstante, aprovechando la hipótesis de que $G$ es un cografo,
+es posible solucionar el problema en tiempo polinomial.
+
+La solución propuesta tiene dos etapas. En primer lugar, se crea el coárbol
+binario de $G$, y luego, utilizando la técnica de programación dinámica, se
+aprovecha esta representación para obtener el subgrafo buscado.
+
+\subsubsection{Resultados preliminares}
+A continuación, se demostrarán una serie de resultados que serán necesarios
+para asegurar la correctitud de los algoritmos presentados más adelante.
+
+\subsubsection{Construcción del coárbol}
+Para construir el coárbol correspondiente a un cografo dado, se aprovecha la
+en cografos de menor tamaño hasta obtener un conjunto de vértices aislados.
+El algoritmo admite una sencilla formulación recursiva: si el cografo consiste
+en un vértice aislado, el coárbol tendrá un único nodo representando este
+vértice. En caso contrario, el cografo será la unión o el \emph{join} de dos
+cografos; el coárbol que lo represente tendrá como raíz un nodo etiquetado con
+esa operación, del cual colgarán los coárboles correspondientes a los dos
+cografos sobre los cuales esta se aplica.
+
+\subsubsection{Búsqueda del subgrafo máximo}
+Para encontrar el subgrafo de $G$ con $K < N$ nodos y máxima cantidad de
+aristas, se diseñó un algoritmo utilizando la técnica de programación
+dinámica. El esquema detrás de la formulación recursiva de este algoritmo es
+la siguiente:
+
+\begin{enumerate}
+    \item Si $K = 0$, la solución del algoritmo es un grafo sin nodos ni
+    aristas.
+    \item Si $K > 0$ y $G = K_1$, es decir, un nodo aislado, la solución es
+    $K_1$.
+    \item Si $G \neq K_1$, entonces existen dos cografos $G_1$ y $G_2$ tales
+    que $G = G_1 \times G_2$ o $G = G_1 \cup G_2$. En tal caso, la solución
+    $H$ del problema tendrá algunos de sus nodos en $G_1$ y el resto en $G_2$.
+    Entonces, según la operación con la que se obtenga $G$ a partir de $G_1$ y
+    $G_2$, tenemos que $H = H_1 \times H_2$ o $H = H_1 \cup H_2$, donde
+    $H_1$ y $H_2$ son los subgrafos inducidos en $G$ por los nodos de $H$ que
+    pertenecen a $G_1$ y a $G_2$, respectivamente.
+\end{enumerate}
+
+\[
+    \operatorname{MCS}(G, K) = \begin{cases}
+        (\varnothing, \varnothing) & \text{si } K = 0 \\
+        K_1 & \text{si } G \text{ es un nodo aislado} \\
+        \displaystyle \argmax_{H \in S(G, K)}(\#E(H)) & \text{si } G = (G_1
+        \cup G_2) \text{ o } G = (G_1 \times G_2) \\
+    \end{cases}
+\]
+
+donde
+
+\[
+    S(G, K) = \begin{cases}
+        \lbrace \operatorname{MCS}(G_1, k) \cup \operatorname{MCS}(G_2, K -
+        k) \ \vert\ 0 \leq k \leq K \rbrace & \text{si } G = (G_1 \cup G_2) \\
+        \lbrace \operatorname{MCS}(G_1, k) \times \operatorname{MCS}(G_2, K -
+        k) \ \vert\ 0 \leq k \leq K \rbrace & \text{si } G = (G_1 \times G_2)
+    \end{cases}
+\]
+
+\begin{algorithm}[H]
+    % \caption{Búsqueda del }
+    \Input{Un cografo $G = (V, E)$ con $N$ nodos y $M$ aristas, y un natural
+        $K < N$.}
+    \Output{Un subgrafo $H \subseteq G$ con $K$ nodos que maximice la cantidad
+        de aristas.}
+
+    $cotree$ $\gets$ cotree correspondiente a $G$ \;
+    $DP$ $\gets$ grilla de dimensiones $(2 \times N - 1) \times K$, donde \;
+    cada fila representa a uno de los vértices del coárbol de $G$, y cada \;
+    columna,
+    \Return{($DP_{N,M}$, $camino$)}
+\end{algorithm}
+
+
+El algoritmo planteado para la búsqueda del máximo subgrafo
 
 
 \subsection{Detalles implementativos}
