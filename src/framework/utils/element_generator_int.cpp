@@ -6,7 +6,7 @@ int element_generator_int::get_next(const graph<int> &g){
 		next = g.n();
 	}
 	else{
-		next = g.n() + next_count;
+		next = next_count;
 	}
 	next_count++;
 	return next;

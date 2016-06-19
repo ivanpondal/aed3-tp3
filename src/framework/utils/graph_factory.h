@@ -8,6 +8,8 @@ template <typename T>
 class graph_factory{
 	public:
 		static void add_n_random_vertices(graph<T> &g, element_generator<T>& e_gen, int n, float c);
+		static adj_list_graph<int> random_co_graph(element_generator<T> &e_gen, unsigned int n);
+		static void add_n_vertices_and_all_edges(graph<T> &g, element_generator<T>& e_gen, int n);
 };
 
 template <typename T>
@@ -28,5 +30,59 @@ void graph_factory<T>::add_n_random_vertices(graph<T> &g, element_generator<T>& 
 		n--;
 	}
 }
+
+template <typename T>
+void graph_factory<T>::add_n_vertices_and_all_edges(graph<T> &g, element_generator<T>& e_gen, int n){
+	T new_node;
+	while(n > 0){
+		new_node = e_gen.generate(g);
+		g.add_node(new_node);
+		for (int i = 0; i < g.n(); ++i){
+			T node = g.get_vertices()[i];
+			if (node != new_node){
+				g.add_edge(node, new_node);
+			}
+		}
+		n--;
+	}
+}
+
+template <typename T>
+adj_list_graph<int> graph_factory<T>::random_co_graph(element_generator<T> &e_gen, unsigned int n){
+	// genero n grafos triviales
+	std::vector < adj_list_graph<int> > vec_g (
+		n,
+		adj_list_graph<int>()
+	);
+	for (uint i = 0; i < n; ++i){
+		vec_g[i].add_node(0);
+	}
+
+	while(n > 1){
+		e_gen.reset();
+		int i;
+		int j;
+		do{
+			i = rand() % n ;
+			j = rand() % n ;
+		}while(i == j);
+		// std::cout << "i: " << i << std::endl << vec_g[i] << std::endl;
+		// std::cout << "j: " << j << std::endl << vec_g[j] << std::endl;
+		int unite_o_join = rand() % 2 ;
+		if (unite_o_join == 0){
+			vec_g[i].unite(vec_g[j],e_gen);
+			// std::cout << "unite: " << std::endl << vec_g[i] << std::endl;
+		}else{
+			vec_g[i].join(vec_g[j],e_gen);
+			// std::cout << "join: " << std::endl << vec_g[i] << std::endl;
+		}
+		vec_g.erase ( vec_g.begin()+ j  );
+		n--;
+	}
+
+	return vec_g[0];
+
+}
+
 
 #endif // GRAPH_FACTORY_H_INCLUDED

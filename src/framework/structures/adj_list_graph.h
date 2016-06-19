@@ -2,6 +2,7 @@
 #define ADJ_LIST_GRAPH_H_
 
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include "graph.h"
 
@@ -101,11 +102,13 @@ graph<T> *adj_list_graph<T>::clone() const{
 template <typename T>
 void adj_list_graph<T>::join(const graph<T> &g,  element_generator<T> &e_gen){
 	std::unordered_map<T,T> g2_to_g1;
+	std::unordered_set<T> g1_new_nodes;
 	// union
 	for (int i = 0; i < g.n(); ++i){
 		T v = g.get_vertices()[i];
 		T new_v = e_gen.generate(*this);
 		g2_to_g1.insert(std::make_pair(v, new_v ));
+		g1_new_nodes.insert(new_v);
 		add_node(new_v);
 	}
 	for (int i = 0; i < g.n(); ++i){
@@ -119,14 +122,18 @@ void adj_list_graph<T>::join(const graph<T> &g,  element_generator<T> &e_gen){
 			}	
 		}
 	}
+	//std::cout << " add others egdes ..." << std::endl;
 	// add others egdes 
 	for (int i = 0; i < g.n(); ++i){
 		T v_g2 = g.get_vertices()[i];
 		T v_g2_in_g1 = g2_to_g1.at(v_g2);
+		//std::cout << "v_g2_in_g1 :" << v_g2 << " -> " << v_g2_in_g1 << std::endl;
 		for (int j = 0; j < n(); ++j){
 			T v_g1 = get_vertices()[j];
-			if(g2_to_g1.find(v_g1) == g2_to_g1.end()){
-				if ( ( v_g2_in_g1 != v_g1 ) && (! adjacent(v_g2_in_g1, v_g1) ) ){
+			//std::cout << "v_g1 :" << v_g1 << std::endl;
+			if(g1_new_nodes.find(v_g1) == g1_new_nodes.end()){
+				if ( v_g2_in_g1 != v_g1 && ! adjacent(v_g2_in_g1, v_g1 ) ){
+					//std::cout << "add_edge :" << v_g2_in_g1 << " -> " << v_g1 << std::endl;
 					add_edge(v_g2_in_g1,v_g1);
 				}
 			}

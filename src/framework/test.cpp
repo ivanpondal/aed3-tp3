@@ -161,55 +161,61 @@ void test_adj_list_graph_vertices(){
 void test_adj_list_graph_unite(){
 	adj_list_graph<int> g_1;
 	adj_list_graph<int> g_2;
+	g_1.add_node(0);
 	g_1.add_node(1);
 	g_1.add_node(2);
-	g_1.add_node(3);
-	g_2.add_node(4);
-	g_2.add_node(5);
-	g_2.add_node(6);
-	g_2.add_edge(4,5);
-	g_2.add_edge(5,6);
-	g_2.add_edge(6,4);
+	g_2.add_node(0);
+	g_2.add_node(1);
+	g_2.add_node(2);
+	g_2.add_edge(0,1);
+	g_2.add_edge(1,2);
+	g_2.add_edge(2,0);
 	element_generator_int e_gen;
 	g_1.unite(g_2,e_gen);
-	std::vector<int> expected = {1, 2, 3, 4, 6, 8};
-	ASSERT(g_1.adjacent(4, 6));
-	ASSERT(g_1.adjacent(4, 8));
-	ASSERT(g_1.adjacent(6, 4));
-	ASSERT(g_1.adjacent(6, 8));
-	ASSERT(g_1.adjacent(8, 4));
-	ASSERT(g_1.adjacent(8, 6));
+	std::vector<int> expected = {0, 1, 2, 3, 4, 5};
+	ASSERT(g_1.adjacent(3, 4));
+	ASSERT(g_1.adjacent(4, 5));
+	ASSERT(g_1.adjacent(5, 3));
 	ASSERT(g_1.get_vertices() == expected);
 }
 
 void test_adj_list_graph_join(){
 	adj_list_graph<int> g_1;
 	adj_list_graph<int> g_2;
+	g_1.add_node(0);
 	g_1.add_node(1);
 	g_1.add_node(2);
-	g_1.add_node(3);
-	g_2.add_node(4);
-	g_2.add_node(5);
-	g_2.add_node(6);
-	g_2.add_edge(4,5);
-	g_2.add_edge(5,6);
-	g_2.add_edge(6,4);
+	g_2.add_node(0);
+	g_2.add_node(1);
+	g_2.add_node(2);
+	g_2.add_edge(0,1);
+	g_2.add_edge(1,2);
+	g_2.add_edge(2,0);
 	element_generator_int e_gen;
 	g_1.join(g_2,e_gen);
-	std::vector<int> expected = {1, 2, 3, 4, 6, 8};
-	ASSERT(g_1.adjacent(4, 6));
-	ASSERT(g_1.adjacent(4, 8));
-	ASSERT(g_1.adjacent(6, 8));
-	ASSERT(g_1.adjacent(1, 4));
-	ASSERT(g_1.adjacent(1, 6));
-	ASSERT(g_1.adjacent(1, 8));
-	ASSERT(g_1.adjacent(2, 4));
-	ASSERT(g_1.adjacent(2, 6));
-	ASSERT(g_1.adjacent(2, 8));
+	std::vector<int> expected = {0, 1, 2, 3, 4, 5};
 	ASSERT(g_1.adjacent(3, 4));
-	ASSERT(g_1.adjacent(3, 6));
-	ASSERT(g_1.adjacent(3, 8));
+	ASSERT(g_1.adjacent(4, 5));
+	ASSERT(g_1.adjacent(5, 3));
+	//std::cout << "join" << g_1 << std::endl;
+	ASSERT(g_1.adjacent(0, 3));
+	ASSERT(g_1.adjacent(0, 4));
+	ASSERT(g_1.adjacent(0, 5));
+	ASSERT(g_1.adjacent(1, 3));
+	ASSERT(g_1.adjacent(1, 4));
+	ASSERT(g_1.adjacent(1, 5));
+	ASSERT(g_1.adjacent(2, 3));
+	ASSERT(g_1.adjacent(2, 4));
+	ASSERT(g_1.adjacent(2, 5));
 	ASSERT(g_1.get_vertices() == expected);
+	adj_list_graph<int> g_3;
+	adj_list_graph<int> g_4;
+	g_3.add_node(0);
+	g_4.add_node(0);
+	element_generator_int e_gen_1;
+	g_3.join(g_4,e_gen_1);
+	//std::cout << std::endl << "join" << g_3 << std::endl;
+	ASSERT(g_3.adjacent(0, 1));
 }
 
 void test_adj_list_graph_assignment(){
@@ -280,6 +286,39 @@ void test_graph_factory_int_random(){
 	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
 }
 
+void test_complete_graph(){
+	element_generator_int e_gen;
+	adj_list_graph<int> g;
+
+	graph_factory<int>::add_n_vertices_and_all_edges(g,e_gen,1);
+
+	ASSERT_EQ(g.m(), 0);
+	ASSERT_EQ(g.n(), 1);
+
+	graph_factory<int>::add_n_vertices_and_all_edges(g,e_gen,1);
+
+	ASSERT_EQ(g.m(), 1);
+	ASSERT(g.adjacent(0, 1));
+	ASSERT_EQ(g.n(), 2);
+
+	graph_factory<int>::add_n_vertices_and_all_edges(g,e_gen,2);
+
+	ASSERT_EQ(g.m(), 6);
+	ASSERT_EQ(g.n(), 4);
+
+	ASSERT(g.adjacent(0, 1));
+
+	ASSERT(g.adjacent(0, 2));
+	ASSERT(g.adjacent(1, 2));
+
+	ASSERT(g.adjacent(0, 3));
+	ASSERT(g.adjacent(1, 3));
+	ASSERT(g.adjacent(2, 3));
+
+
+}
+
+
 
 int main(){
 
@@ -303,4 +342,5 @@ int main(){
 
 	// utils tests
 	RUN_TEST(test_graph_factory_int_random);
+	RUN_TEST(test_complete_graph);
 }

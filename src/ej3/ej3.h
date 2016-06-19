@@ -116,6 +116,9 @@ class cotree_node_leaf : public cotree_node {
     uint get_edge_count() const;
 };
 
+// Prints a cotree
+std::ostream& operator<<(std::ostream& os, cotree_node& n);
+
 // Generates a cotree from a graph (requires graph to be cograph)
 cotree_node* generate_cotree(const graph<int>&);
 
