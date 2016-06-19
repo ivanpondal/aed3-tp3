@@ -18,7 +18,7 @@ class incremental_experiment_input_int: public incremental_experiment_input<int,
 		}
 	private:
 		int calculate_delta() const{
-			return (this->get_max() - this->get_min()) / this->get_samples();
+			return (this->get_max() - this->get_min()) / (this->get_samples() - 1);
 		}
 };
  
