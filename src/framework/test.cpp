@@ -255,6 +255,15 @@ void test_adj_list_n_incremental_experiment(){
 	exp.run();
 }
 
+void test_adj_list_c_incremental_experiment(){
+	// load min, max, discard, repetitions, samples and initial subject values
+	incremental_experiment_input_float< adj_list_graph<int>> input_exp(0, 1, 0, 60, 100, adj_list_graph<int>(), "test_adj_list_c");
+
+	adj_list_c_incremental_experiment exp(&input_exp);
+
+	exp.run();
+}
+
 void test_adj_list_n_incremental_experiment_suite(){
 	// load min, max, discard, repetitions, samples and initial subject values
 	incremental_experiment_input_int< adj_list_graph<int>> exp1_input(1, 100000, 0, 60, 1000, adj_list_graph<int>(), "test_adj_list_n_1");
@@ -364,6 +373,7 @@ int main(){
 
 	// experiment tests
 	RUN_TEST(test_adj_list_n_incremental_experiment);
+	RUN_TEST(test_adj_list_c_incremental_experiment);
 	RUN_TEST(test_adj_list_n_incremental_experiment_suite);
 
 	// utils tests
