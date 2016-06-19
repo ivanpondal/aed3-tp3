@@ -198,3 +198,82 @@ El algoritmo planteado para la búsqueda del máximo subgrafo
 \subsection{Complejidad}
 
 \subsection{Experimentación}
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Aumento la cantidad de Nodos del cografo},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=100
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_nodes};
+
+                \legend{$T_N$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $N$
+        ($T_{co_n}$) . Se considera $c_1 = 666$ .}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Aumento la cantidad de Nodos del grafo completo},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/complete_graph_incremental_nodes};
+
+                \legend{$T_N$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $n$
+        ($k_n$) y de $N$ ($T_N$). Se considera $c_1 = 70$ y $c_2 = 10$.}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+     \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Aumento la cantidad de Nodos del grafo completo y del cografo},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/complete_graph_and_cograph_incremental_nodes};
+
+                \legend{$T_N$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $n$
+        ($k_n$) y de $N$ ($T_N$). Se considera $c_1 = 70$ y $c_2 = 10$.}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}

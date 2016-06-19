@@ -3,6 +3,7 @@
 
 #include <sstream>
 
+
 #include "../mini_test.h"
 #include "experiments/incremental_experiment.h"
 #include "experiments/experiment_suite.h"
@@ -10,6 +11,8 @@
 #include "structures/adj_list_graph.h"
 #include "utils/graph_factory.h"
 #include "utils/element_generator_int.h"
+
+
 
 class adj_list_n_incremental_experiment: public incremental_experiment<int, adj_list_graph<int>>{
 	public:

@@ -6,6 +6,13 @@
 #include <iostream>
 
 #include "../main.h"
+#include "../framework/structures/graph.h"
+#include "../framework/structures/adj_list_graph.h"
+#include "../framework/utils/element_generator_int.h"
+#include "../framework/utils/graph_factory.h"
+#include "../framework/experiments/incremental_experiment.h"
+#include "../framework/experiments/experiment_suite.h"
+#include "../framework/experiments/input/incremental_experiment_input_int.h"
 
 /*
 **  Exercise 3
@@ -137,5 +144,37 @@ graph<int>* induced_supgraph(
     const graph<int>& g,
     const std::vector<int>& subgraph_vertices
 );
+
+class cograph_n_incremental_experiment:public incremental_experiment<int, adj_list_graph<int> > {
+    public:
+        cograph_n_incremental_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){};
+    private:
+        void load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        void solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        adj_list_graph<int> g;
+        element_generator_int e_gen;
+};
+
+class complete_graph_n_incremental_experiment:public incremental_experiment<int, adj_list_graph<int> > {
+    public:
+        complete_graph_n_incremental_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){};
+    private:
+        void load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        void solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        adj_list_graph<int> g;
+        element_generator_int e_gen;
+};
+
+class complete_graph_and_cograph_n_incremental_experiment:public incremental_experiment<int, adj_list_graph<int> > {
+    public:
+        complete_graph_and_cograph_n_incremental_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){};
+    private:
+        void load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        void solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        adj_list_graph<int> g_1;
+        adj_list_graph<int> g_2;
+        element_generator_int e_gen;
+};
+
 
 #endif

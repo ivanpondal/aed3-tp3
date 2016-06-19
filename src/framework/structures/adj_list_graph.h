@@ -97,8 +97,8 @@ graph<T> *adj_list_graph<T, H>::clone() const{
 	return new adj_list_graph<T, H>(*this);
 }
 
-template <typename T>
-void adj_list_graph<T>::join(const graph<T> &g,  element_generator<T> &e_gen){
+template <typename T, typename H>
+void adj_list_graph<T, H>::join(const graph<T> &g,  element_generator<T> &e_gen){
 	std::unordered_map<T,T> g2_to_g1;
 	std::unordered_set<T> g1_new_nodes;
 	// union
@@ -142,8 +142,8 @@ void adj_list_graph<T>::join(const graph<T> &g,  element_generator<T> &e_gen){
 
 }
 
-template <typename T>
-void adj_list_graph<T>::unite(const graph<T> &g,  element_generator<T> &e_gen){
+template <typename T, typename H>
+void adj_list_graph<T, H>::unite(const graph<T> &g,  element_generator<T> &e_gen){
 	std::unordered_map<T,T> g2_to_g1;
 	// add new nodes
 	for (int i = 0; i < g.n(); ++i){
