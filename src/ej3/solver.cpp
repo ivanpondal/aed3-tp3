@@ -149,7 +149,7 @@ solution run_solver(graph<int>& g1, graph<int>& g2) {
 	vector<int> g2_mapping(g2.n());
 	iota(g2_mapping.begin(), g2_mapping.end(), 0);
 
-	return {g1.induced_supgraph(g1_mapping), g1_mapping, g2_mapping};	
+	return {induced_supgraph(g1, g1_mapping), g1_mapping, g2_mapping};
 }
 
 
@@ -227,7 +227,7 @@ subgraph subgraph::find_connected_comp(const graph<int>& g) const {
 
     stack<int> to_explore;
     vector<bool> marked(g.n(), false);
-    
+
     to_explore.push(initial_vertex);
     marked[initial_vertex] = true;
 
@@ -383,7 +383,7 @@ cotree_node* generate_cotree(const graph<int>& g) {
         return ret;
     }
 
-    graph<int>* gc = g.complement();
+    graph<int>* gc = complement(g);
 
     enum direction {left, right, none};
     struct pending_node {
@@ -544,6 +544,72 @@ vector<info_cotree_node> vectorize(cotree_node* cotree) {
                 }
             }
         }
+    }
+
+    return ret;
+}
+
+graph<int>* complement(const graph<int>& g) {
+    graph<int>* ret = new adj_list_graph<int>();
+
+    for (typename vector<int>::const_iterator it1 = g.get_vertices().begin();
+        it1 != g.get_vertices().end();
+        it1++)
+    {
+        int current_node1 = *it1;
+        ret->add_node(current_node1);
+        for (typename vector<int>::const_iterator it2 = g.get_vertices().begin();
+            it2 != g.get_vertices().end();
+            it2++)
+        {
+            int current_node2 = *it2;
+            if (current_node1 != current_node2 &&
+                ! g.adjacent(current_node1, current_node2))
+            {
+                ret->add_edge(current_node1, current_node2);
+            }
+        }
+
+    }
+
+    return ret;
+};
+
+graph<int>* induced_supgraph(
+    const graph<int>& g,
+    const vector<int>& subgraph_vertices
+) {
+    adj_list_graph<int>* ret = new adj_list_graph<int>();
+    unordered_map<int, int> mapping;
+
+    int i = 0;
+    for (typename vector<int>::const_iterator it1 = subgraph_vertices.begin();
+        it1 != subgraph_vertices.end();
+        it1++)
+    {
+        mapping.insert(make_pair(*it1, i));
+        ret->add_node(i);
+        i++;
+    }
+
+    for (typename vector<int>::const_iterator it1 = subgraph_vertices.begin();
+        it1 != subgraph_vertices.end();
+        it1++)
+    {
+        i = mapping[*it1];
+        vector<int> neigh = g.neighbours(*it1);
+
+        for (typename vector<int>::const_iterator it2 = neigh.begin();
+            it2 != neigh.end();
+            it2++)
+        {
+            if (mapping.find(*it2) != mapping.end()) {
+                int j = mapping[*it2];
+                ret->add_edge(i, j);
+            }
+        }
+
+        mapping.erase(*it1);
     }
 
     return ret;

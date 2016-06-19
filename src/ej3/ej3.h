@@ -128,4 +128,11 @@ struct info_cotree_node {
 
 std::vector<info_cotree_node> vectorize(cotree_node* cotree);
 
+graph<int>* complement(const graph<int>& g);
+
+graph<int>* induced_supgraph(
+    const graph<int>& g,
+    const std::vector<int>& subgraph_vertices
+);
+
 #endif
