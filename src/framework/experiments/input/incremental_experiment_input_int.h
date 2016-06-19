@@ -5,9 +5,10 @@ template <typename S>
 class incremental_experiment_input_int: public incremental_experiment_input<int, S>{
 	public:
 		incremental_experiment_input_int(int min_val, int max_val,
-		                                 int discard_val, int repetitions_val, int samples_val, const S &subject_val):
+		                                 int discard_val, int repetitions_val, int samples_val,
+		                                 const S &subject_val, const char *exp_name):
 		                                 incremental_experiment_input<int, S>(min_val, max_val,
-		                                 discard_val, repetitions_val, samples_val, subject_val){
+		                                 discard_val, repetitions_val, samples_val, subject_val, exp_name){
 		}
 
 		~incremental_experiment_input_int(){};
