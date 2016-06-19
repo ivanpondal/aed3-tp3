@@ -321,13 +321,13 @@ void test_co_graph_with_c_probability_edges(){
 	element_generator_int e_gen;
 	adj_list_graph<int> g;
 
-	g = graph_factory<int>::add_n_vertices_and_all_edges(g,e_gen,10,0.f);
+	g = graph_factory<int>::co_graph_with_c_probability_edges(e_gen,10,0.f);
 
 	ASSERT_EQ(g.m(), 0);
 	ASSERT_EQ(g.n(), 10);
 
-	e_gen.resest();
-	g = graph_factory<int>::add_n_vertices_and_all_edges(g,e_gen,4,1.f);
+	e_gen.reset();
+	g = graph_factory<int>::co_graph_with_c_probability_edges(e_gen,4,1.0f);
 
 	ASSERT_EQ(g.m(), 6);
 	ASSERT_EQ(g.n(), 4);
