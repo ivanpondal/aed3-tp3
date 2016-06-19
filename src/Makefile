@@ -18,7 +18,8 @@ OTHER_OBJECTS_DIR=$(foreach exe,$(EXECUTABLES_BASE),$(addprefix $(exe)/,$(OTHER_
 FRAMEWORK_DIR=framework/
 FRAMEWORK_FOLDERS=experiments experiments/input structures utils
 FRAMEWORK_EXPERIMENTS_HEADERS=experiment.h incremental_experiment.h experiment_suite.h \
-                              incremental_experiment_input.h incremental_experiment_input_int.h
+                              incremental_experiment_input.h incremental_experiment_input_int.h \
+                              incremental_experiment_input_float.h
 FRAMEWORK_STRUCTURES_HEADERS=graph.h adj_list_graph.h
 FRAMEWORK_UTILS_HEADERS=chronometer.h graph_factory.h element_generator.h element_generator_int.h
 FRAMEWORK_OBJECTS=utils/chronometer.o utils/element_generator_int.o \
