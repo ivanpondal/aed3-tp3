@@ -21,8 +21,8 @@ class adj_list_graph: public graph<T>{
 		void join(const graph<T> &g);
 		void unite(const graph<T> &g);
 		const std::vector<T> &get_vertices() const;
-		adj_list_graph<T>* complement() const;
-		adj_list_graph<T>* induced_supgraph(std::vector<int> subgraph_vertices) const;
+		// adj_list_graph<T>* complement() const;
+		// adj_list_graph<T>* induced_supgraph(std::vector<int> subgraph_vertices) const;
 	private:
 		void clear();
 		unsigned int n_val;
@@ -113,70 +113,69 @@ const std::vector<T> &adj_list_graph<T, H>::get_vertices() const{
 	return vertices_list;
 }
 
-template <typename T, typename H>
-adj_list_graph<T>* adj_list_graph<T, H>::complement() const{
-	adj_list_graph<T>* ret = new adj_list_graph<T>();
+// template <typename T, typename H>
+// adj_list_graph<T>* adj_list_graph<T, H>::complement() const{
+// 	adj_list_graph<T>* ret = new adj_list_graph<T>();
 
-	for (typename std::vector<T>::const_iterator it1 = vertices_list.begin();
-		it1 != vertices_list.end();
-		it1++)
-	{
-		T current_node1 = *it1;
-		ret->add_node(current_node1);
-		for (typename std::vector<T>::const_iterator it2 = vertices_list.begin();
-			it2 != vertices_list.end();
-			it2++)
-		{
-			T current_node2 = *it2;
-			if (current_node1 != current_node2 &&
-				! adjacent(current_node1, current_node2))
-			{
-				ret->add_edge(current_node1, current_node2);
-			}
-		}
+// 	for (typename std::vector<T>::const_iterator it1 = vertices_list.begin();
+// 		it1 != vertices_list.end();
+// 		it1++)
+// 	{
+// 		T current_node1 = *it1;
+// 		ret->add_node(current_node1);
+// 		for (typename std::vector<T>::const_iterator it2 = vertices_list.begin();
+// 			it2 != vertices_list.end();
+// 			it2++)
+// 		{
+// 			T current_node2 = *it2;
+// 			if (current_node1 != current_node2 &&
+// 				! adjacent(current_node1, current_node2))
+// 			{
+// 				ret->add_edge(current_node1, current_node2);
+// 			}
+// 		}
 
-	}
+// 	}
 
-	return ret;
-};
+// 	return ret;
+// };
 
-template <typename T, typename H>
-adj_list_graph<T>* adj_list_graph<T, H>::induced_supgraph(std::vector<int> subgraph_vertices) const {
-	adj_list_graph<T>* ret = new adj_list_graph<T>();
-	std::unordered_map<int, int> mapping;
+// adj_list_graph<int>* adj_list_graph<int>::induced_supgraph(std::vector<int> subgraph_vertices) const {
+// 	adj_list_graph<int>* ret = new adj_list_graph<int>();
+// 	std::unordered_map<int, int> mapping;
 
-	int i = 0;
-	for (typename std::vector<T>::const_iterator it1 = subgraph_vertices.begin();
-		it1 != subgraph_vertices.end();
-		it1++)
-	{
-		mapping.insert(std::make_pair(*it1, i));
-		ret->add_node(i);
-		i++;
-	}
+// 	int i = 0;
+// 	for (typename std::vector<int>::const_iterator it1 = subgraph_vertices.begin();
+// 		it1 != subgraph_vertices.end();
+// 		it1++)
+// 	{
+// 		mapping.insert(std::make_pair(*it1, i));
+// 		ret->add_node(i);
+// 		i++;
+// 	}
 
-	for (typename std::vector<T>::const_iterator it1 = subgraph_vertices.begin();
-		it1 != subgraph_vertices.end();
-		it1++)
-	{
-		i = mapping[*it1];
-		std::vector<T> neigh = neighbours(*it1);
+// 	for (typename std::vector<int>::const_iterator it1 = subgraph_vertices.begin();
+// 		it1 != subgraph_vertices.end();
+// 		it1++)
+// 	{
+// 		i = mapping[*it1];
+// 		std::vector<int> neigh = neighbours(*it1);
 
-		for (typename std::vector<T>::const_iterator it2 = neigh.begin();
-			it2 != neigh.end();
-			it2++)
-		{
-			if (mapping.find(*it2) != mapping.end()) {
-				int j = mapping[*it2];
-				ret->add_edge(i, j);				
-			}
-		}
+// 		for (typename std::vector<int>::const_iterator it2 = neigh.begin();
+// 			it2 != neigh.end();
+// 			it2++)
+// 		{
+// 			if (mapping.find(*it2) != mapping.end()) {
+// 				int j = mapping[*it2];
+// 				ret->add_edge(i, j);				
+// 			}
+// 		}
 
-		mapping.erase(*it1);
-	}
+// 		mapping.erase(*it1);
+// 	}
 
-	return ret;
-}
+// 	return ret;
+// }
 
 template <typename T, typename H>
 void adj_list_graph<T, H>::clear(){
