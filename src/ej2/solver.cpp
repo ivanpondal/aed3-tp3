@@ -1,9 +1,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <list>
 #include <unistd.h>
-#include "../framework/structures/graph.h"
-#include "../framework/structures/adj_list_graph.h"
 #include "../main.h"
 #include "ej2.h"
 
@@ -25,8 +24,8 @@ bool mcs_backtracking(
         graph<int> *g2,
         graph<int> *subgraph,
         unordered_map<int, int> node_map,
-        vector<int> remaining_g1_nodes,
-        vector<int> remaining_g2_nodes,
+        list<int> remaining_g1_nodes,
+        list<int> remaining_g2_nodes,
         int &maxEdges,
         unordered_set<tuple<int, int, int, int>, hash_tuple_int> &permutations
 ) {
@@ -99,15 +98,19 @@ bool mcs_backtracking(
 
                 if (valid_subgraph && subgraph_copy->m() >= max_subgraph->m()) {
                     *max_subgraph = *subgraph_copy;
+                    
                     if (max_subgraph->m() > maxEdges)
                         maxEdges = max_subgraph->m();
                 }
+                
+                delete(subgraph_copy);
 
                 // cout << "\b\b\b\b\b\b\b\b" << flush;
             }
         }
 
         *subgraph = *max_subgraph;
+        delete(max_subgraph);
     }
 
     return true;
@@ -119,23 +122,27 @@ graph<int>* mcs(graph<int> *g1, graph<int> *g2) {
     unordered_set<tuple<int, int, int, int>, hash_tuple_int> permutations;
     int edges = 0;
 
-    mcs_backtracking(g1, g2, empty_graph, empty_map, g1->get_vertices(), g2->get_vertices(), edges, permutations);
+    vector<int> g1_vertices = g1->get_vertices();
+    vector<int> g2_vertices = g2->get_vertices();
+    list<int> g1_list, g2_list;
+
+    for (vector<int>::iterator it = g1_vertices.begin(); it != g1_vertices.end(); it++)
+        g1_list.push_back(*it);
+
+    for (vector<int>::iterator it = g2_vertices.begin(); it != g2_vertices.end(); it++)
+        g2_list.push_back(*it);
+
+    mcs_backtracking(g1, g2, empty_graph, empty_map, g1_list, g2_list, edges, permutations);
 
     cout << endl << "podas: " << podas << endl;
     cout << "super_podas: " << super_podas << endl;
-    
-    // tuple<int, int, int, int> t(1, 2, 3, 4);
-    // permutations.insert(t);
-    // tuple<int, int, int, int> a(1, 2, 3, 5);
-    // permutations.insert(a);
-    // for (unordered_set<tuple<int, int, int, int>, hash_tuple_int>::iterator it = permutations.begin(); it != permutations.end(); it++){
-    //     cout << get<0>(*it) << get<1>(*it) << get<2>(*it) << get<3>(*it) << endl;
-    // }
     
     return empty_graph;
 }
 
 solution run_solver(graph<int> &g1, graph<int> &g2) {
+
+}raph<int> &g2) {
 
 
 }
