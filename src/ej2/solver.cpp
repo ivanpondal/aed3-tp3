@@ -8,9 +8,6 @@
 
 using namespace std;
 
-int podas = 0;
-int super_podas = 0;
-
 std::ostream &operator<<(std::ostream &output, list<int> &lista){
     for (list<int>::iterator it = lista.begin(); it != lista.end(); it++)
         output << *it << " ";
@@ -34,39 +31,43 @@ bool mcs_backtracking(
         unordered_map<int, int> node_map,
         list<int> &g1_remaining_nodes,
         list<int> &g2_remaining_nodes,
+        // list<int>::iterator &g1_insert_it,
+        // list<int>::iterator &g2_insert_it,
+        // unsigned int g1_insert_it_pos,
+        // unsigned int g2_insert_it_pos,
         unsigned int &maxEdges,
         unordered_set<tuple<int, int, int, int>, hash_tuple_int> &permutations
 ) {
 
-    cout << "g1: " << g1_remaining_nodes << "g2: " << g2_remaining_nodes;
-    cout << "subgraph->m()" << endl;
-
-    if (subgraph->m() + degree_sum(g1, g1_remaining_nodes) <= maxEdges) {
-        podas++;
+    if (subgraph->m() + degree_sum(g1, g1_remaining_nodes) <= maxEdges)
         return false;
-    }
-
-    cout << "viola" << endl;
 
     if (!g1_remaining_nodes.empty() && !g2_remaining_nodes.empty()) {
 
         graph<int> *max_subgraph = new adj_list_graph<int>();
 
-        for (list<int>::iterator g1_remaining_nodes_it = g1_remaining_nodes.begin(); g1_remaining_nodes_it != g1_remaining_nodes.end(); g1_remaining_nodes_it++) {
-            for (list<int>::iterator g2_remaining_nodes_it = g2_remaining_nodes.begin(); g2_remaining_nodes_it != g2_remaining_nodes.end(); g2_remaining_nodes_it++) {
+        // This indexes will be used to prevent losing the reference to the iterator when an element is erased and re-inserted
+        list<int>::iterator g1_remaining_nodes_it = g1_remaining_nodes.begin();
+        unsigned int g1_remaining_nodes_index = 0;
+        while (g1_remaining_nodes_it != g1_remaining_nodes.end()) {
+            
+            list<int>::iterator g2_remaining_nodes_it = g2_remaining_nodes.begin();
+            unsigned int g2_remaining_nodes_index = 0;
+            while (g2_remaining_nodes_it != g2_remaining_nodes.end()) {
+
                 int g1_node = *g1_remaining_nodes_it;
                 int g2_node = *g2_remaining_nodes_it;
-                // cout << "(" << setfill(' ') << setw(2) <<  g1_node << "," << setfill(' ') << setw(2) << g2_node << ") " << flush;
 
                 // Verify if actual mapping can be permuted with a previous branch (only if it is the second mapping)
                 if (subgraph->n() == 1) {
                     unordered_map<int, int>::iterator map_it = node_map.begin();
                     tuple<int, int, int, int> permutation(map_it->first, map_it->second, g1_node, g2_node);
+                    cout << "(" << get<0>(permutation) << "," << get<1>(permutation) << ") (" << g1_node << "," << g2_node << ")" << endl;
                     
                     // If actual mapping is a permutation of a already traversed mapping, it skips it
                     if (permutations.find(permutation) != permutations.end()) {
-                        super_podas++;
-                        // cout << "\b\b\b\b\b\b\b\b" << flush;
+                        g2_remaining_nodes_it++;
+                        g2_remaining_nodes_index++;
                         continue;
                     }
                     else {
@@ -75,16 +76,9 @@ bool mcs_backtracking(
                     }
                 }
 
-                // Copy remaining nodes and erase actual nodes from the copies
-                // vector<int> g1_remaining_nodes_copy = g1_remaining_nodes;
-                // vector<int> desremaining_g2_no_copy = g2_remaining_nodes;
-                // g1_remaining_nodes_copy.erase(g1_remaining_nodes_copy.begin() + remaining_g1_index);
-                // desremaining_g2_no_copy.erase(desremaining_g2_no_copy.begin() + remaining_g2_index);
-                cout << "g1: " << g1_remaining_nodes << endl;
-                cout << "g1 remaining :"  << *g1_remaining_nodes_it << endl;
                 // Erase mapped nodes from list of remaining
-                g1_remaining_nodes_it = g1_remaining_nodes.erase(g1_remaining_nodes_it);
-                g2_remaining_nodes_it = g2_remaining_nodes.erase(g2_remaining_nodes_it);
+                g1_remaining_nodes.erase(g1_remaining_nodes_it);
+                g2_remaining_nodes.erase(g2_remaining_nodes_it);
 
                 // Copy unordered_map and map nodes
                 unordered_map<int, int> node_map_copy = node_map;
@@ -112,11 +106,19 @@ bool mcs_backtracking(
                     }
                 }
 
-                cout << "entra: " << endl << "g1:" <<  g1_remaining_nodes << "g2: " << g2_remaining_nodes;
-                bool valid_subgraph = mcs_backtracking(g1, g2, subgraph_copy, node_map_copy, g1_remaining_nodes, g2_remaining_nodes, maxEdges, permutations);
-                cout << "sale :" << endl << "g1: " << g1_remaining_nodes << "g2: " << g2_remaining_nodes;
-
-
+                bool valid_subgraph = mcs_backtracking( g1,
+                                                        g2,
+                                                        subgraph_copy,
+                                                        node_map_copy,
+                                                        g1_remaining_nodes,
+                                                        g2_remaining_nodes,
+                                                        // g1_remaining_nodes_it,
+                                                        // g2_remaining_nodes_it,
+                                                        // g1_remaining_nodes_index,
+                                                        // g2_remaining_nodes_index,
+                                                        maxEdges,
+                                                        permutations);
+                
                 if (valid_subgraph && subgraph_copy->m() >= max_subgraph->m()) {
                     *max_subgraph = *subgraph_copy;
                     
@@ -126,22 +128,44 @@ bool mcs_backtracking(
 
                 delete(subgraph_copy);
 
-                cout << "Reinsercion" << endl;
-                cout << "g1_insert_pos: " << *g1_remaining_nodes_it << endl;
+                // Move iterator to position
+                g1_remaining_nodes_it = g1_remaining_nodes.begin();
+                for (unsigned int i = 0; i < g1_remaining_nodes_index; i++)
+                    g1_remaining_nodes_it++;
+
+                
+                g2_remaining_nodes_it = g2_remaining_nodes.begin();
+                for (unsigned int i = 0; i < g2_remaining_nodes_index; i++)
+                    g2_remaining_nodes_it++;
+
                 // Re-insert previously erased nodes to remaining nodes lists
                 g1_remaining_nodes.insert(g1_remaining_nodes_it, g1_node);
+                g1_remaining_nodes_it--;
                 g2_remaining_nodes.insert(g2_remaining_nodes_it, g2_node);
-                
-                cout << "pasa" << endl;
-                // cout << "\b\b\b\b\b\b\b\b" << flush;
+
+                // The indexes are necessary to track which position was erased in the previous call of the function
+                // If the element that is being re-inserted matches that position, then the iterator is stored in the iterator passed by refference
+                // if (g1_remaining_nodes_index == g1_insert_it_pos)
+                //     g1_insert_it = g1_remaining_nodes.insert(g1_remaining_nodes_it, g1_node);
+                // else
+                //     g1_remaining_nodes.insert(g1_remaining_nodes_it, g1_node);
+
+                // if (g2_remaining_nodes_index == g2_insert_it_pos)
+                //     g2_insert_it = g2_remaining_nodes.insert(g2_remaining_nodes_it, g2_node);
+                // else
+                //     g2_remaining_nodes.insert(g2_remaining_nodes_it, g2_node);
+
+                g2_remaining_nodes_index++;
             }
+
+            g1_remaining_nodes_it++;
+            g1_remaining_nodes_index++;
         }
 
         *subgraph = *max_subgraph;
         delete(max_subgraph);
     }
 
-    cout << "termina" << endl;
     return true;
 }
 
@@ -162,10 +186,18 @@ graph<int>* mcs(graph<int> *g1, graph<int> *g2) {
     for (vector<int>::iterator it = g2_vertices.begin(); it != g2_vertices.end(); it++)
         g2_list.push_back(*it);
 
-    mcs_backtracking(g1, g2, empty_graph, empty_map, g1_list, g2_list, edges, permutations);
-
-    cout << endl << "podas: " << podas << endl;
-    cout << "super_podas: " << super_podas << endl;
+    mcs_backtracking(   g1,
+                        g2,
+                        empty_graph,
+                        empty_map,
+                        g1_list,
+                        g2_list,
+                        // g1_begining_it,
+                        // g2_begining_it,
+                        // 0,
+                        // 0,
+                        edges,
+                        permutations);
     
     return empty_graph;
 }
