@@ -304,6 +304,23 @@ void test_graph_factory_int_tree(){
 	ASSERT_EQ(g.m(), 9);
 }
 
+void test_graph_factory_int_bipartite(){
+	element_generator_int e_gen;
+
+	float epsilon = 0.01;
+	float edge_proportion = 0;
+
+	int n = 20;
+	int k = 100;
+
+	adj_list_graph<int> g = graph_factory<int>::random_bipartite_graph(e_gen, n, k, 0.5);
+
+	edge_proportion = g.m()*1.0f / (n*k);
+
+	ASSERT_EQ(g.n(), n + k);
+	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
+}
+
 void test_complete_graph(){
 	element_generator_int e_gen;
 	adj_list_graph<int> g;
@@ -333,7 +350,6 @@ void test_complete_graph(){
 	ASSERT(g.adjacent(1, 3));
 	ASSERT(g.adjacent(2, 3));
 
-
 }
 
 void test_co_graph_with_c_probability_edges(){
@@ -362,9 +378,6 @@ void test_co_graph_with_c_probability_edges(){
 
 }
 
-
-
-
 int main(){
 
 	// adj_list_graph tests
@@ -389,6 +402,7 @@ int main(){
 	// utils tests
 	RUN_TEST(test_graph_factory_int_random);
 	RUN_TEST(test_graph_factory_int_tree);
+	RUN_TEST(test_graph_factory_int_bipartite);
 	RUN_TEST(test_complete_graph);
 	RUN_TEST(test_co_graph_with_c_probability_edges);
 }

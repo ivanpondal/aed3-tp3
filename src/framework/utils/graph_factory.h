@@ -9,6 +9,7 @@ class graph_factory{
 	public:
 		static void add_n_random_vertices(graph<T> &g, element_generator<T>& e_gen, int n, float c);
 		static void add_n_tree_vertices(graph<T> &g, element_generator<T>& e_gen, int n);
+		static adj_list_graph<T> random_bipartite_graph(element_generator<T>& e_gen, int n, int k, float c);
 		static adj_list_graph<int> co_graph_with_c_probability_edges(element_generator<T>& e_gen, int n, float c);
 		static adj_list_graph<int> random_co_graph(element_generator<T> &e_gen, int n);
 		static void add_n_vertices_and_all_edges(graph<T> &g, element_generator<T>& e_gen, int n);
@@ -53,6 +54,30 @@ void graph_factory<T>::add_n_tree_vertices(graph<T> &g, element_generator<T>& e_
 		new_element = e_gen.generate(g);
 		n--;
 	}
+}
+
+template <typename T>
+adj_list_graph<T> graph_factory<T>::random_bipartite_graph(element_generator<T>& e_gen, int n, int k, float c){
+	adj_list_graph<T> g;
+
+	T new_element = e_gen.generate(g);
+
+	for(int i = 0; i < n + k; i++){
+		g.add_node(new_element);
+		new_element = e_gen.generate(g);
+	}
+
+	for(int i = 0; i < n; i++){
+		float random_var = 0;
+		for(int j = 0; j < k; j++){
+			random_var = std::rand()*1.0f / RAND_MAX;
+			if(random_var < c){
+				g.add_edge(g.get_vertices()[i], g.get_vertices()[n + j]);
+			}
+		}
+	}
+
+	return g;
 }
 
 template <typename T>
