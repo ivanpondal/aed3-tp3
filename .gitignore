@@ -53,8 +53,3 @@ aed3-tp3.sublime-workspace
 
 # FUSE temporal files
 *.fuse_hidden*
-
-# Executables
-ej2_solver
-ej3_solver
-ej4_solver
