@@ -62,7 +62,6 @@ bool mcs_backtracking(
                 if (subgraph->n() == 1) {
                     unordered_map<int, int>::iterator map_it = node_map.begin();
                     tuple<int, int, int, int> permutation(map_it->first, map_it->second, g1_node, g2_node);
-                    cout << "(" << get<0>(permutation) << "," << get<1>(permutation) << ") (" << g1_node << "," << g2_node << ")" << endl;
                     
                     // If actual mapping is a permutation of a already traversed mapping, it skips it
                     if (permutations.find(permutation) != permutations.end()) {
