@@ -98,7 +98,7 @@ graph<T> *adj_list_graph<T, H>::clone() const{
 }
 
 template <typename T, typename H>
-void adj_list_graph<T, H>::join(const graph<T> &g,  element_generator<T> &e_gen){
+void adj_list_graph<T, H>::join(const graph<T> &g, element_generator<T> &e_gen){
 	std::unordered_map<T, T, H> g2_to_g1;
 	std::unordered_set<T, H> g1_new_nodes;
 	// union
@@ -117,11 +117,11 @@ void adj_list_graph<T, H>::join(const graph<T> &g,  element_generator<T> &e_gen)
 			T neighbour_v_in_g1 = g2_to_g1.at(neighbours[j]);
 			if ( ( v_in_g1 != neighbour_v_in_g1 ) && (! adjacent(v_in_g1, neighbour_v_in_g1) ) ){
 				add_edge(v_in_g1,neighbour_v_in_g1);
-			}	
+			}
 		}
 	}
 	//std::cout << " add others egdes ..." << std::endl;
-	// add others egdes 
+	// add others egdes
 	for (unsigned int i = 0; i < g.n(); ++i){
 		T v_g2 = g.get_vertices()[i];
 		T v_g2_in_g1 = g2_to_g1.at(v_g2);
@@ -143,7 +143,7 @@ void adj_list_graph<T, H>::join(const graph<T> &g,  element_generator<T> &e_gen)
 }
 
 template <typename T, typename H>
-void adj_list_graph<T, H>::unite(const graph<T> &g,  element_generator<T> &e_gen){
+void adj_list_graph<T, H>::unite(const graph<T> &g, element_generator<T> &e_gen){
 	std::unordered_map<T, T, H> g2_to_g1;
 	// add new nodes
 	for (unsigned int i = 0; i < g.n(); ++i){
