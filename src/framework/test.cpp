@@ -294,6 +294,16 @@ void test_graph_factory_int_random(){
 	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
 }
 
+void test_graph_factory_int_tree(){
+	element_generator_int e_gen;
+	adj_list_graph<int> g;
+
+	graph_factory<int>::add_n_tree_vertices(g, e_gen, 10);
+
+	ASSERT_EQ(g.n(), 10);
+	ASSERT_EQ(g.m(), 9);
+}
+
 void test_complete_graph(){
 	element_generator_int e_gen;
 	adj_list_graph<int> g;
@@ -378,6 +388,7 @@ int main(){
 
 	// utils tests
 	RUN_TEST(test_graph_factory_int_random);
+	RUN_TEST(test_graph_factory_int_tree);
 	RUN_TEST(test_complete_graph);
 	RUN_TEST(test_co_graph_with_c_probability_edges);
 }

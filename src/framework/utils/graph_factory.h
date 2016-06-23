@@ -8,6 +8,7 @@ template <typename T>
 class graph_factory{
 	public:
 		static void add_n_random_vertices(graph<T> &g, element_generator<T>& e_gen, int n, float c);
+		static void add_n_tree_vertices(graph<T> &g, element_generator<T>& e_gen, int n);
 		static adj_list_graph<int> co_graph_with_c_probability_edges(element_generator<T>& e_gen, int n, float c);
 		static adj_list_graph<int> random_co_graph(element_generator<T> &e_gen, int n);
 		static void add_n_vertices_and_all_edges(graph<T> &g, element_generator<T>& e_gen, int n);
@@ -27,6 +28,28 @@ void graph_factory<T>::add_n_random_vertices(graph<T> &g, element_generator<T>& 
 			}
 			random_var = std::rand()*1.0f / RAND_MAX;
 		}
+		new_element = e_gen.generate(g);
+		n--;
+	}
+}
+
+template <typename T>
+void graph_factory<T>::add_n_tree_vertices(graph<T> &g, element_generator<T>& e_gen, int n){
+	T new_element = e_gen.generate(g);
+
+	if(g.n() == 0){
+		g.add_node(new_element);
+
+		new_element = e_gen.generate(g);
+		n--;
+	}
+
+	while(n > 0){
+		int random_var = std::rand() % g.n();
+
+		g.add_node(new_element);
+		g.add_edge(new_element, g.get_vertices()[random_var]);
+
 		new_element = e_gen.generate(g);
 		n--;
 	}
