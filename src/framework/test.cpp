@@ -321,6 +321,21 @@ void test_graph_factory_int_bipartite(){
 	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
 }
 
+void test_graph_factory_int_cycle(){
+	element_generator_int e_gen;
+
+	int n = 10;
+
+	adj_list_graph<int> g = graph_factory<int>::cycle_graph(e_gen, n);
+
+	for(unsigned int i = 0; i < g.n(); i++){
+		ASSERT_EQ(g.degree(g.get_vertices()[i]), 2);
+	}
+
+	ASSERT_EQ(g.n(), n);
+	ASSERT_EQ(g.m(), n);
+}
+
 void test_complete_graph(){
 	element_generator_int e_gen;
 	adj_list_graph<int> g;
@@ -403,6 +418,7 @@ int main(){
 	RUN_TEST(test_graph_factory_int_random);
 	RUN_TEST(test_graph_factory_int_tree);
 	RUN_TEST(test_graph_factory_int_bipartite);
+	RUN_TEST(test_graph_factory_int_cycle);
 	RUN_TEST(test_complete_graph);
 	RUN_TEST(test_co_graph_with_c_probability_edges);
 }

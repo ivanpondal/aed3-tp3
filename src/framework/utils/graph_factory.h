@@ -9,10 +9,11 @@ class graph_factory{
 	public:
 		static void add_n_random_vertices(graph<T> &g, element_generator<T>& e_gen, int n, float c);
 		static void add_n_tree_vertices(graph<T> &g, element_generator<T>& e_gen, int n);
+		static void add_n_vertices_and_all_edges(graph<T> &g, element_generator<T>& e_gen, int n);
 		static adj_list_graph<T> random_bipartite_graph(element_generator<T>& e_gen, int n, int k, float c);
+		static adj_list_graph<T> cycle_graph(element_generator<T>& e_gen, int n);
 		static adj_list_graph<int> co_graph_with_c_probability_edges(element_generator<T>& e_gen, int n, float c);
 		static adj_list_graph<int> random_co_graph(element_generator<T> &e_gen, int n);
-		static void add_n_vertices_and_all_edges(graph<T> &g, element_generator<T>& e_gen, int n);
 };
 
 template <typename T>
@@ -57,6 +58,22 @@ void graph_factory<T>::add_n_tree_vertices(graph<T> &g, element_generator<T>& e_
 }
 
 template <typename T>
+void graph_factory<T>::add_n_vertices_and_all_edges(graph<T> &g, element_generator<T>& e_gen, int n){
+	T new_node;
+	while(n > 0){
+		new_node = e_gen.generate(g);
+		g.add_node(new_node);
+		for (unsigned int i = 0; i < g.n(); ++i){
+			T node = g.get_vertices()[i];
+			if (node != new_node){
+				g.add_edge(node, new_node);
+			}
+		}
+		n--;
+	}
+}
+
+template <typename T>
 adj_list_graph<T> graph_factory<T>::random_bipartite_graph(element_generator<T>& e_gen, int n, int k, float c){
 	adj_list_graph<T> g;
 
@@ -81,19 +98,30 @@ adj_list_graph<T> graph_factory<T>::random_bipartite_graph(element_generator<T>&
 }
 
 template <typename T>
-void graph_factory<T>::add_n_vertices_and_all_edges(graph<T> &g, element_generator<T>& e_gen, int n){
-	T new_node;
+adj_list_graph<T> graph_factory<T>::cycle_graph(element_generator<T>& e_gen, int n){
+	adj_list_graph<T> g;
+
+	T new_element = e_gen.generate(g);
+
+	T previous_element = new_element;
+	T first_element = new_element;
+
+	g.add_node(new_element);
+	n--;
+
 	while(n > 0){
-		new_node = e_gen.generate(g);
-		g.add_node(new_node);
-		for (unsigned int i = 0; i < g.n(); ++i){
-			T node = g.get_vertices()[i];
-			if (node != new_node){
-				g.add_edge(node, new_node);
-			}
-		}
+		new_element = e_gen.generate(g);
+
+		g.add_node(new_element);
+		g.add_edge(new_element, previous_element);
+
+		previous_element = new_element;
 		n--;
 	}
+
+	g.add_edge(previous_element, first_element);
+
+	return g;
 }
 
 template <typename T>
