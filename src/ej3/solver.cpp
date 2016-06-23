@@ -3,6 +3,7 @@
 #include "../framework/structures/adj_list_graph.h"
 
 #include <algorithm>
+#include <numeric>
 
 /*
 **  Exercise 3

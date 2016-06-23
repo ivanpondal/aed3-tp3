@@ -9,7 +9,7 @@ class graph_factory{
 	public:
 		static void add_n_random_vertices(graph<T> &g, element_generator<T>& e_gen, int n, float c);
 		static adj_list_graph<int> co_graph_with_c_probability_edges(element_generator<T>& e_gen, int n, float c);
-		static adj_list_graph<int> random_co_graph(element_generator<T> &e_gen, unsigned int n);
+		static adj_list_graph<int> random_co_graph(element_generator<T> &e_gen, int n);
 		static void add_n_vertices_and_all_edges(graph<T> &g, element_generator<T>& e_gen, int n);
 };
 
@@ -38,7 +38,7 @@ void graph_factory<T>::add_n_vertices_and_all_edges(graph<T> &g, element_generat
 	while(n > 0){
 		new_node = e_gen.generate(g);
 		g.add_node(new_node);
-		for (int i = 0; i < g.n(); ++i){
+		for (unsigned int i = 0; i < g.n(); ++i){
 			T node = g.get_vertices()[i];
 			if (node != new_node){
 				g.add_edge(node, new_node);
@@ -49,13 +49,13 @@ void graph_factory<T>::add_n_vertices_and_all_edges(graph<T> &g, element_generat
 }
 
 template <typename T>
-adj_list_graph<int> graph_factory<T>::random_co_graph(element_generator<T> &e_gen, unsigned int n){
+adj_list_graph<int> graph_factory<T>::random_co_graph(element_generator<T> &e_gen, int n){
 	// genero n grafos triviales
 	std::vector < adj_list_graph<int> > vec_g (
 		n,
 		adj_list_graph<int>()
 	);
-	for (uint i = 0; i < n; ++i){
+	for (int i = 0; i < n; ++i){
 		vec_g[i].add_node(0);
 	}
 
@@ -92,7 +92,7 @@ adj_list_graph<int> graph_factory<T>::co_graph_with_c_probability_edges
 		n,
 		adj_list_graph<int>()
 	);
-	for (uint i = 0; i < n; ++i){
+	for (int i = 0; i < n; ++i){
 		vec_g[i].add_node(0);
 	}
 

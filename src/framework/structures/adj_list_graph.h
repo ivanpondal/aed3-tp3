@@ -99,21 +99,21 @@ graph<T> *adj_list_graph<T, H>::clone() const{
 
 template <typename T, typename H>
 void adj_list_graph<T, H>::join(const graph<T> &g,  element_generator<T> &e_gen){
-	std::unordered_map<T,T> g2_to_g1;
-	std::unordered_set<T> g1_new_nodes;
+	std::unordered_map<T, T, H> g2_to_g1;
+	std::unordered_set<T, H> g1_new_nodes;
 	// union
-	for (int i = 0; i < g.n(); ++i){
+	for (unsigned int i = 0; i < g.n(); ++i){
 		T v = g.get_vertices()[i];
 		T new_v = e_gen.generate(*this);
 		g2_to_g1.insert(std::make_pair(v, new_v ));
 		g1_new_nodes.insert(new_v);
 		add_node(new_v);
 	}
-	for (int i = 0; i < g.n(); ++i){
+	for (unsigned int i = 0; i < g.n(); ++i){
 		T v = g.get_vertices()[i];
 		T v_in_g1 = g2_to_g1.at(v);
 		std::vector<T> neighbours = g.neighbours(v);
-		for (int j = 0; j < neighbours.size(); ++j){
+		for (unsigned int j = 0; j < neighbours.size(); ++j){
 			T neighbour_v_in_g1 = g2_to_g1.at(neighbours[j]);
 			if ( ( v_in_g1 != neighbour_v_in_g1 ) && (! adjacent(v_in_g1, neighbour_v_in_g1) ) ){
 				add_edge(v_in_g1,neighbour_v_in_g1);
@@ -122,11 +122,11 @@ void adj_list_graph<T, H>::join(const graph<T> &g,  element_generator<T> &e_gen)
 	}
 	//std::cout << " add others egdes ..." << std::endl;
 	// add others egdes 
-	for (int i = 0; i < g.n(); ++i){
+	for (unsigned int i = 0; i < g.n(); ++i){
 		T v_g2 = g.get_vertices()[i];
 		T v_g2_in_g1 = g2_to_g1.at(v_g2);
 		//std::cout << "v_g2_in_g1 :" << v_g2 << " -> " << v_g2_in_g1 << std::endl;
-		for (int j = 0; j < n(); ++j){
+		for (unsigned int j = 0; j < n(); ++j){
 			T v_g1 = get_vertices()[j];
 			//std::cout << "v_g1 :" << v_g1 << std::endl;
 			if(g1_new_nodes.find(v_g1) == g1_new_nodes.end()){
@@ -144,20 +144,20 @@ void adj_list_graph<T, H>::join(const graph<T> &g,  element_generator<T> &e_gen)
 
 template <typename T, typename H>
 void adj_list_graph<T, H>::unite(const graph<T> &g,  element_generator<T> &e_gen){
-	std::unordered_map<T,T> g2_to_g1;
+	std::unordered_map<T, T, H> g2_to_g1;
 	// add new nodes
-	for (int i = 0; i < g.n(); ++i){
+	for (unsigned int i = 0; i < g.n(); ++i){
 		T v = g.get_vertices()[i];
 		T new_v = e_gen.generate(*this);
 		g2_to_g1.insert(std::make_pair(v, new_v ));
 		add_node(new_v);
 	}
 	// add news edge
-	for (int i = 0; i < g.n(); ++i){
+	for (unsigned int i = 0; i < g.n(); ++i){
 		T v = g.get_vertices()[i];
 		T v_in_g1 = g2_to_g1.at(v);
 		std::vector<T> neighbours = g.neighbours(v);
-		for (int j = 0; j < neighbours.size(); ++j){
+		for (unsigned int j = 0; j < neighbours.size(); ++j){
 			T neighbour_v_in_g1 = g2_to_g1.at(neighbours[j]);
 			if ( ( v_in_g1 != neighbour_v_in_g1 ) && (! adjacent(v_in_g1, neighbour_v_in_g1) ) ){
 				add_edge(v_in_g1,neighbour_v_in_g1);
