@@ -14,7 +14,7 @@ int main (int argc, char* argv[]) {
 
     // Parsea las opciones recibidas
     char opt;
-    while ((opt = getopt(argc, argv, "htve:")) != -1) {
+    while ((opt = getopt(argc, argv, "hvte:")) != -1) {
         switch (opt) {
             case 'h': { // mostrar ayuda
                 show_help(argv[0]);
