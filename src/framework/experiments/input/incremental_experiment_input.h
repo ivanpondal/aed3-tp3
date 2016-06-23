@@ -57,7 +57,7 @@ class incremental_experiment_input{
 		}
 
 		S &set_subject(const S &subject_val){
-			this.subject_val = subject_val;
+			this->subject_val = subject_val;
 		}
 
 		const char *get_exp_name() const{
