@@ -48,6 +48,16 @@ void complete_graph_and_cograph_n_incremental_experiment::solve_instance(increme
     run_solver(g_1,g_2);
 }
 
+void cograph_n_incremental_edges_experiment::load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
+    e_gen.reset();
+    g = graph_factory<int>::co_graph_with_c_probability_edges(e_gen, 100, input->get_inc_val());
+}
+
+void cograph_n_incremental_edges_experiment::solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
+    run_solver(g,input->get_subject());
+}
+
+
 void run_experimentation() {
     element_generator_int e_gen;
     adj_list_graph<int> co_g = graph_factory<int>::random_co_graph(e_gen, 100);
@@ -59,7 +69,7 @@ void run_experimentation() {
 
     adj_list_graph<int> k_n;
     e_gen.reset();
-    graph_factory<int>::add_n_vertices_and_all_edges(k_n,e_gen,100);
+    graph_factory<int>::add_n_vertices_and_all_edges(k_n,e_gen,50);
     // cout << endl << "k_n : " <<  endl <<  k_n << endl;
 
     // load min, load max, discard, repetitions, samples and initial subject values
@@ -84,7 +94,14 @@ void run_experimentation() {
  
     complete_graph_and_cograph_n_incremental_experiment exp_3 = complete_graph_and_cograph_n_incremental_experiment(&exp3_input);
 
-    exp_suite.add(&exp_3);
+    //exp_suite.add(&exp_3);
+
+
+    incremental_experiment_input_float< adj_list_graph<int>> exp4_input(0.0f, 1.0f, 30, 50, 50, k_n, "../exp/ej3/cograph_incremental_edges");
+ 
+    complete_graph_and_cograph_n_incremental_experiment exp_4 = complete_graph_and_cograph_n_incremental_experiment(&exp3_input);
+
+    exp_suite.add(&exp_4);
 
     exp_suite.run();
 

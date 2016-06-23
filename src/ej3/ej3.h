@@ -13,6 +13,7 @@
 #include "../framework/experiments/incremental_experiment.h"
 #include "../framework/experiments/experiment_suite.h"
 #include "../framework/experiments/input/incremental_experiment_input_int.h"
+#include "../framework/experiments/input/incremental_experiment_input_float.h"
 
 /*
 **  Exercise 3
@@ -173,6 +174,16 @@ class complete_graph_and_cograph_n_incremental_experiment:public incremental_exp
         void solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
         adj_list_graph<int> g_1;
         adj_list_graph<int> g_2;
+        element_generator_int e_gen;
+};
+
+class cograph_n_incremental_edges_experiment:public incremental_experiment<int, adj_list_graph<int> > {
+    public:
+        cograph_n_incremental_edges_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){};
+    private:
+        void load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        void solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        adj_list_graph<int> g;
         element_generator_int e_gen;
 };
 
