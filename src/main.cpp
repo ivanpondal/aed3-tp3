@@ -93,6 +93,37 @@ void read_input(std::istream& is, graph<int>& g1, graph<int>& g2) {
     }
 }
 
+solution pairs_to_solution(const graph<std::pair<int, int>>& g) {
+    solution ret;
+    ret.h = new adj_list_graph<int>();
+
+
+    std::vector<std::pair<int, int>> vert = g.get_vertices();
+    std::unordered_map<std::pair<int, int>, int, hash_pair_int> mapping;
+
+    for (unsigned int i = 0; i < vert.size(); i++)
+    {
+        ret.h->add_node(i);
+        mapping.insert({vert[i], i});
+        ret.g1_mapping.push_back(vert[i].first);
+        ret.g2_mapping.push_back(vert[i].second);
+    }
+
+    for (unsigned int i = 0; i < vert.size(); i++) {
+        vector<pair<int,int>> neigh = g.neighbours(vert[i]);
+
+        for (uint j = 0; j < neigh.size(); j++) {
+            pair<int, int> curr_neigh = neigh[j];
+            int mapped_neigh = mapping[curr_neigh];
+            if (mapped_neigh < (int) i) {
+                ret.h->add_edge(i, mapped_neigh);
+            }
+        }
+    }
+
+    return ret;
+}
+
 void print_solution(std::ostream& os, const solution& sol) {
     os << sol.h->n() << " " << sol.h->m() << std::endl;
     print_vector(os, sol.g1_mapping);
