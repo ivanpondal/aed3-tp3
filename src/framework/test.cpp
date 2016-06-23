@@ -157,6 +157,66 @@ void test_adj_list_graph_vertices(){
 	ASSERT(g.get_vertices() == expected);
 }
 
+void test_adj_list_graph_unite(){
+	adj_list_graph<int> g_1;
+	adj_list_graph<int> g_2;
+	g_1.add_node(0);
+	g_1.add_node(1);
+	g_1.add_node(2);
+	g_2.add_node(0);
+	g_2.add_node(1);
+	g_2.add_node(2);
+	g_2.add_edge(0,1);
+	g_2.add_edge(1,2);
+	g_2.add_edge(2,0);
+	element_generator_int e_gen;
+	g_1.unite(g_2,e_gen);
+	std::vector<int> expected = {0, 1, 2, 3, 4, 5};
+	ASSERT(g_1.adjacent(3, 4));
+	ASSERT(g_1.adjacent(4, 5));
+	ASSERT(g_1.adjacent(5, 3));
+	ASSERT(g_1.get_vertices() == expected);
+}
+
+void test_adj_list_graph_join(){
+	adj_list_graph<int> g_1;
+	adj_list_graph<int> g_2;
+	g_1.add_node(0);
+	g_1.add_node(1);
+	g_1.add_node(2);
+	g_2.add_node(0);
+	g_2.add_node(1);
+	g_2.add_node(2);
+	g_2.add_edge(0,1);
+	g_2.add_edge(1,2);
+	g_2.add_edge(2,0);
+	element_generator_int e_gen;
+	g_1.join(g_2,e_gen);
+	std::vector<int> expected = {0, 1, 2, 3, 4, 5};
+	ASSERT(g_1.adjacent(3, 4));
+	ASSERT(g_1.adjacent(4, 5));
+	ASSERT(g_1.adjacent(5, 3));
+	//std::cout << "join" << g_1 << std::endl;
+	ASSERT(g_1.adjacent(0, 3));
+	ASSERT(g_1.adjacent(0, 4));
+	ASSERT(g_1.adjacent(0, 5));
+	ASSERT(g_1.adjacent(1, 3));
+	ASSERT(g_1.adjacent(1, 4));
+	ASSERT(g_1.adjacent(1, 5));
+	ASSERT(g_1.adjacent(2, 3));
+	ASSERT(g_1.adjacent(2, 4));
+	ASSERT(g_1.adjacent(2, 5));
+	ASSERT(g_1.get_vertices() == expected);
+	adj_list_graph<int> g_3;
+	adj_list_graph<int> g_4;
+	g_3.add_node(0);
+	g_4.add_node(0);
+	element_generator_int e_gen_1;
+	g_3.join(g_4,e_gen_1);
+	//std::cout << std::endl << "join" << g_3 << std::endl;
+	ASSERT(g_3.adjacent(0, 1));
+}
+
 void test_adj_list_graph_assignment(){
 	adj_list_graph<int> g;
 	g.add_node(7);
@@ -234,7 +294,107 @@ void test_graph_factory_int_random(){
 	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
 }
 
+void test_graph_factory_int_tree(){
+	element_generator_int e_gen;
+	adj_list_graph<int> g;
+
+	graph_factory<int>::add_n_tree_vertices(g, e_gen, 10);
+
+	ASSERT_EQ(g.n(), 10);
+	ASSERT_EQ(g.m(), 9);
+}
+
+void test_graph_factory_int_bipartite(){
+	element_generator_int e_gen;
+
+	float epsilon = 0.01;
+	float edge_proportion = 0;
+
+	int n = 20;
+	int k = 100;
+
+	adj_list_graph<int> g = graph_factory<int>::random_bipartite_graph(e_gen, n, k, 0.5);
+
+	edge_proportion = g.m()*1.0f / (n*k);
+
+	ASSERT_EQ(g.n(), n + k);
+	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
+}
+
+void test_graph_factory_int_cycle(){
+	element_generator_int e_gen;
+
+	int n = 10;
+
+	adj_list_graph<int> g = graph_factory<int>::cycle_graph(e_gen, n);
+
+	for(unsigned int i = 0; i < g.n(); i++){
+		ASSERT_EQ(g.degree(g.get_vertices()[i]), 2);
+	}
+
+	ASSERT_EQ(g.n(), n);
+	ASSERT_EQ(g.m(), n);
+}
+
+void test_complete_graph(){
+	element_generator_int e_gen;
+	adj_list_graph<int> g;
+
+	graph_factory<int>::add_n_vertices_and_all_edges(g,e_gen,1);
+
+	ASSERT_EQ(g.m(), 0);
+	ASSERT_EQ(g.n(), 1);
+
+	graph_factory<int>::add_n_vertices_and_all_edges(g,e_gen,1);
+
+	ASSERT_EQ(g.m(), 1);
+	ASSERT(g.adjacent(0, 1));
+	ASSERT_EQ(g.n(), 2);
+
+	graph_factory<int>::add_n_vertices_and_all_edges(g,e_gen,2);
+
+	ASSERT_EQ(g.m(), 6);
+	ASSERT_EQ(g.n(), 4);
+
+	ASSERT(g.adjacent(0, 1));
+
+	ASSERT(g.adjacent(0, 2));
+	ASSERT(g.adjacent(1, 2));
+
+	ASSERT(g.adjacent(0, 3));
+	ASSERT(g.adjacent(1, 3));
+	ASSERT(g.adjacent(2, 3));
+
+}
+
+void test_co_graph_with_c_probability_edges(){
+	element_generator_int e_gen;
+	adj_list_graph<int> g;
+
+	g = graph_factory<int>::co_graph_with_c_probability_edges(e_gen,10,0.f);
+
+	ASSERT_EQ(g.m(), 0);
+	ASSERT_EQ(g.n(), 10);
+
+	e_gen.reset();
+	g = graph_factory<int>::co_graph_with_c_probability_edges(e_gen,4,1.0f);
+
+	ASSERT_EQ(g.m(), 6);
+	ASSERT_EQ(g.n(), 4);
+
+	ASSERT(g.adjacent(0, 1));
+
+	ASSERT(g.adjacent(0, 2));
+	ASSERT(g.adjacent(1, 2));
+
+	ASSERT(g.adjacent(0, 3));
+	ASSERT(g.adjacent(1, 3));
+	ASSERT(g.adjacent(2, 3));
+
+}
+
 int main(){
+
 	// adj_list_graph tests
 	RUN_TEST(test_adj_list_graph_add_nodes);
 	RUN_TEST(test_adj_list_graph_add_edges);
@@ -246,6 +406,8 @@ int main(){
 	RUN_TEST(test_adj_list_graph_clone);
 	RUN_TEST(test_adj_list_graph_vertices);
 	RUN_TEST(test_adj_list_graph_assignment);
+	RUN_TEST(test_adj_list_graph_unite);
+	RUN_TEST(test_adj_list_graph_join);
 
 	// experiment tests
 	RUN_TEST(test_adj_list_n_incremental_experiment);
@@ -254,4 +416,9 @@ int main(){
 
 	// utils tests
 	RUN_TEST(test_graph_factory_int_random);
+	RUN_TEST(test_graph_factory_int_tree);
+	RUN_TEST(test_graph_factory_int_bipartite);
+	RUN_TEST(test_graph_factory_int_cycle);
+	RUN_TEST(test_complete_graph);
+	RUN_TEST(test_co_graph_with_c_probability_edges);
 }

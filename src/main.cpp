@@ -1,4 +1,5 @@
 #include "./main.h"
+#include "framework/structures/adj_list_graph.h"
 
 using namespace std;
 
@@ -65,7 +66,7 @@ void show_help(char* bin_path) {
     cout << "  Opciones:" << endl;
     cout << "    -h          Muestra este texto de ayuda" << endl;
     cout << "    -t          Ejecuta los tests unitarios provistos para el algoritmo" << endl;
-    cout << "    -p <seed>   Ejecuta las pruebas de performance diseñadas para el algoritmo" << endl;
+    cout << "    -e <seed>   Ejecuta las pruebas de performance diseñadas para el algoritmo" << endl;
 }
 
 // Funciones de entrada/salida
