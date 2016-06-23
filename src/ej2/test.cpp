@@ -347,25 +347,23 @@ void test_franco_example() {
 
     graph<int> *maxComSub = mcs(&franco1, &franco2);
 
-    cout << endl << *maxComSub << endl;
-
     ASSERT_EQ(maxComSub->m(), 12);
        
     delete(maxComSub);
 }
 
 void run_unit_tests() {
-    // RUN_TEST(test_isolated_nodes);
-    // RUN_TEST(test_k1_and_other);
-    // RUN_TEST(test_k2s);
-    // RUN_TEST(test_k2_and_k3);
+    RUN_TEST(test_isolated_nodes);
+    RUN_TEST(test_k1_and_other);
+    RUN_TEST(test_k2s);
+    RUN_TEST(test_k2_and_k3);
     RUN_TEST(test_k4s);
-    // RUN_TEST(test_p4_and_2k2);
-    // RUN_TEST(test_p4_and_3k2);
-    // RUN_TEST(test_handcrafted_and_p5);
-    // RUN_TEST(test_handcrafteds);
-    // RUN_TEST(test_pseudofranco_example);
-    // RUN_TEST(test_pseudofranco_example2);
-    // RUN_TEST(test_franco_example);
+    RUN_TEST(test_p4_and_2k2);
+    RUN_TEST(test_p4_and_3k2);
+    RUN_TEST(test_handcrafted_and_p5);
+    RUN_TEST(test_handcrafteds);
+    RUN_TEST(test_pseudofranco_example);
+    RUN_TEST(test_pseudofranco_example2);
+    RUN_TEST(test_franco_example);
 
 }
