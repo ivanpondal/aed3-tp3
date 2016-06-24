@@ -20,3 +20,14 @@ extremadamete costoso tanto temporal como espacialmente, por lo que no sólo
 es recomendable sino condición del ejercicio realizar podas y estrategias que
 permitan mejorar los tiempos de resolución.
 
+\subsection{Resolución}
+El algoritmo consiste en probar todos los mapeos posibles entre los nodos de
+ambos grafos, y así tomar un grafo común con la mayor cantidad de aristas de
+entre todas las combinaciones de mapeos.
+
+Dentro de la función principal, aquella que emplea la técnica de
+\textit{Backtracking}, se hace uso de ambos grafos, dos listas enlazadas $L_1, L_2$ (una
+para cada grafo) que contienen los ids de los nodos aún no mapeados en esta
+rama de ejecución, y un mapa implementado sobre una tabla de hash que contiene
+los mapeos hechos en esa rama de ejecución. Se iteran $L_1$ y $L_2$ mediante
+dos ciclos anidados
