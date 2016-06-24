@@ -162,7 +162,8 @@ class complete_graph_n_incremental_experiment:public incremental_experiment<int,
     private:
         void load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
         void solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
-        adj_list_graph<int> g;
+        adj_list_graph<int> g_1;
+        adj_list_graph<int> g_2;
         element_generator_int e_gen;
 };
 
@@ -177,12 +178,12 @@ class complete_graph_and_cograph_n_incremental_experiment:public incremental_exp
         element_generator_int e_gen;
 };
 
-class cograph_n_incremental_edges_experiment:public incremental_experiment<int, adj_list_graph<int> > {
+class cograph_n_incremental_edges_experiment:public incremental_experiment<float, adj_list_graph<int> > {
     public:
-        cograph_n_incremental_edges_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){};
+        cograph_n_incremental_edges_experiment(const incremental_experiment_input<float, adj_list_graph<int> > *input): incremental_experiment(input){};
     private:
-        void load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
-        void solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        void load_instance(incremental_experiment_input<float, adj_list_graph<int>> *input);
+        void solve_instance(incremental_experiment_input<float, adj_list_graph<int>> *input);
         adj_list_graph<int> g;
         element_generator_int e_gen;
 };

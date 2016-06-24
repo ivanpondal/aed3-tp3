@@ -196,15 +196,31 @@ El algoritmo planteado para la búsqueda del máximo subgrafo
 \subsection{Detalles implementativos}
 
 \subsection{Complejidad}
+Defino $n_1$ la cantiadad de nodos de $g_1$ (cografo) y $m_1$ la cantiadad de aristas, 
+$n_2$ la cantidad de nodos del $g_2$ ($K_n$) 
+
+Armar el cotree tiene una complejidad $O(n_1(n_1 + m_2))$ , hacer el DP que calcula la solucion $O(n_1 * (n_2)^2 )$
+
+En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_2) + (n_2)^2 ))$
 
 \subsection{Experimentación}
+
+    Se hicieron 4 experimentos para probar la complejidad del algoritmo:
+
+    \begin{enumerate}
+    \item Aumento la cantidad de nodos del cografo y fijo un $K_n$. 
+    \item Aumento la cantidad de nodos de $K_n$ y fijo un cografo .
+    \item Aumento la cantidad de nodos de $K_n$ y el cografo en proporción de 2 nodos a 1 . Por cada 2 nodos que aumento en el cografo aumento 1 en el $K_n$.
+    \item Fijo un $K_n$ y un $n_1$ y vario probabilidad de hacer join ($c$) en la creacion del cografo. Asi podemos variar crecientemente la cantidad de aristas.
+    \end{enumerate}
+
 
     \begin{figure}[H]
         \centering
         \begin{tikzpicture}
             \begin{axis}[
                     title={},
-                    xlabel={Aumento la cantidad de Nodos del cografo},
+                    xlabel={Vario la cantidad de nodos del cografo ($n_1$) },
                     ylabel={Tiempo de ejecución (nanosegundos)},
                     scaled x ticks=false,
                     scaled y ticks=false,
@@ -217,11 +233,11 @@ El algoritmo planteado para la búsqueda del máximo subgrafo
                 ]
                 \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_nodes};
 
-                \legend{$T_N$}
+                \legend{$T_{(co_n)}$}
             \end{axis}
         \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $N$
-        ($T_{co_n}$) . Se considera $c_1 = 666$ .}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
+        ($T_{co_n}$) .}
         \label{fig:exp3:var-nym-base}
     \end{figure}
 
@@ -231,7 +247,7 @@ El algoritmo planteado para la búsqueda del máximo subgrafo
         \begin{tikzpicture}
             \begin{axis}[
                     title={},
-                    xlabel={Aumento la cantidad de Nodos del grafo completo},
+                    xlabel={Vario la cantidad de nodos del grafo completo ($n_2$)},
                     ylabel={Tiempo de ejecución (nanosegundos)},
                     scaled x ticks=false,
                     scaled y ticks=false,
@@ -244,11 +260,11 @@ El algoritmo planteado para la búsqueda del máximo subgrafo
                 ]
                 \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/complete_graph_incremental_nodes};
 
-                \legend{$T_N$}
+                \legend{$T_{(k_n)}$}
             \end{axis}
         \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n$
-        ($k_n$) y de $N$ ($T_N$). Se considera $c_1 = 70$ y $c_2 = 10$.}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_2$
+        ($(k_n)$) .}
         \label{fig:exp3:var-nym-base}
     \end{figure}
 
@@ -257,7 +273,7 @@ El algoritmo planteado para la búsqueda del máximo subgrafo
         \begin{tikzpicture}
             \begin{axis}[
                     title={},
-                    xlabel={Aumento la cantidad de Nodos del grafo completo y del cografo},
+                    xlabel={Aumento la cantidad de nodos ($n_1$) del grafo completo y del cografo ($n_2$)},
                     ylabel={Tiempo de ejecución (nanosegundos)},
                     scaled x ticks=false,
                     scaled y ticks=false,
@@ -270,10 +286,38 @@ El algoritmo planteado para la búsqueda del máximo subgrafo
                 ]
                 \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/complete_graph_and_cograph_incremental_nodes};
 
-                \legend{$T_N$}
+                \legend{$T_{(k_n y co_n)}$}
             \end{axis}
         \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n$
-        ($k_n$) y de $N$ ($T_N$). Se considera $c_1 = 70$ y $c_2 = 10$.}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_1$ y  $n_2$
+        ($T_{(k_n y co_n)}$).}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+
+
+
+     \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Fijo el $K_n$ ($n_1$)y la cantidad de nodos del cografo ($n_2$)y aumento la cantidad de aristas del cografo.},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_edges};
+
+                \legend{$T_c$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al fijar el $K_n$ ($n_1$)y la cantidad de nodos del cografo ($n_2$) y variar la probabilidad de hacer un join al crear el cografo. Variamos la probabilidad entre $0 y 1$ y la llamamos $c$}
         \label{fig:exp3:var-nym-base}
     \end{figure}
