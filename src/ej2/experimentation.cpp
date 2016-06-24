@@ -1,4 +1,3 @@
-#include "../main.h"
 #include "./ej2.h"
 
 void mcs_incremental_experiment::load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){

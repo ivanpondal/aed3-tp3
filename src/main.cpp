@@ -178,3 +178,34 @@ void print_edges(std::ostream& os, const graph<int>* g) {
         vertices.erase(*it1);
     }
 }
+
+// Funciones auxiliares
+
+bool solution_checker(
+    const solution& s,
+    const graph<int>& g1,
+    const graph<int>& g2
+) {
+    for (unsigned int i = 0; i < s.h->n(); i++) {
+        int vert1_g1 = s.g1_mapping[i];
+        int vert1_g2 = s.g2_mapping[i];
+
+        std::vector<int> neigh = s.h->neighbours(i);
+        for (unsigned int j = 0; j < neigh.size(); j++) {
+            int vert2_g1 = s.g1_mapping[neigh[j]];
+            int vert2_g2 = s.g2_mapping[neigh[j]];
+
+            if (! g1.adjacent(vert1_g1, vert2_g1) ||
+                ! g2.adjacent(vert1_g2, vert2_g2)
+            ) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+std::ostream &operator<<(std::ostream& output, const std::pair<int, int>& p){
+    output << "(" << p.first << ", " << p.second << ")";
+    return output;
+}
