@@ -1,7 +1,7 @@
 #include "ej4.h"
 
 graph< std::pair<int, int>> *solve(graph<int> &g1, graph<int> &g2, bool add_neighbours){
-	/////////////////////////////////////////// add_neighbours
+	// >>>>>>>>> add_neighbours
 	std::priority_queue<std::pair<int, int>,
 	                    std::vector< std::pair<int, int>>,
 	                    node_degree_pair_compare> unvisited_unmapped_g1;
@@ -18,7 +18,7 @@ graph< std::pair<int, int>> *solve(graph<int> &g1, graph<int> &g2, bool add_neig
 	int g2_node_neighbour = 0;
 
 	std::pair<int, int> mcs_node_neighbour;
-	/////////////////////////////////////////// add_neighbours
+	// <<<<<<<<< add_neighbours
 
 	std::priority_queue<std::pair<int, int>,
 	                    std::vector< std::pair<int, int>>,
@@ -38,14 +38,18 @@ graph< std::pair<int, int>> *solve(graph<int> &g1, graph<int> &g2, bool add_neig
 	graph< std::pair<int, int>> *g_mcs = new adj_list_graph<std::pair<int, int>, hash_pair_int>();
 
 	for(unsigned int i = 0; i < g1.n(); i++){
-		unvisited_g1.push(std::make_pair(g1.get_vertices()[i], g1.degree(g1.get_vertices()[i])));
+		unvisited_g1.push(std::make_pair(g1.get_vertices()[i],
+		                  g1.degree(g1.get_vertices()[i])));
 	}
 
 	for(unsigned int i = 0; i < g2.n(); i++){
-		unvisited_g2.push(std::make_pair(g2.get_vertices()[i], g2.degree(g2.get_vertices()[i])));
+		unvisited_g2.push(std::make_pair(g2.get_vertices()[i],
+		                  g2.degree(g2.get_vertices()[i])));
 	}
 	int g1_node = 0;
 	int g2_node = 0;
+
+	unsigned int added_edges = 0;
 
 	std::pair<int, int> mcs_node;
 
@@ -57,7 +61,6 @@ graph< std::pair<int, int>> *solve(graph<int> &g1, graph<int> &g2, bool add_neig
 		unvisited_g1.pop();
 		unvisited_g2.pop();
 
-		/////////////////////////////////////////// add_neighbours
 		if(add_neighbours){
 			while((mapping_g1.find(g1_node) != mapping_g1.end() ||
 			       mapping_g2.find(g2_node) != mapping_g2.end()) &&
@@ -78,7 +81,6 @@ graph< std::pair<int, int>> *solve(graph<int> &g1, graph<int> &g2, bool add_neig
 				break;
 			}
 		}
-		/////////////////////////////////////////// add_neighbours
 
 		mcs_node = std::make_pair(g1_node, g2_node);
 
@@ -93,55 +95,61 @@ graph< std::pair<int, int>> *solve(graph<int> &g1, graph<int> &g2, bool add_neig
 				valid_mapping.insert(mapping_iterator->second);
 			}
 			else{
-				/////////////////////////////////////////// add_neighbours
 				if(add_neighbours){
 					unvisited_unmapped_g1.push(std::make_pair(g1.neighbours(g1_node)[i],
 					                           g1.degree(g1.neighbours(g1_node)[i])));
 				}
-				/////////////////////////////////////////// add_neighbours
 			}
 		}
 
-		for(unsigned int i = 0; i < g2.neighbours(g2_node).size(); i++){
-			mapping_iterator = mapping_g2.find(g2.neighbours(g2_node)[i]);
-			if(mapping_iterator != mapping_g2.end() &&
-			   valid_mapping.find(mapping_iterator->second) != valid_mapping.end()){
-				g_mcs->add_edge(mcs_node, mapping_iterator->second);
-			}
-			else{
-				/////////////////////////////////////////// add_neighbours
-				if(add_neighbours && mapping_iterator == mapping_g2.end()){
-					unvisited_unmapped_g2.push(std::make_pair(g2.neighbours(g2_node)[i],
-					                           g2.degree(g2.neighbours(g2_node)[i])));
+		if(!valid_mapping.empty() || add_neighbours){
+			for(unsigned int i = 0; i < g2.neighbours(g2_node).size(); i++){
+				mapping_iterator = mapping_g2.find(g2.neighbours(g2_node)[i]);
+				if(mapping_iterator != mapping_g2.end() &&
+				   valid_mapping.find(mapping_iterator->second) != valid_mapping.end()){
+
+					g_mcs->add_edge(mcs_node, mapping_iterator->second);
+
+					added_edges++;
+					if(added_edges == valid_mapping.size() && !add_neighbours){
+						break;
+					}
 				}
-				/////////////////////////////////////////// add_neighbours
-			}
-		}
-
-		/////////////////////////////////////////// add_neighbours
-		if(add_neighbours){
-			while(!unvisited_unmapped_g1.empty() && !unvisited_unmapped_g2.empty()){
-				g1_node_neighbour = unvisited_unmapped_g1.top().first;
-				g2_node_neighbour = unvisited_unmapped_g2.top().first;
-
-				unvisited_unmapped_g1.pop();
-				unvisited_unmapped_g2.pop();
-
-				mcs_node_neighbour = std::make_pair(g1_node_neighbour, g2_node_neighbour);
-
-				mapping_g1.insert(std::make_pair(g1_node_neighbour, mcs_node_neighbour));
-				mapping_g2.insert(std::make_pair(g2_node_neighbour, mcs_node_neighbour));
-
-				g_mcs->add_node(mcs_node_neighbour);
-				g_mcs->add_edge(mcs_node, mcs_node_neighbour);
+				else{
+					if(add_neighbours && mapping_iterator == mapping_g2.end()){
+						unvisited_unmapped_g2.push(std::make_pair(g2.neighbours(g2_node)[i],
+						                           g2.degree(g2.neighbours(g2_node)[i])));
+					}
+				}
 			}
 
-			unvisited_unmapped_g1 = clear_heap;
-			unvisited_unmapped_g2 = clear_heap;
-		}
-		/////////////////////////////////////////// add_neighbours
+			if(add_neighbours){
+				while(!unvisited_unmapped_g1.empty() && !unvisited_unmapped_g2.empty()){
+					g1_node_neighbour = unvisited_unmapped_g1.top().first;
+					g2_node_neighbour = unvisited_unmapped_g2.top().first;
 
-		valid_mapping.clear();
+					unvisited_unmapped_g1.pop();
+					unvisited_unmapped_g2.pop();
+
+					mcs_node_neighbour = std::make_pair(g1_node_neighbour,
+					                                    g2_node_neighbour);
+
+					mapping_g1.insert(std::make_pair(g1_node_neighbour,
+					                                 mcs_node_neighbour));
+					mapping_g2.insert(std::make_pair(g2_node_neighbour,
+					                                 mcs_node_neighbour));
+
+					g_mcs->add_node(mcs_node_neighbour);
+					g_mcs->add_edge(mcs_node, mcs_node_neighbour);
+				}
+
+				unvisited_unmapped_g1 = clear_heap;
+				unvisited_unmapped_g2 = clear_heap;
+			}
+
+			valid_mapping.clear();
+			added_edges = 0;
+		}
 	}
 
 	return g_mcs;
