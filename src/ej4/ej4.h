@@ -1,20 +1,12 @@
-#ifndef EJ4_H
-#define EJ4_H
+#ifndef AED3_TP3_EJ4_H
+#define AED3_TP3_EJ4_H
 
 #include "../main.h"
+#include "../heuristics/heuristics.h"
 
-#include <queue>
-#include <unordered_set>
-#include <unordered_map>
+/*
+**  Exercise 4
+*/
 
-std::ostream &operator<<(std::ostream& output, const std::pair<int, int>& p);
 
-struct node_degree_pair_compare{
-	bool operator()(const std::pair<int, int> &p1, const std::pair<int, int> &p2){
-		return p1.second < p2.second;
-	}
-};
-
-graph< std::pair<int, int>> *solve(graph<int> &g1, graph<int> &g2, bool add_neighbours = false);
-
-#endif // EJ4_H
+#endif  // AED3_TP3_EJ4_H

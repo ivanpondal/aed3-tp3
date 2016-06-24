@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef AED3_TP3_MAIN_H
+#define AED3_TP3_MAIN_H
 
 #include <iostream>      // cout, cin, <<
 #include <fstream>       // open, close, <<
@@ -42,6 +42,9 @@ void print_edges(std::ostream& os, const graph<int>* g);
 
 // Funciones auxiliares
 
+// Verifica que una solución sea válida
+bool solution_checker(const solution& s, const graph<int>& g1, const graph<int>& g2);
+
 // Compara dos vectores
 template <typename T>
 bool compare_vectors(const std::vector<T> v1, const std::vector<T> v2) {
@@ -76,6 +79,9 @@ std::ostream& operator <<(std::ostream& os, const std::vector<T>& v) {
     return os;
 }
 
+// Imprime un par de enteros
+std::ostream &operator<<(std::ostream& output, const std::pair<int, int>& p);
+
 // Función de hash para pares de enteros
 struct hash_pair_int{
     size_t operator()(const std::pair<int, int> &p) const{
@@ -86,4 +92,4 @@ struct hash_pair_int{
     }
 };
 
-#endif
+#endif  // AED3_TP3_MAIN_H

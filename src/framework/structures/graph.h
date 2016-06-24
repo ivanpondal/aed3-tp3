@@ -17,6 +17,7 @@ class graph{
 		virtual unsigned int degree(const T &v) const = 0;
 		virtual bool adjacent(const T &v1, const T &v2) const = 0;
 		virtual void add_node(const T &v) = 0;
+		virtual void remove_node(const T &v) = 0;
 		virtual void add_edge(const T &v1, const T &v2) = 0;
 		virtual bool contains(const T &v) const = 0;
 		virtual graph<T> *clone() const = 0;

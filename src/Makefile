@@ -29,6 +29,12 @@ FRAMEWORK_OBJECTS_DIR=$(addprefix $(FRAMEWORK_DIR),$(FRAMEWORK_OBJECTS))
 FRAMEWORK_TEST_OBJECT=$(FRAMEWORK_DIR)test.o
 FRAMEWORK_TEST_EXECUTABLE=$(FRAMEWORK_DIR)test_framework
 
+# heuristics variables
+HEURISTICS_DIR=heuristics
+HEURISTICS_HEADER=heuristics.h
+HEURISTICS_OBJECTS=greedy.o local_search_1.o
+HEURISTICS_OBJECTS_DIR=$(addprefix $(HEURISTICS_DIR)/,$(HEURISTICS_OBJECTS))
+
 VPATH=$(addprefix $(FRAMEWORK_DIR),$(FRAMEWORK_FOLDERS))
 
 # targets that aren't file names
@@ -57,6 +63,6 @@ $(MAIN_OBJECT): $(subst .o,.h,$(MAIN_OBJECT))
 $(OTHER_OBJECTS_DIR): $$(dir $$@)/$$(subst /,.h,$$(dir $$@)) \
                       $(FRAMEWORK_UTILS_HEADERS) $(FRAMEWORK_STRUCTURES_HEADERS) $(FRAMEWORK_EXPERIMENTS_HEADERS)
 
-$(EXECUTABLES): $(MAIN_OBJECT) $(FRAMEWORK_OBJECTS_DIR) \
+$(EXECUTABLES): $(MAIN_OBJECT) $(FRAMEWORK_OBJECTS_DIR) $(HEURISTICS_OBJECTS_DIR) \
                 $$(addprefix $$(subst _solver,,$$@)/,$(OTHER_OBJECTS))
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CXXFLAGS) -o $@ $^

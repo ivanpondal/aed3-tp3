@@ -69,7 +69,7 @@ class cotree_node {
  private:
     cotree_node* right_child;
     cotree_node* left_child;
-    
+
  public:
     cotree_node();
     virtual ~cotree_node();
@@ -187,5 +187,4 @@ class cograph_n_incremental_edges_experiment:public incremental_experiment<int, 
         element_generator_int e_gen;
 };
 
-
-#endif
+#endif  // AED3_TP3_EJ3_H

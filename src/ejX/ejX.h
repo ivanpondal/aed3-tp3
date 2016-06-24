@@ -2,6 +2,7 @@
 #define AED3_TP3_EJX_H
 
 #include "../main.h"
+#include "../heuristics/heuristics.h"
 
 /*
 **  Exercise X

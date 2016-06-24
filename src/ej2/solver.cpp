@@ -3,7 +3,6 @@
 #include <vector>
 #include <list>
 #include <unistd.h>
-#include "../main.h"
 #include "ej2.h"
 
 using namespace std;
@@ -50,7 +49,7 @@ bool mcs_backtracking(
         list<int>::iterator g1_remaining_nodes_it = g1_remaining_nodes.begin();
         unsigned int g1_remaining_nodes_index = 0;
         while (g1_remaining_nodes_it != g1_remaining_nodes.end()) {
-            
+
             list<int>::iterator g2_remaining_nodes_it = g2_remaining_nodes.begin();
             unsigned int g2_remaining_nodes_index = 0;
             while (g2_remaining_nodes_it != g2_remaining_nodes.end()) {
@@ -62,7 +61,7 @@ bool mcs_backtracking(
                 if (subgraph->n() == 1) {
                     unordered_map<int, int>::iterator map_it = node_map.begin();
                     tuple<int, int, int, int> permutation(map_it->first, map_it->second, g1_node, g2_node);
-                    
+
                     // If actual mapping is a permutation of a already traversed mapping, it skips it
                     if (permutations.find(permutation) != permutations.end()) {
                         g2_remaining_nodes_it++;
@@ -117,10 +116,10 @@ bool mcs_backtracking(
                                                         // g2_remaining_nodes_index,
                                                         maxEdges,
                                                         permutations);
-                
+
                 if (valid_subgraph && subgraph_copy->m() >= max_subgraph->m()) {
                     *max_subgraph = *subgraph_copy;
-                    
+
                     if (max_subgraph->m() > maxEdges)
                         maxEdges = max_subgraph->m();
                 }
@@ -132,7 +131,7 @@ bool mcs_backtracking(
                 for (unsigned int i = 0; i < g1_remaining_nodes_index; i++)
                     g1_remaining_nodes_it++;
 
-                
+
                 g2_remaining_nodes_it = g2_remaining_nodes.begin();
                 for (unsigned int i = 0; i < g2_remaining_nodes_index; i++)
                     g2_remaining_nodes_it++;
@@ -197,7 +196,7 @@ graph<int>* mcs(graph<int> *g1, graph<int> *g2) {
                         // 0,
                         edges,
                         permutations);
-    
+
     return empty_graph;
 }
 
