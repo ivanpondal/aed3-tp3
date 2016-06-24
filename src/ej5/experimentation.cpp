@@ -1,4 +1,4 @@
-#include "./ejX.h"
+#include "./ej5.h"
 #include "../framework/structures/adj_list_graph.h"
 
 /*

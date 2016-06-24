@@ -8,7 +8,7 @@ CPPFLAGS=-g -Wall -O2
 CXXFLAGS=-std=c++11
 
 # excercise variables
-EXECUTABLES_BASE=ej2 ej3 ej4 #exercise1 excercise2 ... exerciseN
+EXECUTABLES_BASE=ej2 ej3 ej4 ej5 #exercise1 excercise2 ... exerciseN
 
 EXECUTABLES=$(addsuffix _solver, $(EXECUTABLES_BASE))
 MAIN_OBJECT=main.o
