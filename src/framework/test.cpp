@@ -336,6 +336,25 @@ void test_graph_factory_int_cycle(){
 	ASSERT_EQ(g.m(), n);
 }
 
+void test_graph_factory_int_disconnected(){
+	element_generator_int e_gen;
+
+	int n = 12;
+	int d = 3;
+
+	// forest
+	adj_list_graph<int> g = graph_factory<int>::random_disconnected_graph(e_gen, n, d, 0);
+
+	ASSERT_EQ(g.n(), n);
+	ASSERT_EQ(g.m(), n - d);
+
+	// complete
+	g = graph_factory<int>::random_disconnected_graph(e_gen, n, d, 1);
+
+	ASSERT_EQ(g.n(), n);
+	ASSERT_EQ(g.m(), d*(n/d)*(n/d - 1)/2);
+}
+
 void test_complete_graph(){
 	element_generator_int e_gen;
 	adj_list_graph<int> g;
@@ -419,6 +438,7 @@ int main(){
 	RUN_TEST(test_graph_factory_int_tree);
 	RUN_TEST(test_graph_factory_int_bipartite);
 	RUN_TEST(test_graph_factory_int_cycle);
+	RUN_TEST(test_graph_factory_int_disconnected);
 	RUN_TEST(test_complete_graph);
 	RUN_TEST(test_co_graph_with_c_probability_edges);
 }
