@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "framework/structures/graph.h"
+#include "framework/utils/element_generator.h"
 #include "framework/structures/adj_list_graph.h"
 
 extern bool verbose;
@@ -34,6 +35,7 @@ void run_experimentation();
 
 // Funciones de entrada/salida
 void read_input(std::istream& is, graph<int>& g1, graph<int>& g2);
+solution pairs_to_solution(const graph<std::pair<int, int>>&);
 void print_solution(std::ostream& os, const solution& sol);
 void print_vector(std::ostream& os, const std::vector<int>& v);
 void print_edges(std::ostream& os, const graph<int>* g);
@@ -74,5 +76,14 @@ std::ostream& operator <<(std::ostream& os, const std::vector<T>& v) {
     return os;
 }
 
+// Función de hash para pares de enteros
+struct hash_pair_int{
+    size_t operator()(const std::pair<int, int> &p) const{
+        size_t seed = 0;
+        seed ^= std::hash<int>()(p.first) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= std::hash<int>()(p.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        return seed;
+    }
+};
 
 #endif

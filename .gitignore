@@ -26,6 +26,7 @@
 *.exe
 *.out
 *.app
+ej*_solver
 
 # Latex
 *.aux
@@ -34,6 +35,9 @@
 *.log
 *.synctex.gz
 *.toc
+*.bbl
+*.bcf
+*.blg
 
 # Compiled Latex files
 *informe.pdf
@@ -46,3 +50,6 @@ src/CMakeLists.txt
 # Sublime Text
 aed3-tp3.sublime-project
 aed3-tp3.sublime-workspace
+
+# FUSE temporal files
+*.fuse_hidden*

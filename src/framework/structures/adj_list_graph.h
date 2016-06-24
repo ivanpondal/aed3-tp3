@@ -2,6 +2,8 @@
 #define ADJ_LIST_GRAPH_H_
 
 #include <unordered_map>
+#include <unordered_set>
+#include <vector>
 #include "graph.h"
 
 template <typename T, typename H = std::hash<T>>
@@ -18,8 +20,8 @@ class adj_list_graph: public graph<T>{
 		void add_edge(const T &v1, const T &v2);
 		bool contains(const T &v) const;
 		graph<T> *clone() const;
-		void join(const graph<T> &g);
-		void unite(const graph<T> &g);
+		void join(const graph<T> &g, element_generator<T> &e_gen);
+		void unite(const graph<T> &g, element_generator<T> &e_gen);
 		const std::vector<T> &get_vertices() const;
 	private:
 		void clear();
@@ -96,13 +98,73 @@ graph<T> *adj_list_graph<T, H>::clone() const{
 }
 
 template <typename T, typename H>
-void adj_list_graph<T, H>::join(const graph<T> &g){
-	// MAXI COMPLETAME
+void adj_list_graph<T, H>::join(const graph<T> &g, element_generator<T> &e_gen){
+	std::unordered_map<T, T, H> g2_to_g1;
+	std::unordered_set<T, H> g1_new_nodes;
+	// union
+	for (unsigned int i = 0; i < g.n(); ++i){
+		T v = g.get_vertices()[i];
+		T new_v = e_gen.generate(*this);
+		g2_to_g1.insert(std::make_pair(v, new_v ));
+		g1_new_nodes.insert(new_v);
+		add_node(new_v);
+	}
+	for (unsigned int i = 0; i < g.n(); ++i){
+		T v = g.get_vertices()[i];
+		T v_in_g1 = g2_to_g1.at(v);
+		std::vector<T> neighbours = g.neighbours(v);
+		for (unsigned int j = 0; j < neighbours.size(); ++j){
+			T neighbour_v_in_g1 = g2_to_g1.at(neighbours[j]);
+			if ( ( v_in_g1 != neighbour_v_in_g1 ) && (! adjacent(v_in_g1, neighbour_v_in_g1) ) ){
+				add_edge(v_in_g1,neighbour_v_in_g1);
+			}
+		}
+	}
+	//std::cout << " add others egdes ..." << std::endl;
+	// add others egdes
+	for (unsigned int i = 0; i < g.n(); ++i){
+		T v_g2 = g.get_vertices()[i];
+		T v_g2_in_g1 = g2_to_g1.at(v_g2);
+		//std::cout << "v_g2_in_g1 :" << v_g2 << " -> " << v_g2_in_g1 << std::endl;
+		for (unsigned int j = 0; j < n(); ++j){
+			T v_g1 = get_vertices()[j];
+			//std::cout << "v_g1 :" << v_g1 << std::endl;
+			if(g1_new_nodes.find(v_g1) == g1_new_nodes.end()){
+				if ( v_g2_in_g1 != v_g1 && ! adjacent(v_g2_in_g1, v_g1 ) ){
+					//std::cout << "add_edge :" << v_g2_in_g1 << " -> " << v_g1 << std::endl;
+					add_edge(v_g2_in_g1,v_g1);
+				}
+			}
+		}
+	}
+
+
+
 }
 
 template <typename T, typename H>
-void adj_list_graph<T, H>::unite(const graph<T> &g){
-	// MAXI COMPLETAME
+void adj_list_graph<T, H>::unite(const graph<T> &g, element_generator<T> &e_gen){
+	std::unordered_map<T, T, H> g2_to_g1;
+	// add new nodes
+	for (unsigned int i = 0; i < g.n(); ++i){
+		T v = g.get_vertices()[i];
+		T new_v = e_gen.generate(*this);
+		g2_to_g1.insert(std::make_pair(v, new_v ));
+		add_node(new_v);
+	}
+	// add news edge
+	for (unsigned int i = 0; i < g.n(); ++i){
+		T v = g.get_vertices()[i];
+		T v_in_g1 = g2_to_g1.at(v);
+		std::vector<T> neighbours = g.neighbours(v);
+		for (unsigned int j = 0; j < neighbours.size(); ++j){
+			T neighbour_v_in_g1 = g2_to_g1.at(neighbours[j]);
+			if ( ( v_in_g1 != neighbour_v_in_g1 ) && (! adjacent(v_in_g1, neighbour_v_in_g1) ) ){
+				add_edge(v_in_g1,neighbour_v_in_g1);
+			}
+			
+		}
+	}
 }
 
 

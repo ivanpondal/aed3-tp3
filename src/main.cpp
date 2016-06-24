@@ -1,4 +1,5 @@
 #include "./main.h"
+#include "framework/structures/adj_list_graph.h"
 
 using namespace std;
 
@@ -13,7 +14,7 @@ int main (int argc, char* argv[]) {
 
     // Parsea las opciones recibidas
     char opt;
-    while ((opt = getopt(argc, argv, "htvp:")) != -1) {
+    while ((opt = getopt(argc, argv, "hvte:")) != -1) {
         switch (opt) {
             case 'h': { // mostrar ayuda
                 show_help(argv[0]);
@@ -65,7 +66,7 @@ void show_help(char* bin_path) {
     cout << "  Opciones:" << endl;
     cout << "    -h          Muestra este texto de ayuda" << endl;
     cout << "    -t          Ejecuta los tests unitarios provistos para el algoritmo" << endl;
-    cout << "    -p <seed>   Ejecuta las pruebas de performance diseñadas para el algoritmo" << endl;
+    cout << "    -e <seed>   Ejecuta las pruebas de performance diseñadas para el algoritmo" << endl;
 }
 
 // Funciones de entrada/salida
@@ -90,6 +91,37 @@ void read_input(std::istream& is, graph<int>& g1, graph<int>& g2) {
         is >> vertex_1 >> vertex_2;
         g2.add_edge(vertex_1, vertex_2);
     }
+}
+
+solution pairs_to_solution(const graph<std::pair<int, int>>& g) {
+    solution ret;
+    ret.h = new adj_list_graph<int>();
+
+
+    std::vector<std::pair<int, int>> vert = g.get_vertices();
+    std::unordered_map<std::pair<int, int>, int, hash_pair_int> mapping;
+
+    for (unsigned int i = 0; i < vert.size(); i++)
+    {
+        ret.h->add_node(i);
+        mapping.insert({vert[i], i});
+        ret.g1_mapping.push_back(vert[i].first);
+        ret.g2_mapping.push_back(vert[i].second);
+    }
+
+    for (unsigned int i = 0; i < vert.size(); i++) {
+        vector<pair<int,int>> neigh = g.neighbours(vert[i]);
+
+        for (uint j = 0; j < neigh.size(); j++) {
+            pair<int, int> curr_neigh = neigh[j];
+            int mapped_neigh = mapping[curr_neigh];
+            if (mapped_neigh < (int) i) {
+                ret.h->add_edge(i, mapped_neigh);
+            }
+        }
+    }
+
+    return ret;
 }
 
 void print_solution(std::ostream& os, const solution& sol) {
