@@ -44,52 +44,10 @@ graph< std::pair<int, int>> *solve(graph<int> &g1, graph<int> &g2, bool add_neig
 	for(unsigned int i = 0; i < g2.n(); i++){
 		unvisited_g2.push(std::make_pair(g2.get_vertices()[i], g2.degree(g2.get_vertices()[i])));
 	}
+	int g1_node = 0;
+	int g2_node = 0;
 
-	int g1_node = unvisited_g1.top().first;
-	int g2_node = unvisited_g2.top().first;
-
-	unvisited_g1.pop();
-	unvisited_g2.pop();
-
-	std::pair<int, int> mcs_node = std::make_pair(g1_node, g2_node);
-
-	mapping_g1.insert(std::make_pair(g1_node, mcs_node));
-	mapping_g2.insert(std::make_pair(g2_node, mcs_node));
-
-	g_mcs->add_node(mcs_node);
-
-	/////////////////////////////////////////// add_neighbours
-	if(add_neighbours){
-		for(unsigned int i = 0; i < g1.neighbours(g1_node).size(); i++){
-			unvisited_unmapped_g1.push(std::make_pair(g1.neighbours(g1_node)[i],
-			                                          g1.degree(g1.neighbours(g1_node)[i])));
-		}
-
-		for(unsigned int i = 0; i < g2.neighbours(g2_node).size(); i++){
-			unvisited_unmapped_g2.push(std::make_pair(g2.neighbours(g2_node)[i],
-			                                          g2.degree(g2.neighbours(g2_node)[i])));
-		}
-
-		while(!unvisited_unmapped_g1.empty() && !unvisited_unmapped_g2.empty()){
-			g1_node_neighbour = unvisited_unmapped_g1.top().first;
-			g2_node_neighbour = unvisited_unmapped_g2.top().first;
-
-			unvisited_unmapped_g1.pop();
-			unvisited_unmapped_g2.pop();
-
-			mcs_node_neighbour = std::make_pair(g1_node_neighbour, g2_node_neighbour);
-
-			mapping_g1.insert(std::make_pair(g1_node_neighbour, mcs_node_neighbour));
-			mapping_g2.insert(std::make_pair(g2_node_neighbour, mcs_node_neighbour));
-
-			g_mcs->add_node(mcs_node_neighbour);
-			g_mcs->add_edge(mcs_node, mcs_node_neighbour);
-		}
-
-		unvisited_unmapped_g1 = clear_heap;
-		unvisited_unmapped_g2 = clear_heap;
-	}
-	/////////////////////////////////////////// add_neighbours
+	std::pair<int, int> mcs_node;
 
 	while(!unvisited_g1.empty() && !unvisited_g2.empty()){
 
