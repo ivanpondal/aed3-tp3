@@ -44,7 +44,7 @@ bool mcs_backtracking(
 
     if (!g1_remaining_nodes.empty() && !g2_remaining_nodes.empty()) {
 
-        graph<pair<int, int> > *max_subgraph = new adj_list_graph<pair<int, int> >();
+        graph<pair<int, int> > *max_subgraph = new adj_list_graph<pair<int, int>, hash_pair_int>();
 
         // This indexes will be used to prevent losing the reference to the iterator when an element is erased and re-inserted
         list<int>::iterator g1_remaining_nodes_it = g1_remaining_nodes.begin();
@@ -175,7 +175,7 @@ bool mcs_backtracking(
 }
 
 graph<pair<int, int> >* mcs(graph<int> *g1, graph<int> *g2) {
-    adj_list_graph<pair<int, int> > *empty_graph = new adj_list_graph<pair<int, int> >();
+    graph<pair<int, int>> *empty_graph = new adj_list_graph<pair<int, int>, hash_pair_int>();
     unordered_map<int, int> empty_map;
     unordered_set<tuple<int, int, int, int>, hash_tuple_int> permutations;
     unsigned int edges = 0;
