@@ -1,4 +1,3 @@
-#include "../main.h"
 #include "ej2.h"
 #include "../mini_test.h"
 #include <sstream>

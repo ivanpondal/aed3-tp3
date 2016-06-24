@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <algorithm>  // std::find
 #include "graph.h"
 
 template <typename T, typename H = std::hash<T>>
@@ -18,6 +19,7 @@ class adj_list_graph: public graph<T>{
 		bool adjacent(const T &v1, const T &v2) const;
 		void add_node(const T &v);
 		void add_edge(const T &v1, const T &v2);
+		void remove_node(const T &v);
 		bool contains(const T &v) const;
 		graph<T> *clone() const;
 		void join(const graph<T> &g, element_generator<T> &e_gen);
@@ -85,6 +87,24 @@ void adj_list_graph<T, H>::add_edge(const T &v1, const T &v2){
 	adj_list[v1].push_back(v2);
 	adj_list[v2].push_back(v1);
 	m_val++;
+}
+
+template <typename T, typename H>
+void adj_list_graph<T, H>::remove_node(const T &v) {
+	n_val--;
+	m_val -= degree(v);
+
+	for (unsigned int i = 0; i < degree(v); i++) {
+		adj_list[adj_list[v][i]].erase(
+			find(
+				adj_list[adj_list[v][i]].begin(),
+				adj_list[adj_list[v][i]].end(),
+				v
+			)
+		);
+	}
+	adj_list.erase(v);
+	vertices_list.erase(std::find(vertices_list.begin(), vertices_list.end(), v));
 }
 
 template <typename T, typename H>
@@ -162,7 +182,7 @@ void adj_list_graph<T, H>::unite(const graph<T> &g, element_generator<T> &e_gen)
 			if ( ( v_in_g1 != neighbour_v_in_g1 ) && (! adjacent(v_in_g1, neighbour_v_in_g1) ) ){
 				add_edge(v_in_g1,neighbour_v_in_g1);
 			}
-			
+
 		}
 	}
 }

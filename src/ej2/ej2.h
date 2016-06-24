@@ -1,5 +1,5 @@
-#ifndef SRC_EJ2_H
-#define SRC_EJ2_H
+#ifndef AED3_TP3_EJ2_H
+#define AED3_TP3_EJ2_H
 
 #include <unordered_map>
 
@@ -7,6 +7,7 @@ using namespace std;
 
 #include <sstream>
 
+#include "../main.h"
 #include "../framework/experiments/incremental_experiment.h"
 #include "../framework/experiments/experiment_suite.h"
 #include "../framework/experiments/input/incremental_experiment_input_int.h"
@@ -41,4 +42,4 @@ graph<pair<int, int> >* mcs(
         graph<int> *g2
 );
 
-#endif //SRC_EJ2_H
+#endif  // AED3_TP3_EJ2_H
