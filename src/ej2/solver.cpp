@@ -27,7 +27,8 @@ unsigned int degree_sum(graph<int> *g, list<int> remaining_nodes) {
 bool mcs_backtracking(
         graph<int> *g1,
         graph<int> *g2,
-        graph<int> *subgraph,
+        // graph<int> *subgraph,
+        graph<pair<int, int> > *subgraph,
         unordered_map<int, int> node_map,
         list<int> &g1_remaining_nodes,
         list<int> &g2_remaining_nodes,
@@ -44,7 +45,7 @@ bool mcs_backtracking(
 
     if (!g1_remaining_nodes.empty() && !g2_remaining_nodes.empty()) {
 
-        graph<int> *max_subgraph = new adj_list_graph<int>();
+        graph<pair<int, int> > *max_subgraph = new adj_list_graph<pair<int, int> >();
 
         // This indexes will be used to prevent losing the reference to the iterator when an element is erased and re-inserted
         list<int>::iterator g1_remaining_nodes_it = g1_remaining_nodes.begin();
@@ -62,6 +63,8 @@ bool mcs_backtracking(
                 if (subgraph->n() == 1) {
                     unordered_map<int, int>::iterator map_it = node_map.begin();
                     tuple<int, int, int, int> permutation(map_it->first, map_it->second, g1_node, g2_node);
+                    // pair<int, int> first_mapping = subgraph->get_vertices[0];
+                    // tuple<int, int, int, int> permutation(first_mapping.first, first_mapping.second, g1_node, g2_node);
                     
                     // If actual mapping is a permutation of a already traversed mapping, it skips it
                     if (permutations.find(permutation) != permutations.end()) {
@@ -79,14 +82,16 @@ bool mcs_backtracking(
                 g1_remaining_nodes.erase(g1_remaining_nodes_it);
                 g2_remaining_nodes.erase(g2_remaining_nodes_it);
 
+                pair<int, int> actual_mapping(g1_node,g2_node);
+
                 // Copy unordered_map and map nodes
                 unordered_map<int, int> node_map_copy = node_map;
-                pair<int, int> par(g1_node,g2_node);
-                node_map_copy.insert(par);
+                node_map_copy.insert(actual_mapping);
 
                 // Copy subgraph and dd new node
-                graph<int> *subgraph_copy = subgraph->clone();
-                subgraph_copy->add_node(g1_node);
+                graph<pair<int, int> > *subgraph_copy = subgraph->clone();
+                // subgraph_copy->add_node(g1_node);
+                subgraph_copy->add_node(actual_mapping);
 
                 // Add edges to the existing neighbours
                 vector<int> g1_neighbours = g1->neighbours(g1_node);
@@ -95,12 +100,14 @@ bool mcs_backtracking(
                     int g1_neighbour = g1_neighbours[neighbour_index];
 
                     // Check if the neighbour is in the subgraph
-                    if (subgraph->contains(g1_neighbour)) {
-                        // Check if the neighbour is mapped to a neighbour of the remaining_g2 node-to-map
+                    if (node_map.find(g1_neighbour) != node_map.end()) {
                         int g2_mapped_node = node_map.at(g1_neighbour);
+                        
+                        // Check if the neighbour is mapped to a neighbour of the remaining_g2 node-to-map
                         if (g2->adjacent(g2_mapped_node, g2_node)) {
                             // Add edge
-                            subgraph_copy->add_edge(g1_node, g1_neighbour);
+                            pair<int, int> subgraph_neighbour_node(g1_neighbour, g2_mapped_node);
+                            subgraph_copy->add_edge(actual_mapping, subgraph_neighbour_node);
                         }
                     }
                 }
@@ -168,8 +175,8 @@ bool mcs_backtracking(
     return true;
 }
 
-graph<int>* mcs(graph<int> *g1, graph<int> *g2) {
-    adj_list_graph<int> *empty_graph = new adj_list_graph<int>();
+graph<pair<int, int> >* mcs(graph<int> *g1, graph<int> *g2) {
+    adj_list_graph<pair<int, int> > *empty_graph = new adj_list_graph<pair<int, int> >();
     unordered_map<int, int> empty_map;
     unordered_set<tuple<int, int, int, int>, hash_tuple_int> permutations;
     unsigned int edges = 0;
@@ -202,5 +209,6 @@ graph<int>* mcs(graph<int> *g1, graph<int> *g2) {
 }
 
 solution run_solver(graph<int> &g1, graph<int> &g2) {
-
+    graph<std::pair<int, int>> *maxComSub = mcs(&g1, &g2);
+    return pairs_to_solution(maxComSub);
 }

@@ -36,7 +36,7 @@ struct hash_tuple_int{
 	}
 };
 
-graph<int>* mcs(
+graph<pair<int, int> >* mcs(
         graph<int> *g1,
         graph<int> *g2
 );
