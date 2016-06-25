@@ -209,5 +209,5 @@ graph<pair<int, int> >* mcs(graph<int> *g1, graph<int> *g2) {
 
 solution run_solver(graph<int> &g1, graph<int> &g2) {
     graph<std::pair<int, int>> *maxComSub = mcs(&g1, &g2);
-    return pairs_to_solution(maxComSub);
+    return pairs_to_solution(*maxComSub);
 }
