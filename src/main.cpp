@@ -73,7 +73,7 @@ void show_help(char* bin_path) {
 
 void read_input(std::istream& is, graph<int>& g1, graph<int>& g2) {
     uint n1, n2, m1, m2;
-    is >> n1 >> n2 >> m1 >> m2;
+    is >> n1 >> m1 >> n2 >> m2;
 
     for (uint i = 0; i < n1; i++) {
         g1.add_node(i);
