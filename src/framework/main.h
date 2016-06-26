@@ -19,6 +19,8 @@ void run_instance_generation();
 
 enum mode {test, instance_generation};
 
+// class declarations
+
 class adj_list_n_incremental_experiment: public incremental_experiment<int, adj_list_graph<int>>{
 	public:
 		adj_list_n_incremental_experiment(const incremental_experiment_input<int, adj_list_graph<int>> *input):
