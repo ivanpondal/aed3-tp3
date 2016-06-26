@@ -12,7 +12,7 @@
 template <typename T, typename S>
 class incremental_experiment: public experiment{
 	public:
-		incremental_experiment(const incremental_experiment_input<T, S> *input);
+		incremental_experiment(const incremental_experiment_input<T, S> *input, bool print = true);
 		~incremental_experiment();
 		void init(const incremental_experiment_input<T, S> *input);
 		void run();
@@ -22,11 +22,13 @@ class incremental_experiment: public experiment{
 		void print_results();
 		std::vector< std::pair<T, std::vector<T>>> times_vec;
 		incremental_experiment_input<T, S> *input = NULL;
+		bool print;
 };
 
 template <typename T, typename S>
-incremental_experiment<T, S>::incremental_experiment(const incremental_experiment_input<T, S> *input){
+incremental_experiment<T, S>::incremental_experiment(const incremental_experiment_input<T, S> *input, bool print){
 	init(input);
+	this->print = print;
 }
 
 template <typename T, typename S>
@@ -65,7 +67,9 @@ void incremental_experiment<T, S>::run(){
 		input->get_inc_val() += input->get_delta();
 	}
 
-	print_results();
+	if(print){
+		print_results();
+	}
 }
 
 template <typename T, typename S>

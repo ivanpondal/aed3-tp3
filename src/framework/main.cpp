@@ -1,4 +1,6 @@
-#include "test.h"
+#include "main.h"
+
+using namespace std;
 
 void test_adj_list_graph_add_nodes(){
 	adj_list_graph<int> g;
@@ -48,7 +50,7 @@ void test_adj_list_graph_neighbours(){
 	ASSERT(g.adjacent(4, 3));
 	ASSERT(!g.adjacent(2, 3));
 
-	std::vector<int> expected = {2, 3};
+	vector<int> expected = {2, 3};
 	ASSERT(g.neighbours(4) == expected);
 }
 
@@ -70,7 +72,7 @@ void test_adj_list_graph_degree(){
 void test_adj_list_graph_istream(){
 	adj_list_graph<int> g;
 
-	std::stringstream iss;
+	stringstream iss;
 	iss << "5 4\n1 2\n2 3\n3 4\n3 5";
 
 	iss >> g;
@@ -83,7 +85,7 @@ void test_adj_list_graph_istream(){
 	ASSERT(g.adjacent(3, 4));
 	ASSERT(g.adjacent(3, 5));
 
-	std::vector<int> expected = {2, 4, 5};
+	vector<int> expected = {2, 4, 5};
 	ASSERT(g.neighbours(3) == expected);
 }
 
@@ -100,7 +102,7 @@ void test_adj_list_graph_ostream(){
 	g.add_edge(6, 4);
 	g.add_edge(6, 7);
 
-	std::stringstream oss;
+	stringstream oss;
 	oss << g;
 	const char* expected = "4: 2 6\n2: 4 6\n6: 2 4 7\n7: 6\n";
 
@@ -152,7 +154,7 @@ void test_adj_list_graph_vertices(){
 	g.add_node(2);
 	g.add_node(3);
 
-	std::vector<int> expected = {4, 2, 3};
+	vector<int> expected = {4, 2, 3};
 
 	ASSERT(g.get_vertices() == expected);
 }
@@ -171,7 +173,7 @@ void test_adj_list_graph_unite(){
 	g_2.add_edge(2,0);
 	element_generator_int e_gen;
 	g_1.unite(g_2,e_gen);
-	std::vector<int> expected = {0, 1, 2, 3, 4, 5};
+	vector<int> expected = {0, 1, 2, 3, 4, 5};
 	ASSERT(g_1.adjacent(3, 4));
 	ASSERT(g_1.adjacent(4, 5));
 	ASSERT(g_1.adjacent(5, 3));
@@ -192,11 +194,11 @@ void test_adj_list_graph_join(){
 	g_2.add_edge(2,0);
 	element_generator_int e_gen;
 	g_1.join(g_2,e_gen);
-	std::vector<int> expected = {0, 1, 2, 3, 4, 5};
+	vector<int> expected = {0, 1, 2, 3, 4, 5};
 	ASSERT(g_1.adjacent(3, 4));
 	ASSERT(g_1.adjacent(4, 5));
 	ASSERT(g_1.adjacent(5, 3));
-	//std::cout << "join" << g_1 << std::endl;
+	//cout << "join" << g_1 << endl;
 	ASSERT(g_1.adjacent(0, 3));
 	ASSERT(g_1.adjacent(0, 4));
 	ASSERT(g_1.adjacent(0, 5));
@@ -213,7 +215,7 @@ void test_adj_list_graph_join(){
 	g_4.add_node(0);
 	element_generator_int e_gen_1;
 	g_3.join(g_4,e_gen_1);
-	//std::cout << std::endl << "join" << g_3 << std::endl;
+	//cout << endl << "join" << g_3 << endl;
 	ASSERT(g_3.adjacent(0, 1));
 }
 
@@ -291,7 +293,7 @@ void test_graph_factory_int_random(){
 	edge_proportion = g.m()*1.0f / ((g.n()*(g.n() - 1))/2);
 
 	ASSERT_EQ(g.n(), 100);
-	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
+	ASSERT(abs(edge_proportion - 0.5) < epsilon);
 }
 
 void test_graph_factory_int_tree(){
@@ -318,7 +320,7 @@ void test_graph_factory_int_bipartite(){
 	edge_proportion = g.m()*1.0f / (n*k);
 
 	ASSERT_EQ(g.n(), n + k);
-	ASSERT(std::abs(edge_proportion - 0.5) < epsilon);
+	ASSERT(abs(edge_proportion - 0.5) < epsilon);
 }
 
 void test_graph_factory_int_cycle(){
@@ -412,8 +414,7 @@ void test_co_graph_with_c_probability_edges(){
 
 }
 
-int main(){
-
+void run_unit_tests(){
 	// adj_list_graph tests
 	RUN_TEST(test_adj_list_graph_add_nodes);
 	RUN_TEST(test_adj_list_graph_add_edges);
@@ -441,4 +442,50 @@ int main(){
 	RUN_TEST(test_graph_factory_int_disconnected);
 	RUN_TEST(test_complete_graph);
 	RUN_TEST(test_co_graph_with_c_probability_edges);
+
+}
+
+void show_help(char* bin_path) {
+	cout << "  Modo de uso: " << bin_path << endl;
+	cout << endl;
+	cout << "  Opciones:" << endl;
+	cout << "    -h          Muestra este texto de ayuda" << endl;
+	cout << "    -t          Ejecuta los tests unitarios provistos para el framework" << endl;
+	cout << "    -g          Ejecuta los generadores de instancias de grafos para pruebas" << endl;
+}
+
+int main (int argc, char* argv[]) {
+	mode exec_mode = test;
+
+	char opt;
+	while ((opt = getopt(argc, argv, "htg")) != -1) {
+		switch (opt) {
+			case 'h': {
+				show_help(argv[0]);
+				exit(0);
+				break;
+			}
+			case 't': {
+				exec_mode = test;
+				break;
+			}
+			case 'g': {
+				srand(MAGIC_SEED);
+				exec_mode = instance_generation;
+				break;
+			}
+			default: {
+				show_help(argv[0]);
+				exit(1);
+				break;
+			}
+		}
+	}
+
+	if (exec_mode == test) {
+		run_unit_tests();
+	}
+	else if (exec_mode == instance_generation) {
+		// TODO: instance generation
+	}
 }

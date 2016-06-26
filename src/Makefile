@@ -16,7 +16,7 @@ OTHER_OBJECTS=solver.o experimentation.o test.o
 OTHER_OBJECTS_DIR=$(foreach exe,$(EXECUTABLES_BASE),$(addprefix $(exe)/,$(OTHER_OBJECTS)))
 
 # framework variables
-FRAMEWORK_DIR=framework/
+FRAMEWORK_DIR=framework
 FRAMEWORK_FOLDERS=experiments experiments/input structures utils
 FRAMEWORK_EXPERIMENTS_HEADERS=experiment.h incremental_experiment.h experiment_suite.h \
                               incremental_experiment_input.h incremental_experiment_input_int.h \
@@ -25,9 +25,9 @@ FRAMEWORK_STRUCTURES_HEADERS=graph.h adj_list_graph.h
 FRAMEWORK_UTILS_HEADERS=chronometer.h graph_factory.h element_generator.h element_generator_int.h
 FRAMEWORK_OBJECTS=utils/chronometer.o utils/element_generator_int.o \
                   experiments/experiment_suite.o
-FRAMEWORK_OBJECTS_DIR=$(addprefix $(FRAMEWORK_DIR),$(FRAMEWORK_OBJECTS))
-FRAMEWORK_TEST_OBJECT=$(FRAMEWORK_DIR)test.o
-FRAMEWORK_TEST_EXECUTABLE=$(FRAMEWORK_DIR)test_framework
+FRAMEWORK_OBJECTS_DIR=$(addprefix $(FRAMEWORK_DIR)/,$(FRAMEWORK_OBJECTS))
+FRAMEWORK_MAIN_OBJECT=$(FRAMEWORK_DIR)/main.o
+FRAMEWORK_EXECUTABLE=$(FRAMEWORK_DIR)/main
 
 # heuristics variables
 HEURISTICS_DIR=heuristics
@@ -35,7 +35,7 @@ HEURISTICS_HEADER=heuristics.h
 HEURISTICS_OBJECTS=greedy.o local_search_1.o
 HEURISTICS_OBJECTS_DIR=$(addprefix $(HEURISTICS_DIR)/,$(HEURISTICS_OBJECTS))
 
-VPATH=$(addprefix $(FRAMEWORK_DIR),$(FRAMEWORK_FOLDERS)) $(HEURISTICS_DIR)
+VPATH=$(addprefix $(FRAMEWORK_DIR)/,$(FRAMEWORK_FOLDERS)) $(HEURISTICS_DIR)
 
 # targets that aren't file names
 .PHONY: all clean test
@@ -44,16 +44,16 @@ all: $(EXECUTABLES)
 
 clean:
 	rm -rf $(EXECUTABLES) $(MAIN_OBJECT) $(addsuffix /*.o,$(EXECUTABLES_BASE)) \
-           $(FRAMEWORK_TEST_EXECUTABLE) $(FRAMEWORK_TEST_OBJECT) $(FRAMEWORK_OBJECTS_DIR) \
+           $(FRAMEWORK_EXECUTABLE) $(FRAMEWORK_MAIN_OBJECT) $(FRAMEWORK_OBJECTS_DIR) \
            $(HEURISTICS_OBJECTS_DIR)
 
-test: $(FRAMEWORK_TEST_EXECUTABLE)
+framework: $(FRAMEWORK_EXECUTABLE)
 
 # any change to the framework or the test header forces rebuilding
-$(FRAMEWORK_TEST_OBJECT): $(subst .o,.h,$(FRAMEWORK_TEST_OBJECT)) \
+$(FRAMEWORK_MAIN_OBJECT): $(subst .o,.h,$(FRAMEWORK_MAIN_OBJECT)) \
                 $(FRAMEWORK_UTILS_HEADERS) $(FRAMEWORK_STRUCTURES_HEADERS) $(FRAMEWORK_EXPERIMENTS_HEADERS)
 
-$(FRAMEWORK_TEST_EXECUTABLE): $(FRAMEWORK_OBJECTS_DIR) $(FRAMEWORK_TEST_OBJECT)
+$(FRAMEWORK_EXECUTABLE): $(FRAMEWORK_OBJECTS_DIR) $(FRAMEWORK_MAIN_OBJECT)
 	$(CC) $(CFLAGS) -o $@ $^
 
 $(MAIN_OBJECT): $(subst .o,.h,$(MAIN_OBJECT))
