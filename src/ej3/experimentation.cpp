@@ -42,12 +42,12 @@ void complete_graph_n_incremental_dp_experiment::load_instance(incremental_exper
     graph_factory<int>::add_n_vertices_and_all_edges(g_2,e_gen,input->get_delta());
     dp = vector<vector<subsolution>>(
         input->get_subject().size(),
-        vector<subsolution>(g2.n() + 1)
+        vector<subsolution>(g_2.n() + 1)
     );
 }
 
 void complete_graph_n_incremental_dp_experiment::solve_instance(incremental_experiment_input<int, vector<info_cotree_node>> *input){
-    solver_dp(dp,input->get_subject(),g2.n());
+    solver_dp(dp,input->get_subject(),g_2.n());
 }
 
 // Incremental Kn and cograph

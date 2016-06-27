@@ -321,3 +321,33 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_2) + (
         \caption{Tiempos de ejecución observados al fijar el $K_n$ ($n_1$)y la cantidad de nodos del cografo ($n_2$) y variar la probabilidad de hacer un join al crear el cografo. Variamos la probabilidad entre $0 y 1$ y la llamamos $c$}
         \label{fig:exp3:var-nym-base}
     \end{figure}
+
+
+
+
+
+     \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Fijo el cografo y vario la cantidad de nodos del $K_n$ ($n_2$), ejecuto solo la resolución del DP},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/complete_graph_incremental_nodes_dp};
+
+                \legend{$T_c$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{lalala}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
