@@ -9,6 +9,9 @@
 */
 using namespace std;
 
+
+// Incremental cograph
+
 void cograph_n_incremental_experiment::load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
     e_gen.reset();
     g = graph_factory<int>::random_co_graph(e_gen, input->get_inc_val());
@@ -17,6 +20,8 @@ void cograph_n_incremental_experiment::load_instance(incremental_experiment_inpu
 void cograph_n_incremental_experiment::solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
     run_solver(g,input->get_subject());
 }
+
+// Incremental Kn
 
 void complete_graph_n_incremental_experiment::load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
     e_gen.reset();
@@ -29,6 +34,23 @@ void complete_graph_n_incremental_experiment::load_instance(incremental_experime
 void complete_graph_n_incremental_experiment::solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
     run_solver(input->get_subject(),g_2);
 }
+
+// DP incremental Kn
+
+void complete_graph_n_incremental_dp_experiment::load_instance(incremental_experiment_input<int, vector<info_cotree_node>> *input){
+    e_gen.reset();
+    graph_factory<int>::add_n_vertices_and_all_edges(g_2,e_gen,input->get_delta());
+    dp = vector<vector<subsolution>>(
+        input->get_subject().size(),
+        vector<subsolution>(g2.n() + 1)
+    );
+}
+
+void complete_graph_n_incremental_dp_experiment::solve_instance(incremental_experiment_input<int, vector<info_cotree_node>> *input){
+    solver_dp(dp,input->get_subject(),g2.n());
+}
+
+// Incremental Kn and cograph
 
 void complete_graph_and_cograph_n_incremental_experiment::load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
     e_gen.reset();
@@ -47,6 +69,8 @@ void complete_graph_and_cograph_n_incremental_experiment::load_instance(incremen
 void complete_graph_and_cograph_n_incremental_experiment::solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
     run_solver(g_1,g_2);
 }
+
+// Incremental edges of cograph
 
 void cograph_n_incremental_edges_experiment::load_instance(incremental_experiment_input<float, adj_list_graph<int>> *input){
     e_gen.reset();
@@ -83,11 +107,11 @@ void run_experimentation() {
     // exp_suite.add(&exp_1);
 
 
-    incremental_experiment_input_int< adj_list_graph<int>> exp2_input(1, 200, 0, 20, 40, co_g, "../exp/ej3/complete_graph_incremental_nodes");
+    // incremental_experiment_input_int< adj_list_graph<int>> exp2_input(1, 200, 0, 20, 40, co_g, "../exp/ej3/complete_graph_incremental_nodes");
 
-    complete_graph_n_incremental_experiment exp_2 = complete_graph_n_incremental_experiment(&exp2_input);
+    // complete_graph_n_incremental_experiment exp_2 = complete_graph_n_incremental_experiment(&exp2_input);
 
-    exp_suite.add(&exp_2);
+    // exp_suite.add(&exp_2);
 
 
     // incremental_experiment_input_int< adj_list_graph<int>> exp3_input(1, 100, 30, 50, 50, adj_list_graph<int>(), "../exp/ej3/complete_graph_and_cograph_incremental_nodes");
@@ -102,6 +126,17 @@ void run_experimentation() {
     // cograph_n_incremental_edges_experiment exp_4 = cograph_n_incremental_edges_experiment(&exp4_input);
 
     // exp_suite.add(&exp_4);
+
+    // DP experimentation
+
+    cotree_node* cotree = generate_cotree(co_g);
+    vector<info_cotree_node> vec_cotree = vectorize(cotree);
+
+    incremental_experiment_input_int< vector<info_cotree_node> > exp5_input(1, 200, 20, 30, 50, vec_cotree , "../exp/ej3/complete_graph_incremental_nodes_dp");
+
+    complete_graph_n_incremental_dp_experiment exp_5 = complete_graph_n_incremental_dp_experiment(&exp5_input);
+
+    exp_suite.add(&exp_5);
 
     exp_suite.run();
 

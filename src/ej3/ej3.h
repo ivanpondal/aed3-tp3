@@ -188,4 +188,25 @@ class cograph_n_incremental_edges_experiment:public incremental_experiment<float
         element_generator_int e_gen;
 };
 
+
+
+// Calculate solution
+struct subsolution {
+    int edge_count;
+    std::vector<int> vertices;
+};
+
+void solver_dp(std::vector<std::vector<subsolution>> &dp,std::vector<info_cotree_node> &vec_cotree, uint g2_n);
+
+class complete_graph_n_incremental_dp_experiment:public incremental_experiment<int, std::vector<info_cotree_node> > {
+    public:
+        complete_graph_n_incremental_dp_experiment(const incremental_experiment_input<int, std::vector<info_cotree_node> > *input): incremental_experiment(input){};
+    private:
+        void load_instance(incremental_experiment_input<int, std::vector<info_cotree_node>> *input);
+        void solve_instance(incremental_experiment_input<int, std::vector<info_cotree_node>> *input);
+        std::vector<std::vector<subsolution>> dp;
+        adj_list_graph<int> g_2;
+        element_generator_int e_gen;
+};  
+
 #endif  // AED3_TP3_EJ3_H
