@@ -207,6 +207,30 @@ class complete_graph_n_incremental_dp_experiment:public incremental_experiment<i
         std::vector<std::vector<subsolution>> dp;
         adj_list_graph<int> g_2;
         element_generator_int e_gen;
+};
+
+class cograph_n_incremental_dp_experiment:public incremental_experiment<int, adj_list_graph<int> > {
+    public:
+        cograph_n_incremental_dp_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){};
+    private:
+        void load_instance(incremental_experiment_input<int, adj_list_graph<int> > *input);
+        void solve_instance(incremental_experiment_input<int, adj_list_graph<int> > *input);
+        std::vector<std::vector<subsolution>> dp;
+        std::vector<info_cotree_node> vec_cotree;
+        element_generator_int e_gen;
 };  
+
+// generate cotree
+
+class cograph_n_incremental_edges_create_cotree_experiment:public incremental_experiment<float, adj_list_graph<int> > {
+    public:
+        cograph_n_incremental_edges_create_cotree_experiment(const incremental_experiment_input<float, adj_list_graph<int> > *input): incremental_experiment(input){};
+    private:
+        void load_instance(incremental_experiment_input<float, adj_list_graph<int>> *input);
+        void solve_instance(incremental_experiment_input<float, adj_list_graph<int>> *input);
+        adj_list_graph<int> g;
+        element_generator_int e_gen;
+};
+
 
 #endif  // AED3_TP3_EJ3_H
