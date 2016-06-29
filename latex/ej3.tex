@@ -379,3 +379,30 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_2) + (
     \end{figure}
 
 
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Fijo la cantidad de nodos del cografo ($n_1$) y aumento la cantidad de aristas del cografo.},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_edges_create_cotree};
+
+                \legend{$T_s$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{lalala Solo ejecuto la creación del cotree}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+
