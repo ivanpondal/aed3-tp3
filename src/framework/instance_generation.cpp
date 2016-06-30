@@ -46,6 +46,142 @@ void save_instance(const graph<int> &g1, const graph<int> &g2, const char *save_
 }
 
 void run_known_solution_instance_generation(){
+	element_generator_int e_gen;
+	adj_list_graph<int> g1, g2;
+
+	// random
+	int n = 10;
+	float c = 0.25;
+
+	g1.clear();
+	g2.clear();
+
+	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
+	e_gen.reset();
+	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_n10_c025.ins");
+
+	c = 0.5;
+
+	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
+	e_gen.reset();
+	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_n10_c050.ins");
+
+	c = 0.75;
+
+	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
+	e_gen.reset();
+	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_n10_c075.ins");
+
+	// co-graph vs complete
+	n = 100;
+	int k = 50;
+
+	g2.clear();
+
+	g1 = graph_factory<int>::random_co_graph(e_gen, n);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, k);
+	e_gen.reset();
+
+	save_instance(g1, g2, "cograph_n100_k50.ins");
+
+	n = 50;
+	k = 100;
+
+	g2.clear();
+
+	g1 = graph_factory<int>::random_co_graph(e_gen, n);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, k);
+	e_gen.reset();
+
+	save_instance(g1, g2, "cograph_n50_k100.ins");
+
+	// subgraph instances (incremental graphs)
+
+	// random
+	n = 500;
+	c = 0.25;
+
+	g1.clear();
+	g2.clear();
+
+	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
+	g2 = g1;
+	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_subgraph_n500_c025.ins");
+
+	c = 0.5;
+
+	g1.clear();
+	g2.clear();
+
+	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
+	g2 = g1;
+	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_subgraph_n500_c050.ins");
+
+	c = 0.75;
+
+	g1.clear();
+	g2.clear();
+
+	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
+	g2 = g1;
+	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_subgraph_n500_c075.ins");
+
+	// tree
+
+	n = 500;
+
+	g1.clear();
+	g2.clear();
+
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n);
+	g2 = g1;
+	graph_factory<int>::add_n_tree_vertices(g2, e_gen, n);
+	e_gen.reset();
+
+	save_instance(g1, g2, "tree_subgraph_n500.ins");
+
+	// complete
+
+	g1.clear();
+	g2.clear();
+
+	graph_factory<int>::add_n_vertices_and_all_edges(g1, e_gen, n);
+	g2 = g1;
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n);
+	e_gen.reset();
+
+	save_instance(g1, g2, "complete_subgraph_n500.ins");
+
+	// cycle
+
+	n = 500;
+
+	g1 = graph_factory<int>::cycle_graph(e_gen, n);
+	e_gen.reset();
+	g2 = graph_factory<int>::cycle_graph(e_gen, 2*n);
+	e_gen.reset();
+
+	save_instance(g1, g2, "cycle_subgraph_n500.ins");
 }
 
 void run_unknown_solution_instance_generation(){
