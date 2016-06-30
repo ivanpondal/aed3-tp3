@@ -2,6 +2,7 @@
 #define MAIN_H_
 
 #include <sstream>
+#include <cstring>
 #include <unistd.h>
 
 #include "experiments/incremental_experiment.h"

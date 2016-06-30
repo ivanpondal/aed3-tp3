@@ -4,7 +4,12 @@ using namespace std;
 
 void save_instance(const graph<int> &g1, const graph<int> &g2, const char *save_name){
 	ofstream output_file;
-	output_file.open(save_name);
+
+	char file_name[80];
+	strcpy(file_name, "framework/generated_instances/");
+	output_file.open(strcat(file_name, save_name));
+
+	std::cout << "Guardando instancia " << file_name << std::endl;
 
 	output_file << g1.n() << " " << g1.m() << " " << g2.n() << " " << g2.m() << endl;
 
