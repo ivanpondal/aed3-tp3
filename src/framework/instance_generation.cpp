@@ -55,6 +55,7 @@ void run_known_solution_instance_generation(){
 
 	g1.clear();
 	g2.clear();
+	srand(MAGIC_SEED);
 
 	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
 	e_gen.reset();
@@ -86,6 +87,7 @@ void run_known_solution_instance_generation(){
 	int k = 50;
 
 	g2.clear();
+	srand(MAGIC_SEED);
 
 	g1 = graph_factory<int>::random_co_graph(e_gen, n);
 	e_gen.reset();
@@ -114,6 +116,7 @@ void run_known_solution_instance_generation(){
 
 	g1.clear();
 	g2.clear();
+	srand(MAGIC_SEED);
 
 	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
 	g2 = g1;
@@ -152,6 +155,7 @@ void run_known_solution_instance_generation(){
 
 	g1.clear();
 	g2.clear();
+	srand(MAGIC_SEED);
 
 	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n);
 	g2 = g1;

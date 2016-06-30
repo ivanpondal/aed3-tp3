@@ -27,7 +27,6 @@ int main (int argc, char* argv[]) {
 				break;
 			}
 			case 'g': {
-				srand(MAGIC_SEED);
 				exec_mode = instance_generation;
 				break;
 			}
