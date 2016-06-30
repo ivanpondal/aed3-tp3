@@ -25,8 +25,8 @@ class adj_list_graph: public graph<T>{
 		void join(const graph<T> &g, element_generator<T> &e_gen);
 		void unite(const graph<T> &g, element_generator<T> &e_gen);
 		const std::vector<T> &get_vertices() const;
-	private:
 		void clear();
+	private:
 		unsigned int n_val;
 		unsigned int m_val;
 		std::unordered_map<T, std::vector<T>, H> adj_list;
