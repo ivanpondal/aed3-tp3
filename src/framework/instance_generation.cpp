@@ -9,8 +9,6 @@ void save_instance(const graph<int> &g1, const graph<int> &g2, const char *save_
 	strcpy(file_name, "framework/generated_instances/");
 	output_file.open(strcat(file_name, save_name));
 
-	std::cout << "Guardando instancia " << file_name << std::endl;
-
 	output_file << g1.n() << " " << g1.m() << " " << g2.n() << " " << g2.m() << endl;
 
 	unordered_set<int> done_vertices;
@@ -43,8 +41,11 @@ void save_instance(const graph<int> &g1, const graph<int> &g2, const char *save_
 	}
 
 	output_file.close();
+
+	std::cout << "Instancia '" << file_name << "' almacenada correctamente." << std::endl;
 }
 
+// these are all instances for which we can calculate the exact MCS
 void run_known_solution_instance_generation(){
 	element_generator_int e_gen;
 	adj_list_graph<int> g1, g2;
@@ -109,6 +110,7 @@ void run_known_solution_instance_generation(){
 	save_instance(g1, g2, "cograph_n50_k100.ins");
 
 	// subgraph instances (incremental graphs)
+	// these instances are all scenarios were g1 is a subgraph of g2
 
 	// random
 	n = 500;
@@ -186,9 +188,185 @@ void run_known_solution_instance_generation(){
 	e_gen.reset();
 
 	save_instance(g1, g2, "cycle_subgraph_n500.ins");
+
+	// vs complete instances
+	// these are instances were we compare against a complete graph g2
+	// this assures us that g1 will be able to match all its edges
+
+	// bipartite
+
+	c = 0.5;
+	n = 500;
+	k = 500;
+
+	srand(MAGIC_SEED);
+
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, c);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, 1.0);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_bipartite_vs_complete_n500_k500_c050.ins");
+
+	c = 0.5;
+	n = 250;
+	k = 500;
+
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, c);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, 1.0);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_bipartite_vs_complete_n250_k500_c050.ins");
+
+	// disconnected
+
+	// forest
+
+	int d = 10;
+	n = 1000;
+	c = 0.0;
+
+	srand(MAGIC_SEED);
+
+	g1 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, c);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, 1.0);
+	e_gen.reset();
+
+	save_instance(g1, g2, "forest_vs_complete_n1000_d10.ins");
+
+	// random
+
+	d = 10;
+	n = 1000;
+	c = 0.5;
+
+	srand(MAGIC_SEED);
+
+	g1 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, c);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, 1.0);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_vs_complete_n1000_d10_c050.ins");
 }
 
+// these are instances were no known exact solution is available
 void run_unknown_solution_instance_generation(){
+	element_generator_int e_gen;
+	adj_list_graph<int> g1, g2;
+
+	// random
+	int n = 1000;
+	float c = 0.25;
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
+	e_gen.reset();
+	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_n1000_c025.ins");
+
+	c = 0.5;
+
+	g1.clear();
+	g2.clear();
+
+	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
+	e_gen.reset();
+	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_n1000_c050.ins");
+
+	c = 0.75;
+
+	g1.clear();
+	g2.clear();
+
+	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
+	e_gen.reset();
+	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_n1000_c075.ins");
+
+	// tree
+	n = 1000;
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n);
+	e_gen.reset();
+	graph_factory<int>::add_n_tree_vertices(g2, e_gen, n);
+	e_gen.reset();
+
+	save_instance(g1, g2, "tree_n1000.ins");
+
+	// bipartite
+
+	c = 0.5;
+	n = 500;
+	int	k = 500;
+
+	srand(MAGIC_SEED);
+
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, c);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_bipartite_n500_k500_c050.ins");
+
+	c = 0.5;
+	n = 250;
+	k = 500;
+
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, c);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, c);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_bipartite_n250_k500_c050.ins");
+
+	// disconnected
+
+	// forest
+
+	int d = 10;
+	int v = 0.25;
+	n = 1000;
+	c = 0.0;
+
+	srand(MAGIC_SEED);
+
+	g1 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, c, v);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, c, v);
+	e_gen.reset();
+
+	save_instance(g1, g2, "forest_n1000_d10_v025.ins");
+
+	// random
+
+	d = 10;
+	v = 0.25;
+	n = 1000;
+	c = 0.5;
+
+	g1 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, c, v);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, c, v);
+	e_gen.reset();
+
+	save_instance(g1, g2, "random_n1000_d10_c050_v025.ins");
 }
 
 void run_instance_generation(){
