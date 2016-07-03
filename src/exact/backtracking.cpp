@@ -14,7 +14,7 @@ std::ostream &operator<<(std::ostream &output, list<int> &lista){
     return output;
 }
 
-unsigned int degree_sum(graph<int> *g, list<int> remaining_nodes) {
+unsigned int degree_sum(const graph<int> *g, list<int> remaining_nodes) {
     int sum = 0;
     for (list<int>::iterator it = remaining_nodes.begin(); it != remaining_nodes.end(); it++) {
         sum += g->degree(*it);
@@ -22,8 +22,8 @@ unsigned int degree_sum(graph<int> *g, list<int> remaining_nodes) {
     return sum;
 }
 bool mcs_backtracking(
-        graph<int> *g1,
-        graph<int> *g2,
+        const graph<int> *g1,
+        const graph<int> *g2,
         // graph<int> *subgraph,
         graph<pair<int, int> > *subgraph,
         unordered_map<int, int> node_map,
@@ -172,7 +172,7 @@ bool mcs_backtracking(
     return true;
 }
 
-graph<pair<int, int> >* solve_backtracking(graph<int> *g1, graph<int> *g2) {
+graph<pair<int, int> >* solve_backtracking(const graph<int> *g1, const graph<int> *g2) {
     graph<pair<int, int>> *empty_graph = new adj_list_graph<pair<int, int>, hash_pair_int>();
     unordered_map<int, int> empty_map;
     unordered_set<tuple<int, int, int, int>, hash_tuple_int> permutations;

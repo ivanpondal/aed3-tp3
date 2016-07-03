@@ -6,7 +6,7 @@ using namespace std;
 **  Cograph vs complete algorithm
 */
 
-solution solve_cograph_vs_complete(graph<int>& g1, graph<int>& g2){
+solution solve_cograph_vs_complete(const graph<int>& g1, const graph<int>& g2){
 	if (g2.n() >= g1.n()) {
 		vector<int> g1_mapping = g1.get_vertices();
 

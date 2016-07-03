@@ -15,9 +15,11 @@
 **  Exact algorithms
 */
 
-graph<std::pair<int, int> >* solve_backtracking(graph<int> *g1, graph<int> *g2);
+graph<std::pair<int, int> >* solve_backtracking(const graph<int> *g1, const graph<int> *g2);
+solution solve_cograph_vs_complete(const graph<int>& g1, const graph<int>& g2);
 
-solution solve_cograph_vs_complete(graph<int>& g1, graph<int>& g2);
+// Here go declarations of functions which are exported by the problem solver,
+// global variables, etc.
 
 struct hash_tuple_int{
 	size_t operator()(const std::tuple<int, int, int, int> &t) const{
@@ -29,10 +31,6 @@ struct hash_tuple_int{
 		return seed;
 	}
 };
-
-// Here go declarations of functions which are exported by the problem solver,
-// global variables, etc.
-
 
 //  Subgraphs (implemented as vector of booleans)
 //  ---------
