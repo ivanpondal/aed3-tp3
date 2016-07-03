@@ -14,12 +14,10 @@ graph<pair<int, int>>* solve_local_search_1(
     graph<int>& g2,
     graph<pair<int, int>>& start_point,
     int iteration_limit,
-    // int neighbourhood_limit,
     float neighbourhood_proportion,
     bool strict_comparisons
 ) {
     // We assume #V(g1) < #V(g2), #V(start_point) == #V(g_1)
-    // srand(time(NULL));
 
     unsigned int solution_size = start_point.n();
 
@@ -60,8 +58,6 @@ graph<pair<int, int>>* solve_local_search_1(
     graph<pair<int, int>>* ret = start_point.clone();
 
     while (! stop && (iteration_limit < 0 || iteration_count < iteration_limit)) {
-        // cout << "ITERATION " << iteration_count << endl;  // DEBUG
-
         // Neighbourhood is of quadratic size
         vector<pair<int, int>> solution_vertices =
             ret->get_vertices();
@@ -80,13 +76,6 @@ graph<pair<int, int>>* solve_local_search_1(
 
             // Allows a limit for the size of neighbourhood
             int neighbourhood_size = unmapped_nodes.size();
-            // vector<int> shuffled_neighbours;
-            // if (neighbourhood_limit > 0) {
-            //     neighbourhood_size = min(neighbourhood_limit, (int) unmapped_nodes.size());
-            //     shuffled_neighbours = vector<int>(unmapped_nodes.size());
-            //     iota(shuffled_neighbours.begin(), shuffled_neighbours.end(), 0);
-            //     random_shuffle(shuffled_neighbours.begin(), shuffled_neighbours.end());
-            // }
 
             // for (unsigned int j = 0; j < neighbourhood_size; j++) {
             for (unsigned int j = 0; j < neighbourhood_size; j++) {
@@ -94,16 +83,7 @@ graph<pair<int, int>>* solve_local_search_1(
                     // Possible new pair. Let's evaluate its potential
                     int node_mapped    = solution_vertices[i].first;   // part of g1
                     int node_to_remove = solution_vertices[i].second;  // part of g2
-                    int node_to_add;                                   // part of g2
-                    // if (neighbourhood_limit > 0) {
-                    //     node_to_add = unmapped_nodes[shuffled_neighbours[j]];
-                    //     node_to_add = unmapped_nodes[rand() % unmapped_nodes.size()];
-                    // } else {
-                        node_to_add = unmapped_nodes[j];
-                    // }
-                    // cout << "Possible new pair: replace (" << node_mapped << ","  // DEBUG
-                        // << node_to_remove << ") with (" << node_mapped << "," <<  // DEBUG
-                        // node_to_add << ")" << endl;  // DEBUG
+                    int node_to_add    = unmapped_nodes[j];            // part of g2
 
                     int lost_edges = ret->degree({node_mapped, node_to_remove});
                     vector<int> new_edges;
@@ -134,42 +114,19 @@ graph<pair<int, int>>* solve_local_search_1(
                         best_new_edges = new_edges;
                     }
 
-                    // cout << "  If we did that, we would " << (edge_diff < 0 ?  // DEBUG
-                    // "lose " : "add ") << abs(edge_diff) << " edge" <<  // DEBUG
-                    // (abs(edge_diff) == 1 ? "" : "s") << endl;  // DEBUG
-                    // if (is_improvement) {  // DEBUG
-                        // cout << "  We should do it!" << endl;  // DEBUG
-                    // } else {  // DEBUG
-                        // cout << "  Hmm... I think not" << endl;  // DEBUG
-                    // }  // DEBUG
                 }
             }
         }
 
-        // if (any_improvement) {  // DEBUG
-            // cout << "Our best option is replacing (" << best_to_remove.first  // DEBUG
-                // << "," << best_to_remove.second << ") with " << "(" <<  // DEBUG
-                // best_to_add.first << "," << best_to_add.second << ")" <<  // DEBUG
-                // endl;  // DEBUG
-        // } else {  // DEBUG
-            // cout << "We should do nothing" << endl;  // DEBUG
-        // }  // DEBUG
 
         if (any_improvement) {
-            // cout << "There are improvements. Let's modify the graph." << endl;  // DEBUG
             ret->remove_node(best_to_remove);
-            // cout << "  Deleting node (" << best_to_remove.first << "," <<  // DEBUG
-                // best_to_remove.second << ")" << endl;  // DEBUG
             g2_to_g1_mapping.erase(best_to_remove.second);
             unmapped_nodes.push_back(best_to_remove.second);
             unmapped_nodes_set.insert(best_to_remove.second);
 
             ret->add_node(best_to_add);
             g2_to_g1_mapping.insert({best_to_add.second, best_to_add.first});
-            // cout << "  Adding node (" << best_to_add.first << ","  // DEBUG
-                // << best_to_add.second << ")" << endl;  // DEBUG
-            // cout << "  In g2, node " << best_to_add.second <<  // DEBUG
-                // " is adjacent to nodes " << best_new_edges << endl;  // DEBUG
             unmapped_nodes.erase(find(unmapped_nodes.begin(),
                 unmapped_nodes.end(), best_to_add.second));
             unmapped_nodes_set.erase(best_to_add.second);
@@ -180,15 +137,11 @@ graph<pair<int, int>>* solve_local_search_1(
                     best_new_edges[i]
                 };
                 ret->add_edge(best_to_add, new_edge_dest);
-                // cout << "  Adding edge (" << best_to_add.first << "," <<  // DEBUG
-                    // best_to_add.second << ") <-> (" << new_edge_dest.first << ","  // DEBUG
-                    // << new_edge_dest.second << ")" << endl;  // DEBUG
             }
         } else {
             stop = true;
         }
 
-        // cout << "WE'VE GOT " << ret->m() << " EDGES SO FAR" << endl << endl;  // DEBUG
 
         iteration_count++;
     }
