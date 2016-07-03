@@ -6,7 +6,7 @@ void mcs_incremental_experiment::load_instance(incremental_experiment_input<int,
 }
 
 void mcs_incremental_experiment::solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
-	mcs(&g1, &g2);
+	solve_backtracking(&g1, &g2);
 }
 
 void run_experimentation() {
