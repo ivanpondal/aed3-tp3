@@ -13,12 +13,9 @@
 #include "utils/graph_factory.h"
 #include "utils/element_generator_int.h"
 
-#define MAGIC_SEED 42
-
 void run_unit_tests();
-void run_instance_generation();
 
-enum mode {test, instance_generation};
+enum mode {test};
 
 // class declarations
 

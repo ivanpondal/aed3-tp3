@@ -7,6 +7,10 @@ CC=g++
 CPPFLAGS=-g -Wall -O2
 CXXFLAGS=-std=c++11
 
+# instance generator variables
+INSTANCE_GENERATOR_EXECUTABLE=instance_generator
+INSTANCE_GENERATOR_OBJECT=$(addsuffix .o, $(INSTANCE_GENERATOR_EXECUTABLE))
+
 # excercise variables
 EXECUTABLES_BASE=ej2 ej3 ej4 ej5 #exercise1 excercise2 ... exerciseN
 
@@ -26,7 +30,7 @@ FRAMEWORK_UTILS_HEADERS=chronometer.h graph_factory.h element_generator.h elemen
 FRAMEWORK_OBJECTS=utils/chronometer.o utils/element_generator_int.o \
                   experiments/experiment_suite.o
 FRAMEWORK_OBJECTS_DIR=$(addprefix $(FRAMEWORK_DIR)/,$(FRAMEWORK_OBJECTS))
-FRAMEWORK_OTHER_OBJECTS=test.o instance_generation.o
+FRAMEWORK_OTHER_OBJECTS=test.o
 FRAMEWORK_OTHER_OBJECTS_DIR=$(addprefix $(FRAMEWORK_DIR)/,$(FRAMEWORK_OTHER_OBJECTS))
 FRAMEWORK_MAIN_OBJECT=$(FRAMEWORK_DIR)/main.o
 FRAMEWORK_EXECUTABLE=$(FRAMEWORK_DIR)/main
@@ -53,9 +57,12 @@ all: $(EXECUTABLES)
 clean:
 	rm -rf $(EXECUTABLES) $(MAIN_OBJECT) $(addsuffix /*.o,$(EXECUTABLES_BASE)) \
            $(FRAMEWORK_EXECUTABLE) $(FRAMEWORK_MAIN_OBJECT) $(FRAMEWORK_OBJECTS_DIR) \
-           $(FRAMEWORK_OTHER_OBJECTS_DIR) $(EXACT_OBJECTS_DIR) $(HEURISTICS_OBJECTS_DIR)
+           $(FRAMEWORK_OTHER_OBJECTS_DIR) $(EXACT_OBJECTS_DIR) $(HEURISTICS_OBJECTS_DIR) \
+           $(INSTANCE_GENERATOR_EXECUTABLE) $(INSTANCE_GENERATOR_OBJECT)
 
 framework: $(FRAMEWORK_EXECUTABLE)
+
+instance-generator: $(INSTANCE_GENERATOR_EXECUTABLE)
 
 # any change to the framework or the test header forces rebuilding
 $(FRAMEWORK_MAIN_OBJECT): $(subst .o,.h,$(FRAMEWORK_MAIN_OBJECT)) \
@@ -69,9 +76,12 @@ $(FRAMEWORK_EXECUTABLE): $(FRAMEWORK_OBJECTS_DIR) $(FRAMEWORK_OTHER_OBJECTS_DIR)
                          $(FRAMEWORK_MAIN_OBJECT)
 	$(CC) $(CFLAGS) -o $@ $^
 
+$(INSTANCE_GENERATOR_EXECUTABLE): $(INSTANCE_GENERATOR_OBJECT) $(FRAMEWORK_OBJECTS_DIR) $(EXACT_OBJECTS_DIR)
+	$(CC) $(CFLAGS) -o $@ $^
+
 $(MAIN_OBJECT): $(subst .o,.h,$(MAIN_OBJECT))
 
-$(EXACT_OBJECTS_DIR): $(EXACT_HEADER)
+$(EXACT_OBJECTS_DIR): $(EXACT_HEADER) $(subst .o,.h,$(MAIN_OBJECT))
 
 $(HEURISTICS_OBJECTS_DIR): $(HEURISTICS_HEADER)
 

@@ -1,4 +1,12 @@
-#include "main.h"
+#include <cstring>
+#include <sstream>
+#include <fstream>
+
+#include "framework/structures/adj_list_graph.h"
+#include "framework/utils/graph_factory.h"
+#include "framework/utils/element_generator_int.h"
+
+#define MAGIC_SEED 42
 
 using namespace std;
 
@@ -6,7 +14,7 @@ void save_instance(const graph<int> &g1, const graph<int> &g2, const char *save_
 	ofstream output_file;
 
 	char file_name[80];
-	strcpy(file_name, "framework/generated_instances/");
+	strcpy(file_name, "generated_instances/");
 	output_file.open(strcat(file_name, save_name));
 
 	output_file << g1.n() << " " << g1.m() << " " << g2.n() << " " << g2.m() << endl;
@@ -369,7 +377,7 @@ void run_unknown_solution_instance_generation(){
 	save_instance(g1, g2, "random_n1000_d10_c050_v025.ins");
 }
 
-void run_instance_generation(){
+int main (int argc, char* argv[]) {
 	// instances were we know the optimum solution
 	run_known_solution_instance_generation();
 	// instances were we don't
