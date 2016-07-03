@@ -34,7 +34,7 @@ FRAMEWORK_EXECUTABLE=$(FRAMEWORK_DIR)/main
 # exact algorithm variables
 EXACT_DIR=exact
 EXACT_HEADER=exact.h
-EXACT_OBJECTS=backtracking.o
+EXACT_OBJECTS=backtracking.o cograph_vs_complete.o
 EXACT_OBJECTS_DIR=$(addprefix $(EXACT_DIR)/,$(EXACT_OBJECTS))
 
 # heuristics variables
