@@ -11,10 +11,11 @@ bool verbose = false;
 int main (int argc, char* argv[]) {
     // Configuración de la ejecución
     mode exec_mode = solver;
+    srand(time(NULL)); // configura el seed por defecto
 
     // Parsea las opciones recibidas
     char opt;
-    while ((opt = getopt(argc, argv, "hvte:")) != -1) {
+    while ((opt = getopt(argc, argv, "hvtes:")) != -1) {
         switch (opt) {
             case 'h': { // mostrar ayuda
                 show_help(argv[0]);
@@ -30,8 +31,11 @@ int main (int argc, char* argv[]) {
                 break;
             }
             case 'e': { // correr pruebas de performance
-                srand(stoi(optarg)); // configura el seed que recibe por parámetro
                 exec_mode = experimentation;
+                break;
+            }
+            case 's': {
+                srand(stoi(optarg)); // configura el seed que recibe por parámetro
                 break;
             }
             default: { // si las opciones son inválidas
@@ -66,7 +70,9 @@ void show_help(char* bin_path) {
     cout << "  Opciones:" << endl;
     cout << "    -h          Muestra este texto de ayuda" << endl;
     cout << "    -t          Ejecuta los tests unitarios provistos para el algoritmo" << endl;
-    cout << "    -e <seed>   Ejecuta las pruebas de performance diseñadas para el algoritmo" << endl;
+    cout << "    -e          Ejecuta las pruebas de performance diseñadas para el algoritmo" << endl;
+    cout << "    -s <seed>   Configura el seed utilizado durante la generación de instancias" << endl;
+    cout << "                  aleatorias. Por defecto, se genera en base a la hora del CPU" << endl;
 }
 
 // Funciones de entrada/salida
