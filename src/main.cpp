@@ -181,7 +181,7 @@ void print_edges(std::ostream& os, const graph<int>* g) {
 
 // Funciones auxiliares
 
-bool solution_checker(
+bool check_solution(
     const solution& s,
     const graph<int>& g1,
     const graph<int>& g2
