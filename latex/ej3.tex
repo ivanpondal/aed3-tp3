@@ -199,19 +199,38 @@ El algoritmo planteado para la búsqueda del máximo subgrafo
 Defino $n_1$ la cantiadad de nodos de $g_1$ (cografo) y $m_1$ la cantiadad de aristas, 
 $n_2$ la cantidad de nodos del $g_2$ ($K_n$) 
 
-Armar el cotree tiene una complejidad $O(n_1(n_1 + m_2))$ , hacer el DP que calcula la solucion $O(n_1 * (n_2)^2 )$
+Armar el cotree tiene una complejidad $O(n_1(n_1 + m_1))$ , hacer el DP que calcula la solucion $O(n_1 * (n_2)^2 )$
 
-En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_2) + (n_2)^2 ))$
+En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (n_2)^2 ))$
 
 \subsection{Experimentación}
 
-    Se hicieron 4 experimentos para probar la complejidad del algoritmo:
+    Se experimentó con la creacion del cotree, con la solucion del DP y finalmente con el algoritmo completo.
+    Esto se hizo para tener un mayor control de las variables a la hora de experimentar.
+
+    para la solucion del DP se hicieron 2 experimentos:
 
     \begin{enumerate}
-    \item Aumento la cantidad de nodos del cografo y fijo un $K_n$. 
-    \item Aumento la cantidad de nodos de $K_n$ y fijo un cografo .
-    \item Aumento la cantidad de nodos de $K_n$ y el cografo en proporción de 2 nodos a 1 . Por cada 2 nodos que aumento en el cografo aumento 1 en el $K_n$.
-    \item Fijo un $K_n$ y un $n_1$ y vario probabilidad de hacer join ($c$) en la creacion del cografo. Asi podemos variar crecientemente la cantidad de aristas.
+    
+        \item se aumento la cantidad de nodos de $K_n$ y fijo un cografo .
+        \item se aumento la cantidad de nodos del cografo y fijo un $K_n$. 
+    \end{enumerate}
+
+    para la creacion del coarbol se hizo 1 experimento:
+
+    \begin{enumerate}
+    
+        \item Se fijo un $K_n$ y un $n_1$ y vario probabilidad de hacer join ($c$) en la creacion del cografo. Asi podemos variar crecientemente la cantidad de aristas.
+    \end{enumerate}
+
+
+    Se hicieron 4 experimentos para probar la complejidad del algoritmo completo:
+
+    \begin{enumerate}
+    \item Se aumento la cantidad de nodos del cografo y fijo un $K_n$. 
+    \item Se aumento la cantidad de nodos de $K_n$ y fijo un cografo .
+    \item Se aumento la cantidad de nodos de $K_n$ y el cografo en proporción de 2 nodos a 1 . Por cada 2 nodos que se aumenta en el cografo se aumenta 1 en el $K_n$.
+    \item Se fijo un $K_n$ y un $n_1$ y vario probabilidad de hacer join ($c$) en la creacion del cografo. Asi podemos variar crecientemente la cantidad de aristas.
     \end{enumerate}
 
 
@@ -229,11 +248,12 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_2) + (
                     height=0.5\textwidth,
                     legend pos=north west,
                     legend cell align=left,
-                    xmin=100
+                    xmin=200
                 ]
                 \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_nodes};
+                \addplot[color=red] table[x index=0, y expr={  2500 * (x*x)  }]{../exp/ej3/cograph_incremental_nodes};
 
-                \legend{$T_{(co_n)}$}
+                \legend{$T_{(co_n)}$, $ C * x^2 $}
             \end{axis}
         \end{tikzpicture}
         \caption{Tiempos de ejecución observados al variar los valores de $n_1$
@@ -285,8 +305,9 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_2) + (
                     xmin=0
                 ]
                 \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/complete_graph_and_cograph_incremental_nodes};
+                \addplot[color=red] table[x index=0, y expr={ 8 * (x*x*x) }]{../exp/ej3/complete_graph_and_cograph_incremental_nodes};
 
-                \legend{$T_{(k_n y co_n)}$}
+                \legend{$T_{(k_n y co_n)}$, $ C * x^3$}
             \end{axis}
         \end{tikzpicture}
         \caption{Tiempos de ejecución observados al variar los valores de $n_1$ y  $n_2$
@@ -314,8 +335,9 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_2) + (
                     xmin=0
                 ]
                 \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_edges};
+                \addplot[color=red] table[x index=0, y expr={  (19000000 * x) + 9000000 ) }]{../exp/ej3/cograph_incremental_edges};
 
-                \legend{$T_c$}
+                \legend{$T_{m_2}$,$ C * x $ }
             \end{axis}
         \end{tikzpicture}
         \caption{Tiempos de ejecución observados al fijar el $K_n$ ($n_1$)y la cantidad de nodos del cografo ($n_2$) y variar la probabilidad de hacer un join al crear el cografo. Variamos la probabilidad entre $0 y 1$ y la llamamos $c$}
@@ -340,11 +362,13 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_2) + (
                     height=0.5\textwidth,
                     legend pos=north west,
                     legend cell align=left,
-                    xmin=0
+                    xmin=0,
+                    ymax= 77500000
                 ]
                 \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/complete_graph_incremental_nodes_dp};
+                \addplot[color=red] table[x index=0, y expr={  1200 * (x*x)  }]{../exp/ej3/complete_graph_incremental_nodes_dp};
 
-                \legend{$T_c$}
+                \legend{$T_(K_n)$, $ C * x^2 $}
             \end{axis}
         \end{tikzpicture}
         \caption{lalala}
@@ -370,8 +394,9 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_2) + (
                     xmin=300
                 ]
                 \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_nodes_dp};
+                \addplot[color=red] table[x index=0, y expr={  190000 * x ) }]{../exp/ej3/cograph_incremental_nodes_dp};
 
-                \legend{$T_c$}
+                \legend{$T_{(n_1)}$, $ C * x $ }
             \end{axis}
         \end{tikzpicture}
         \caption{lalala}
@@ -397,8 +422,8 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_2) + (
                     xmin=0
                 ]
                 \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_edges_create_cotree};
-
-                \legend{$T_s$}
+                \addplot[color=red] table[x index=0, y expr={  500000 * ((x*x) * 200) }]{../exp/ej3/cograph_incremental_edges_create_cotree};
+                \legend{$T_c$, $ C * x^2 $}
             \end{axis}
         \end{tikzpicture}
         \caption{lalala Solo ejecuto la creación del cotree}

@@ -44,10 +44,11 @@ solution run_solver(graph<int>& g1, graph<int>& g2) {
 
 void solver_dp(vector<vector<subsolution>> &dp,vector<info_cotree_node> &vec_cotree, uint g2_n){
 
-
+    // Recorro el cotree , el tamaño del cotree es 2 n1 (donde n1 son los nodos del cografo)
     for (uint i = 0; i < vec_cotree.size(); i++) {
         info_cotree_node current_info = vec_cotree[i];
-
+        // Recorro los nodos de kn (n2)
+        // Por ahora vamos n1*n2 
         for (uint j = 0; j <= g2_n; j++) {
             // si pido 0 nodos
             if (j == 0) {
@@ -110,7 +111,8 @@ void solver_dp(vector<vector<subsolution>> &dp,vector<info_cotree_node> &vec_cot
                         // pruebo combinando tomando de 1 a i y de i a 1 en
                         // los hijos del co-tree
                         int best_edge_count = -1;
-
+                        // Recorro las posibilidades de meter j nodos de este sub-cotree ()
+                        // A lo sumo es los nodos de kn (n2)
                         for (uint k = 0; k <= j; k++) {
                             subsolution left_subsolution =
                                 dp[current_info.left_child_index][j - k];
@@ -148,11 +150,15 @@ void solver_dp(vector<vector<subsolution>> &dp,vector<info_cotree_node> &vec_cot
                                 }
                             }
                         }
+                        
                     }
                 }
             }
         }
     }
+    // Entonces la complejidad en el peor caso es de O(n1*(n2)^2)
+    // Notar que el segundo multiplicador de n2 va creciendo , solo en la ultima iteración es realmente n2
+    // Entoces hilemos más fino . (n1*n2)*(n2/2)
 }
 
 

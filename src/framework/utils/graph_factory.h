@@ -234,6 +234,9 @@ adj_list_graph<int> graph_factory<T>::co_graph_with_c_probability_edges
 		vec_g[i].add_node(0);
 	}
 
+	int expected_joins = (int) ( ((float) n )* c); 
+	int joins = 0; 
+
 	while(n > 1){
 		e_gen.reset();
 		int i;
@@ -248,6 +251,7 @@ adj_list_graph<int> graph_factory<T>::co_graph_with_c_probability_edges
 		if (prob_join <= c){
 			vec_g[i].join(vec_g[j],e_gen);
 			// std::cout << "unite: " << std::endl << vec_g[i] << std::endl;
+			joins ++ ;
 		}else{
 			vec_g[i].unite(vec_g[j],e_gen);
 			// std::cout << "join: " << std::endl << vec_g[i] << std::endl;
@@ -255,6 +259,8 @@ adj_list_graph<int> graph_factory<T>::co_graph_with_c_probability_edges
 		vec_g.erase ( vec_g.begin()+ j  );
 		n--;
 	}
+	std::cout << "cantidad de joins echos : " << joins << std::endl;
+	std::cout << "cantidad de joins esperados : " << expected_joins << std::endl;
 	return vec_g[0];
 
 }

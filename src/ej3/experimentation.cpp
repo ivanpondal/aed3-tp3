@@ -103,7 +103,10 @@ void cograph_n_incremental_edges_experiment::solve_instance(incremental_experime
 
 void cograph_n_incremental_edges_create_cotree_experiment::load_instance(incremental_experiment_input<float, adj_list_graph<int>> *input){
     e_gen.reset();
-    g = graph_factory<int>::co_graph_with_c_probability_edges(e_gen, 150, input->get_inc_val());
+    float c = input->get_inc_val();
+    g = graph_factory<int>::co_graph_with_c_probability_edges(e_gen, 200, c );
+    cout << " c : "<< c << endl;
+    cout << "Aristas del nuevo cotree : "<< g.m()<< endl << endl << endl;
 }
 
 void cograph_n_incremental_edges_create_cotree_experiment::solve_instance(incremental_experiment_input<float, adj_list_graph<int>> *input){
@@ -114,27 +117,28 @@ void cograph_n_incremental_edges_create_cotree_experiment::solve_instance(increm
 
 void run_experimentation() {
     element_generator_int e_gen;
-    adj_list_graph<int> co_g = graph_factory<int>::random_co_graph(e_gen, 210);
+    adj_list_graph<int> co_g = graph_factory<int>::random_co_graph(e_gen, 200);
     // cout << "co_g: " << endl;
     // cout << co_g << endl;
 
-    // cotree_node* co_tree_node = generate_cotree(co_g);
-    // cout << "cotree : " <<  endl <<*co_tree_node << endl;
+    cotree_node* co_tree_node = generate_cotree(co_g);
+    vector<info_cotree_node> vec_cotree = vectorize(co_tree_node);
+   // cout << "cotree : " <<  endl <<*co_tree_node << endl;
 
     adj_list_graph<int> k_n;
     e_gen.reset();
-    graph_factory<int>::add_n_vertices_and_all_edges(k_n,e_gen,100);
+    graph_factory<int>::add_n_vertices_and_all_edges(k_n,e_gen,200);
     // cout << endl << "k_n : " <<  endl <<  k_n << endl;
 
     experiment_suite exp_suite;
 
     // load min, load max, discard, repetitions, samples and initial subject values
 
-    // incremental_experiment_input_int< adj_list_graph<int>> exp1_input(100, 200, 30, 50, 50, k_n, "../exp/ej3/cograph_incremental_nodes");
+    incremental_experiment_input_int< adj_list_graph<int>> exp1_input(200, 400, 25, 30, 75, k_n, "../exp/ej3/cograph_incremental_nodes");
 
-    // cograph_n_incremental_experiment exp_1 = cograph_n_incremental_experiment(&exp1_input);
+    cograph_n_incremental_experiment exp_1 = cograph_n_incremental_experiment(&exp1_input);
 
-    // exp_suite.add(&exp_1);
+    exp_suite.add(&exp_1);
 
 
     // incremental_experiment_input_int< adj_list_graph<int>> exp2_input(1, 200, 0, 20, 40, co_g, "../exp/ej3/complete_graph_incremental_nodes");
@@ -144,7 +148,7 @@ void run_experimentation() {
     // exp_suite.add(&exp_2);
 
 
-    // incremental_experiment_input_int< adj_list_graph<int>> exp3_input(1, 100, 30, 50, 50, adj_list_graph<int>(), "../exp/ej3/complete_graph_and_cograph_incremental_nodes");
+    // incremental_experiment_input_int< adj_list_graph<int>> exp3_input(1, 250, 25, 30, 75, adj_list_graph<int>(), "../exp/ej3/complete_graph_and_cograph_incremental_nodes");
 
     // complete_graph_and_cograph_n_incremental_experiment exp_3 = complete_graph_and_cograph_n_incremental_experiment(&exp3_input);
 
@@ -160,12 +164,12 @@ void run_experimentation() {
 
     // DP experimentation incremental Kn
 
-    //incremental_experiment_input_int< vector<info_cotree_node> > exp5_input(1, 200, 20, 30, 50, vec_cotree , "../exp/ej3/complete_graph_incremental_nodes_dp");
+    // incremental_experiment_input_int< vector<info_cotree_node> > exp5_input(1, 350, 25, 35, 75, vec_cotree , "../exp/ej3/complete_graph_incremental_nodes_dp");
 
-    //complete_graph_n_incremental_dp_experiment exp_5 = complete_graph_n_incremental_dp_experiment(&exp5_input);
+    // complete_graph_n_incremental_dp_experiment exp_5 = complete_graph_n_incremental_dp_experiment(&exp5_input);
 
-    
-    //exp_suite.add(&exp_5);
+    // exp_suite.add(&exp_5);
+
 
     // DP experimentation incremental cograph nodes
 
@@ -178,11 +182,11 @@ void run_experimentation() {
 
     // generate cotree incremental edges
 
-    incremental_experiment_input_float< adj_list_graph<int>> exp7_input(0.0f, 1.0f, 10, 15, 50, adj_list_graph<int>(), "../exp/ej3/cograph_incremental_edges_create_cotree");
+    // incremental_experiment_input_float< adj_list_graph<int>> exp7_input(0.0f, 1.0f, 15, 20, 50, adj_list_graph<int>(), "../exp/ej3/cograph_incremental_edges_create_cotree");
 
-    cograph_n_incremental_edges_create_cotree_experiment exp_7 = cograph_n_incremental_edges_create_cotree_experiment(&exp7_input);
+    // cograph_n_incremental_edges_create_cotree_experiment exp_7 = cograph_n_incremental_edges_create_cotree_experiment(&exp7_input);
 
-    exp_suite.add(&exp_7);
+    // exp_suite.add(&exp_7);
 
 
     exp_suite.run();
