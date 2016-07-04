@@ -44,7 +44,7 @@ EXACT_OBJECTS_DIR=$(addprefix $(EXACT_DIR)/,$(EXACT_OBJECTS))
 # heuristics variables
 HEURISTICS_DIR=heuristics
 HEURISTICS_HEADER=heuristics.h
-HEURISTICS_OBJECTS=greedy.o local_search_1.o
+HEURISTICS_OBJECTS=greedy.o local_search.o
 HEURISTICS_OBJECTS_DIR=$(addprefix $(HEURISTICS_DIR)/,$(HEURISTICS_OBJECTS))
 
 VPATH=$(addprefix $(FRAMEWORK_DIR)/,$(FRAMEWORK_FOLDERS)) $(EXACT_DIR) $(HEURISTICS_DIR)

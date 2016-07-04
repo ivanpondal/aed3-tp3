@@ -11,7 +11,7 @@ using namespace std;
 
 solution run_solver(graph<int>& g1, graph<int>& g2) {
     graph<pair<int, int>>* start_point = solve_greedy(g1, g2);
-    graph<pair<int, int>>* h = solve_local_search_1(g1, g2, *start_point);
+    graph<pair<int, int>>* h = solve_local_search(g1, g2, *start_point);
 
     solution ret = pairs_to_solution(*h);
 

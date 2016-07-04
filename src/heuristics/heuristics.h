@@ -24,10 +24,11 @@ graph<std::pair<int, int>> *solve_greedy(
     bool add_neighbours = false
 );
 
-graph<std::pair<int, int>>* solve_local_search_1(
+graph<std::pair<int, int>>* solve_local_search(
     graph<int>& g1,
     graph<int>& g2,
     graph<std::pair<int, int>>& start_point,
+    int neighbourhood_type = 0,
     int iteration_limit = -1,
     // int neighbourhood_limit = -1,
     float neighbourhood_proportion = 1,
