@@ -43,7 +43,7 @@ void print_edges(std::ostream& os, const graph<int>* g);
 // Funciones auxiliares
 
 // Verifica que una solución sea válida
-bool solution_checker(const solution& s, const graph<int>& g1, const graph<int>& g2);
+bool check_solution(const solution& s, const graph<int>& g1, const graph<int>& g2);
 
 // Compara dos vectores
 template <typename T>

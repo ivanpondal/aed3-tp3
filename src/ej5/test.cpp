@@ -101,11 +101,11 @@ void compare_with_greedy() {
 
     graph<std::pair<int, int>>* start_point = solve_greedy(g1, g2);
     std::cout << "  GREEDY: " << start_point->n() << " nodes, " << start_point->m() << " edges";
-    std::cout << (solution_checker(pairs_to_solution(*start_point), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
+    std::cout << (check_solution(pairs_to_solution(*start_point), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
 
     graph<std::pair<int, int>>* h = solve_local_search_1(g1, g2, *start_point, 100, .2);
     std::cout << "  L SRCH: " << h->n() << " nodes, " << h->m() << " edges";
-    std::cout << (solution_checker(pairs_to_solution(*h), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
+    std::cout << (check_solution(pairs_to_solution(*h), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
 
     delete start_point;
     delete h;
@@ -118,11 +118,11 @@ void compare_with_greedy() {
     graph_factory<int>::add_n_tree_vertices(g4, e_gen, 1500);
     start_point = solve_greedy(g3, g4, true);
     std::cout << "  GREEDY: " << start_point->n() << " nodes, " << start_point->m() << " edges";
-    std::cout << (solution_checker(pairs_to_solution(*start_point), g3, g4) ? " (valid)" : " (invalid)") << std::endl;
+    std::cout << (check_solution(pairs_to_solution(*start_point), g3, g4) ? " (valid)" : " (invalid)") << std::endl;
 
     h = solve_local_search_1(g3, g4, *start_point, 100, .4);
     std::cout << "  L SRCH: " << h->n() << " nodes, " << h->m() << " edges";
-    std::cout << (solution_checker(pairs_to_solution(*h), g3, g4) ? " (valid)" : " (invalid)") << std::endl;
+    std::cout << (check_solution(pairs_to_solution(*h), g3, g4) ? " (valid)" : " (invalid)") << std::endl;
 
     delete start_point;
     // delete h;

@@ -13,7 +13,7 @@ void test_isolated_nodes() {
     g2.add_node(2);
     g2.add_node(3);
 
-    graph<pair<int, int>> *maxComSub = mcs(&g1, &g2);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&g1, &g2);
 
     ASSERT_EQ(maxComSub->m(), 0);
 
@@ -28,7 +28,7 @@ void test_k1_and_other() {
     g2.add_node(2);
     g2.add_node(1);
 
-    graph<pair<int, int>> *maxComSub = mcs(&g1, &g2);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&g1, &g2);
 
     ASSERT_EQ(maxComSub->m(), 0);
 
@@ -48,7 +48,7 @@ void test_k2s() {
     g2.add_edge(3, 4);
 
 
-    graph<pair<int, int>> *maxComSub = mcs(&g1, &g2);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&g1, &g2);
 
     ASSERT_EQ(maxComSub->m(), 1);
     ASSERT_EQ(maxComSub->n(), 2);
@@ -63,7 +63,7 @@ void test_k2_and_k3() {
     graph_factory<int>::add_n_random_vertices(k2, e_gen, 2, 1.0f);
     graph_factory<int>::add_n_random_vertices(k3, e_gen, 3, 1.0f);
 
-    graph<pair<int, int>> *maxComSub = mcs(&k2, &k3);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&k2, &k3);
 
     ASSERT_EQ(maxComSub->m(), 1);
     ASSERT_EQ(maxComSub->n(), 2);
@@ -78,7 +78,7 @@ void test_k4s() {
     graph_factory<int>::add_n_random_vertices(k4, e_gen, 4, 1.0f);
     graph_factory<int>::add_n_random_vertices(k4bis, e_gen, 4, 1.0f);
 
-    graph<pair<int, int>> *maxComSub = mcs(&k4, &k4bis);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&k4, &k4bis);
 
     // ASSERT_EQ(maxComSub->m(), 6);
 
@@ -104,7 +104,7 @@ void test_p4_and_2k2() {
     k2s.add_edge(1, 2);
     k2s.add_edge(3, 4);
 
-    graph<pair<int, int>> *maxComSub = mcs(&p4, &k2s);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&p4, &k2s);
 
     ASSERT_EQ(maxComSub->m(), 2);
 
@@ -133,7 +133,7 @@ void test_p4_and_3k2() {
     k2s.add_edge(3, 4);
     k2s.add_edge(5, 6);
 
-    graph<pair<int, int>> *maxComSub = mcs(&p4, &k2s);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&p4, &k2s);
 
     ASSERT_EQ(maxComSub->m(), 2);
 
@@ -163,7 +163,7 @@ void test_handcrafted_and_p5() {
     p5.add_edge(3, 4);
     p5.add_edge(4, 5);
 
-    graph<pair<int, int>> *maxComSub = mcs(&handcrafted, &p5);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&handcrafted, &p5);
 
     ASSERT_EQ(maxComSub->m(), 3);
 
@@ -200,7 +200,7 @@ void test_handcrafteds() {
     graph2.add_edge(3, 4);
     graph2.add_edge(4, 5);
 
-    graph<pair<int, int>> *maxComSub = mcs(&graph1, &graph2);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&graph1, &graph2);
 
     ASSERT_EQ(maxComSub->m(), 6);
 
@@ -240,7 +240,7 @@ void test_pseudofranco_example() {
     graph2.add_edge(5, 7);
     graph2.add_edge(6, 7);
 
-    graph<pair<int, int>> *maxComSub = mcs(&graph1, &graph2);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&graph1, &graph2);
 
     ASSERT_EQ(maxComSub->m(), 6);
 
@@ -288,7 +288,7 @@ void test_pseudofranco_example2() {
     franco2.add_edge(5, 7);
     franco2.add_edge(6, 7);
 
-    graph<pair<int, int>> *maxComSub = mcs(&franco1, &franco2);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&franco1, &franco2);
 
     ASSERT_EQ(maxComSub->m(), 9);
 
@@ -344,7 +344,7 @@ void test_franco_example() {
     franco2.add_edge(6, 8);
     franco2.add_edge(7, 8);
 
-    graph<pair<int, int>> *maxComSub = mcs(&franco1, &franco2);
+    graph<pair<int, int>> *maxComSub = solve_backtracking(&franco1, &franco2);
 
     ASSERT_EQ(maxComSub->m(), 12);
        

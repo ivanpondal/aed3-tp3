@@ -8,7 +8,6 @@ void show_help(char* bin_path) {
 	cout << "  Opciones:" << endl;
 	cout << "    -h          Muestra este texto de ayuda" << endl;
 	cout << "    -t          Ejecuta los tests unitarios provistos para el framework" << endl;
-	cout << "    -g          Ejecuta los generadores de instancias de grafos para pruebas" << endl;
 }
 
 int main (int argc, char* argv[]) {
@@ -26,10 +25,6 @@ int main (int argc, char* argv[]) {
 				exec_mode = test;
 				break;
 			}
-			case 'g': {
-				exec_mode = instance_generation;
-				break;
-			}
 			default: {
 				show_help(argv[0]);
 				exit(1);
@@ -40,8 +35,5 @@ int main (int argc, char* argv[]) {
 
 	if (exec_mode == test) {
 		run_unit_tests();
-	}
-	else if (exec_mode == instance_generation) {
-		run_instance_generation();
 	}
 }
