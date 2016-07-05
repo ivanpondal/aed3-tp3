@@ -244,6 +244,18 @@ class cograph_n_incremental_nodes_create_cotree_experiment:public incremental_ex
         adj_list_graph<int> g;
 };
 
+class cograph_K_N_union_create_cotree_experiment:public incremental_experiment<int, int> {
+    public:
+        cograph_K_N_union_create_cotree_experiment(const incremental_experiment_input<int, int> *input): incremental_experiment(input){
+            graph_factory<int>::add_n_vertices_and_all_edges(g,e_gen,1);
+        };
+    private:
+        void load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        void solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        element_generator_int e_gen;
+        adj_list_graph<int> g;
+};
+
 
 
 #endif  // AED3_TP3_EJ3_H
