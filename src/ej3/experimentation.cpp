@@ -114,6 +114,16 @@ void cograph_n_incremental_edges_create_cotree_experiment::solve_instance(increm
     vectorize(cotree);
 }
 
+void cograph_n_incremental_nodes_create_cotree_experiment::load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
+   g.add_node(e_gen.generate(g));
+}
+
+void cograph_n_incremental_nodes_create_cotree_experiment::solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
+    cotree_node* cotree = generate_cotree(g);
+    vectorize(cotree);
+}
+
+
 
 void run_experimentation() {
     element_generator_int e_gen;
@@ -127,18 +137,18 @@ void run_experimentation() {
 
     adj_list_graph<int> k_n;
     e_gen.reset();
-    graph_factory<int>::add_n_vertices_and_all_edges(k_n,e_gen,200);
+    graph_factory<int>::add_n_vertices_and_all_edges(k_n,e_gen,2);
     // cout << endl << "k_n : " <<  endl <<  k_n << endl;
 
     experiment_suite exp_suite;
 
     // load min, load max, discard, repetitions, samples and initial subject values
 
-    incremental_experiment_input_int< adj_list_graph<int>> exp1_input(200, 400, 25, 30, 75, k_n, "../exp/ej3/cograph_incremental_nodes");
+    // incremental_experiment_input_int< adj_list_graph<int>> exp1_input(200, 400, 25, 30, 75, k_n, "../exp/ej3/cograph_incremental_nodes");
 
-    cograph_n_incremental_experiment exp_1 = cograph_n_incremental_experiment(&exp1_input);
+    // cograph_n_incremental_experiment exp_1 = cograph_n_incremental_experiment(&exp1_input);
 
-    exp_suite.add(&exp_1);
+    // exp_suite.add(&exp_1);
 
 
     // incremental_experiment_input_int< adj_list_graph<int>> exp2_input(1, 200, 0, 20, 40, co_g, "../exp/ej3/complete_graph_incremental_nodes");
@@ -187,6 +197,17 @@ void run_experimentation() {
     // cograph_n_incremental_edges_create_cotree_experiment exp_7 = cograph_n_incremental_edges_create_cotree_experiment(&exp7_input);
 
     // exp_suite.add(&exp_7);
+
+    
+    // generate cotree incremental nodos
+
+
+    incremental_experiment_input_int< adj_list_graph<int>> exp8_input(2, 500, 25, 35, 100, adj_list_graph<int>(), "../exp/ej3/cograph_incremental_nodes_create_cotree");
+
+    cograph_n_incremental_nodes_create_cotree_experiment exp_8 = cograph_n_incremental_nodes_create_cotree_experiment(&exp8_input);
+
+    exp_suite.add(&exp_8);
+
 
 
     exp_suite.run();

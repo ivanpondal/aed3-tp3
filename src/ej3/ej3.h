@@ -190,7 +190,7 @@ class cograph_n_incremental_edges_experiment:public incremental_experiment<float
 
 
 
-// Calculate solution
+// Calculate DP solution 
 struct subsolution {
     int edge_count;
     std::vector<int> vertices;
@@ -220,7 +220,7 @@ class cograph_n_incremental_dp_experiment:public incremental_experiment<int, adj
         element_generator_int e_gen;
 };  
 
-// generate cotree
+// generate cotree 
 
 class cograph_n_incremental_edges_create_cotree_experiment:public incremental_experiment<float, adj_list_graph<int> > {
     public:
@@ -231,6 +231,19 @@ class cograph_n_incremental_edges_create_cotree_experiment:public incremental_ex
         adj_list_graph<int> g;
         element_generator_int e_gen;
 };
+
+class cograph_n_incremental_nodes_create_cotree_experiment:public incremental_experiment<int, adj_list_graph<int> > {
+    public:
+        cograph_n_incremental_nodes_create_cotree_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){
+            graph_factory<int>::add_n_vertices_and_all_edges(g,e_gen,2);
+        };
+    private:
+        void load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        void solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
+        element_generator_int e_gen;
+        adj_list_graph<int> g;
+};
+
 
 
 #endif  // AED3_TP3_EJ3_H

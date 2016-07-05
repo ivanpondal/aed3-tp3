@@ -1,0 +1,6 @@
+NOTAS:
+- Para aumentar arristas , uniendo familias de grafos (Existe generador de bipartitos)
+- DP: 
+	* Variar solo n2, es un experimento q no tiene sentido , ya q es un corte vertical en la complejidad.
+- cotree:
+	* Variar solo m2 es un experimento sin sentido.

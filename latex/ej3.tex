@@ -205,22 +205,22 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
 
 \subsection{Experimentación}
 
-    Se experimentó con la creacion del cotree, con la solucion del DP y finalmente con el algoritmo completo.
-    Esto se hizo para tener un mayor control de las variables a la hora de experimentar.
+    
 
-    para la solucion del DP se hicieron 2 experimentos:
+    Para la solucion del DP se hicieron 2 experimentos:
 
     \begin{enumerate}
-    
-        \item se aumento la cantidad de nodos de $K_n$ y fijo un cografo .
-        \item se aumento la cantidad de nodos del cografo y fijo un $K_n$. 
+        \item Se aumento la cantidad de nodos de $K_n$ y fijo un cografo .
+        \item Se aumento la cantidad de nodos del cografo y fijo un $K_n$. 
     \end{enumerate}
 
-    para la creacion del coarbol se hizo 1 experimento:
+    Para la creacion del coarbol se hicieron dos experimentos:
 
     \begin{enumerate}
     
         \item Se fijo un $K_n$ y un $n_1$ y vario probabilidad de hacer join ($c$) en la creacion del cografo. Asi podemos variar crecientemente la cantidad de aristas.
+        \item Se fijo la cantidad de aristas en uno y se vario la cantidad de nodos del cografo
+
     \end{enumerate}
 
 
@@ -232,6 +232,83 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
     \item Se aumento la cantidad de nodos de $K_n$ y el cografo en proporción de 2 nodos a 1 . Por cada 2 nodos que se aumenta en el cografo se aumenta 1 en el $K_n$.
     \item Se fijo un $K_n$ y un $n_1$ y vario probabilidad de hacer join ($c$) en la creacion del cografo. Asi podemos variar crecientemente la cantidad de aristas.
     \end{enumerate}
+
+    Se experimentó con la creacion del cotree, con la solucion del DP y finalmente con el algoritmo completo.
+    Esto se hizo para tener un mayor control de las variables a la hora de experimentar.
+
+
+
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Fijo la cantidad de nodos del cografo ($n_1$) y aumento la cantidad de aristas del cografo.},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_edges_create_cotree};
+                \addplot[color=red] table[x index=0, y expr={  500000 * ((x*x) * 200) }]{../exp/ej3/cograph_incremental_edges_create_cotree};
+                \legend{$T_c$, $ C * x^2 $}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{lalala Solo ejecuto la creación del cotree}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_nodes_create_cotree};
+                \addplot[color=red] table[x index=0, y expr={ 3 * (x*x) }]{../exp/ej3/cograph_incremental_nodes_create_cotree};
+                \legend{$T_{n_1}$,$ C * x^2 $}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{lalala Solo ejecuto la creación del cotree}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     \begin{figure}[H]
@@ -405,29 +482,5 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
 
 
 
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Fijo la cantidad de nodos del cografo ($n_1$) y aumento la cantidad de aristas del cografo.},
-                    ylabel={Tiempo de ejecución (nanosegundos)},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_edges_create_cotree};
-                \addplot[color=red] table[x index=0, y expr={  500000 * ((x*x) * 200) }]{../exp/ej3/cograph_incremental_edges_create_cotree};
-                \legend{$T_c$, $ C * x^2 $}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{lalala Solo ejecuto la creación del cotree}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
 
 
