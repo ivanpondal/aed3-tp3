@@ -85,6 +85,8 @@ $(EXACT_OBJECTS_DIR): $(EXACT_HEADER) $(subst .o,.h,$(MAIN_OBJECT))
 
 $(HEURISTICS_OBJECTS_DIR): $(HEURISTICS_HEADER)
 
+$(INSTANCE_GENERATOR_OBJECT): $(subst .o,.h,$(MAIN_OBJECT))
+
 .SECONDEXPANSION:
 
 # any change to the framework or the exercise header forces rebuilding

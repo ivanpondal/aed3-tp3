@@ -25,7 +25,19 @@ struct solution {
     std::vector<int> g2_mapping;
 
     ~solution() {
-        delete h;
+        if (h != NULL) {
+            delete h;
+        }
+    }
+
+    solution& operator=(const solution &s) {
+        if (h != NULL) {
+            delete h;
+        }
+        this->h = s.h->clone();
+        this->g1_mapping = s.g1_mapping;
+        this->g2_mapping = s.g2_mapping;
+        return *this;
     }
 };
 
