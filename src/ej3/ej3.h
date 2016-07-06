@@ -197,6 +197,9 @@ struct subsolution {
     std::vector<int> vertices;
 };
 
+void solver_dp(std::vector<std::vector<subsolution>> &dp,std::vector<info_cotree_node> &vec_cotree, uint g2_n);
+
+
 class cograph_K_1_union_dp_experiment:public incremental_experiment<int, adj_list_graph<int> > {
     public:
         cograph_K_1_union_dp_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){};
