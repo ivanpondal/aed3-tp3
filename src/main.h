@@ -11,6 +11,7 @@
 
 #include "framework/structures/graph.h"
 #include "framework/utils/element_generator.h"
+#include "framework/utils/io.h"
 #include "framework/structures/adj_list_graph.h"
 
 extern bool verbose;
@@ -19,40 +20,12 @@ extern bool verbose;
 void show_help(char* bin_path);
 
 // Funciones principales
-struct solution {
-    graph<int>* h;
-    std::vector<int> g1_mapping;
-    std::vector<int> g2_mapping;
-
-    ~solution() {
-        if (h != NULL) {
-            delete h;
-        }
-    }
-
-    solution& operator=(const solution &s) {
-        if (h != NULL) {
-            delete h;
-        }
-        this->h = s.h->clone();
-        this->g1_mapping = s.g1_mapping;
-        this->g2_mapping = s.g2_mapping;
-        return *this;
-    }
-};
-
 solution run_solver(graph<int>& g1, graph<int>& g2);
 void run_unit_tests();
 void run_experimentation();
 
-// Funciones de entrada/salida
-void read_input(std::istream& is, graph<int>& g1, graph<int>& g2);
-solution pairs_to_solution(const graph<std::pair<int, int>>&);
-void print_solution(std::ostream& os, const solution& sol);
-void print_vector(std::ostream& os, const std::vector<int>& v);
-void print_edges(std::ostream& os, const graph<int>* g);
-
 // Funciones auxiliares
+solution pairs_to_solution(const graph<std::pair<int, int>>&);
 
 // Verifica que una solución sea válida
 bool check_solution(const solution& s, const graph<int>& g1, const graph<int>& g2);

@@ -45,9 +45,9 @@ int main (int argc, char* argv[]) {
     if (exec_mode == solver) {
         adj_list_graph<int> g1;
         adj_list_graph<int> g2;
-        read_input(cin, g1, g2);
+        io::read_input(cin, g1, g2);
         solution res = run_solver(g1, g2);
-        print_solution(cout, res);
+        io::print_solution(cout, res);
     }
     else if (exec_mode == test) {
         run_unit_tests();
@@ -69,29 +69,7 @@ void show_help(char* bin_path) {
     cout << "    -e <seed>   Ejecuta las pruebas de performance diseñadas para el algoritmo" << endl;
 }
 
-// Funciones de entrada/salida
-
-void read_input(std::istream& is, graph<int>& g1, graph<int>& g2) {
-    uint n1, n2, m1, m2;
-    is >> n1 >> m1 >> n2 >> m2;
-
-    for (uint i = 0; i < n1; i++) {
-        g1.add_node(i);
-    }
-    for (uint i = 0; i < n2; i++) {
-        g2.add_node(i);
-    }
-
-    int vertex_1, vertex_2;
-    for (uint i = 0; i < m1; i++) {
-        is >> vertex_1 >> vertex_2;
-        g1.add_edge(vertex_1, vertex_2);
-    }
-    for (uint i = 0; i < m2; i++) {
-        is >> vertex_1 >> vertex_2;
-        g2.add_edge(vertex_1, vertex_2);
-    }
-}
+// Funciones auxiliares
 
 solution pairs_to_solution(const graph<std::pair<int, int>>& g) {
     solution ret;
@@ -123,63 +101,6 @@ solution pairs_to_solution(const graph<std::pair<int, int>>& g) {
 
     return ret;
 }
-
-void print_solution(std::ostream& os, const solution& sol) {
-    os << sol.h->n() << " " << sol.h->m() << std::endl;
-    print_vector(os, sol.g1_mapping);
-    os << std::endl;
-    print_vector(os, sol.g2_mapping);
-    os << std::endl;
-    print_edges(os, sol.h);
-}
-
-void print_vector(std::ostream& os, const std::vector<int>& v) {
-    bool first = true;
-    for (typename std::vector<int>::const_iterator it = v.begin();
-        it != v.end();
-        it++)
-    {
-        if (first) {
-            first = false;
-            os << *it;
-        }
-        else {
-            os << " " << *it;
-        }
-    }
-}
-
-void print_edges(std::ostream& os, const graph<int>* g) {
-    std::vector<int> vertices_list = g->get_vertices();
-    std::unordered_set<int> vertices;
-
-    for (typename std::vector<int>::const_iterator it1 = vertices_list.begin();
-        it1 != vertices_list.end();
-        it1++)
-    {
-        vertices.insert(*it1);
-    }
-
-    for (typename std::vector<int>::const_iterator it1 = vertices_list.begin();
-        it1 != vertices_list.end();
-        it1++)
-    {
-        std::vector<int> neigh = g->neighbours(*it1);
-
-        for (typename std::vector<int>::const_iterator it2 = neigh.begin();
-            it2 != neigh.end();
-            it2++)
-        {
-            if (vertices.find(*it2) != vertices.end()) {
-                os << *it1 << " " << *it2 << std::endl;
-            }
-        }
-
-        vertices.erase(*it1);
-    }
-}
-
-// Funciones auxiliares
 
 bool check_solution(
     const solution& s,
