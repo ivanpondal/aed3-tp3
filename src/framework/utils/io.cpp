@@ -2,6 +2,10 @@
 
 void io::read_input(std::istream &is, graph<int> &g1, graph<int> &g2) {
 	unsigned int n1, n2, m1, m2;
+
+	g1.clear();
+	g2.clear();
+
 	is >> n1 >> m1 >> n2 >> m2;
 
 	for (unsigned int i = 0; i < n1; i++) {

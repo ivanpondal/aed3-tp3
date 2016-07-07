@@ -10,9 +10,9 @@
 #include <utility>
 #include <string>
 
-#include "framework/structures/graph.h"
 #include "framework/utils/element_generator.h"
 #include "framework/utils/io.h"
+#include "framework/structures/graph.h"
 #include "framework/structures/adj_list_graph.h"
 
 extern bool verbose;
