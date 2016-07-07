@@ -26,14 +26,17 @@ void quality_exp_greedy_add_neighbours::clean_solution() {
 
 void run_experimentation(){
 	experiment_suite quality_exp_suite;
+	int repetitions_val = 50;
 
-	quality_exp_greedy known_sol_greedy_exp(known_solution_instances, "../exp/ej4/known_sol_greedy_exp", 0, 10);
-	quality_exp_greedy unknown_sol_greedy_exp(unknown_solution_instances, "../exp/ej4/unknown_sol_greedy_exp", 0, 10);
+	quality_exp_greedy known_sol_greedy_exp(
+			known_solution_instances, "../exp/ej4/known_sol_greedy_exp", 0, repetitions_val);
+	quality_exp_greedy unknown_sol_greedy_exp(
+			unknown_solution_instances, "../exp/ej4/unknown_sol_greedy_exp", 0, repetitions_val);
 
 	quality_exp_greedy_add_neighbours known_sol_greedy_add_neighbours_exp(
-			known_solution_instances, "../exp/ej4/known_sol_greedy_add_neighbours_exp", 0, 10);
+			known_solution_instances, "../exp/ej4/known_sol_greedy_add_neighbours_exp", 0, repetitions_val);
 	quality_exp_greedy_add_neighbours unknown_sol_greedy_add_neighbours_exp(
-			unknown_solution_instances, "../exp/ej4/unknown_sol_greedy_add_neighbours_exp", 0, 10);
+			unknown_solution_instances, "../exp/ej4/unknown_sol_greedy_add_neighbours_exp", 0, repetitions_val);
 
 	quality_exp_suite.add(&known_sol_greedy_exp);
 	quality_exp_suite.add(&unknown_sol_greedy_exp);
