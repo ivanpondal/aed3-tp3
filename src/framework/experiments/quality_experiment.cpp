@@ -26,12 +26,14 @@ void quality_experiment::run() {
 
 	adj_list_graph<int> g1, g2;
 
+	cout << "Iniciando prueba de calidad '" << output_file_name << "'" << endl;
+
 	for (unsigned int i = 0; i < instances.size(); i++) {
 		instance_file.open(instances_directory + "/" + instances[i]);
 		io::read_input(instance_file, g1, g2);
 		instance_file.close();
 
-		cout << "Experimentando con instancia " << instances[i] << endl;
+		cout << "Experimentando con instancia '" << instances[i] << "'" << endl;
 		for (int j = -discard_val; j < repetitions_val; j++) {
 			chronometer::start();
 			m = solve_instance(g1, g2);
@@ -47,13 +49,13 @@ void quality_experiment::run() {
 
 	output_file.open(output_file_name);
 
+	double solution_average = 0;
+	double solution_std_deviation = 0;
+
+	double time_average = 0;
+	double time_std_deviation = 0;
+
 	for(unsigned i = 0; i < instance_results.size(); i++){
-		double solution_average = 0;
-		double solution_std_deviation = 0;
-
-		double time_average = 0;
-		double time_std_deviation = 0;
-
 		for(int j = 0; j < repetitions_val; j++){
 			solution_average += instance_results[i].first[j];
 			time_average += instance_results[i].second[j];
@@ -70,6 +72,12 @@ void quality_experiment::run() {
 
 		output_file << instances[i] << " " << solution_average << " " << solution_std_deviation
 		            << " " << time_average << " " << time_std_deviation << std::endl;
+
+		solution_average = 0;
+		solution_std_deviation = 0;
+
+		time_average = 0;
+		time_std_deviation = 0;
 	}
 
 	output_file.close();
