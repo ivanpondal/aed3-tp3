@@ -317,6 +317,33 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
     \end{figure}
 
     DP !!
+    cograph_kn_dp
+     \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=100
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_kn_dp};
+                \addplot[color=red] table[x index=0, y expr={ 250000 * (x) }]{../exp/ej3/cograph_kn_dp};
+                \legend{$T_{n_1}$,$ C * x $}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{lalala Solo ejecuto la creación del cotree}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    cograph_kn_dp/x
 
      \begin{figure}[H]
         \centering
@@ -332,16 +359,70 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
                     height=0.5\textwidth,
                     legend pos=north west,
                     legend cell align=left,
-                    xmin=300
+                    xmin=100
                 ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_kn_dp};
-                \addplot[color=red] table[x index=0, y expr={ 25 * (x) }]{../exp/ej3/cograph_kn_dp};
+                \addplot[color=black] table[x index=0,y expr={ \thisrowno{1}/(x)} ]{../exp/ej3/cograph_kn_dp};
+                \addplot[color=red] table[x index=0, y expr={ 500000 }]{../exp/ej3/cograph_kn_dp};
                 \legend{$T_{n_1}$,$ C * x $}
             \end{axis}
         \end{tikzpicture}
         \caption{lalala Solo ejecuto la creación del cotree}
         \label{fig:exp3:var-nym-base}
     \end{figure}
+
+    cograph k1 union dp
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=100
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_k1_union_dp};
+                \addplot[color=red] table[x index=0, y expr={ 5000 * (x) }]{../exp/ej3/cograph_k1_union_dp};
+                \legend{$T_{n_1}$,$ C * x $}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{lalala Solo ejecuto la creación del cotree}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    cograph k3 union dp
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=100
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_k3_union_dp};
+                \addplot[color=red] table[x index=0, y expr={ 5* (x) }]{../exp/ej3/cograph_k3_union_dp};
+                \legend{$T_{n_1}$,$ C * x $}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{lalala Solo ejecuto la creación del cotree}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+
 
 
 

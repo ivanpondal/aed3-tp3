@@ -224,6 +224,18 @@ class cograph_K_N_dp_experiment:public incremental_experiment<int, adj_list_grap
         element_generator_int e_gen;
 };  
 
+class cograph_K_N_union_dp_experiment:public incremental_experiment<int, int > {
+    public:
+        cograph_K_N_union_dp_experiment(const incremental_experiment_input<int, int > *input): incremental_experiment(input){};
+    private:
+        void load_instance(incremental_experiment_input<int, int > *input);
+        void solve_instance(incremental_experiment_input<int, int > *input);
+        adj_list_graph<int> co_g;
+        std::vector<std::vector<subsolution>> dp;
+        std::vector<info_cotree_node> vec_cotree;
+        element_generator_int e_gen;
+};  
+
 // generate cotree 
 
 class cograph_K_1_union_create_cotree_experiment:public incremental_experiment<int, adj_list_graph<int> > {

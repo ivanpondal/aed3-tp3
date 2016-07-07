@@ -69,7 +69,7 @@ void cograph_n_incremental_edges_experiment::solve_instance(incremental_experime
 
 // Solver DP :
 
-// Kn
+// Kn coograph
 void cograph_K_N_dp_experiment::load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
     e_gen.reset();
     graph_factory<int>::add_n_vertices_and_all_edges(co_g,e_gen,input->get_delta());;
@@ -86,20 +86,43 @@ void cograph_K_N_dp_experiment::solve_instance(incremental_experiment_input<int,
     solver_dp(dp, vec_cotree, input->get_subject().n());
 }
 
-// K1
+// K1 union coograph
 void cograph_K_1_union_dp_experiment::load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
-    co_g.add_node(e_gen.generate(co_g));
+    for (int i = 0; i < input->get_delta(); ++i){
+        co_g.add_node(e_gen.generate(co_g));
+    }
+    
     //adj_list_graph<int> co_g = graph_factory<int>::random_co_graph(e_gen, input->get_inc_val());
     cotree_node* cotree = generate_cotree(co_g);
     vec_cotree = vectorize(cotree);
     dp = vector<vector<subsolution>>(
         vec_cotree.size(),
-        vector<subsolution>(input->get_subject().n() + 1)
+        vector<subsolution>(101)
     );
 }
 
 void cograph_K_1_union_dp_experiment::solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
     solver_dp(dp, vec_cotree, input->get_subject().n());
+}
+
+// KN union 
+void cograph_K_N_union_dp_experiment::load_instance(incremental_experiment_input<int, int> *input){
+
+    adj_list_graph<int> aux_g;
+    graph_factory<int>::add_n_vertices_and_all_edges(aux_g,e_gen,input->get_subject());
+    e_gen.reset();
+    co_g.unite(aux_g,e_gen);
+    //adj_list_graph<int> co_g = graph_factory<int>::random_co_graph(e_gen, input->get_inc_val());
+    cotree_node* cotree = generate_cotree(co_g);
+    vec_cotree = vectorize(cotree);
+    dp = vector<vector<subsolution>>(
+        vec_cotree.size(),
+        vector<subsolution>(101)
+    );
+}
+
+void cograph_K_N_union_dp_experiment::solve_instance(incremental_experiment_input<int, int> *input){
+    solver_dp(dp, vec_cotree,100);
 }
 
 
@@ -154,7 +177,7 @@ void run_experimentation() {
 
     adj_list_graph<int> k_n;
     e_gen.reset();
-    graph_factory<int>::add_n_vertices_and_all_edges(k_n,e_gen,200);
+    graph_factory<int>::add_n_vertices_and_all_edges(k_n,e_gen,100);
     // cout << endl << "k_n : " <<  endl <<  k_n << endl;
 
     experiment_suite exp_suite;
@@ -245,18 +268,26 @@ void run_experimentation() {
     // Solver DP :
 
     //g1 Kn
-    incremental_experiment_input_int< adj_list_graph<int>> exp4_input(200, 500, 25, 35, 75, k_n, "../exp/ej3/cograph_kn_dp");
+    /*incremental_experiment_input_int< adj_list_graph<int>> exp4_input(100, 400, 25, 35, 75, k_n, "../exp/ej3/cograph_kn_dp");
 
     cograph_K_N_dp_experiment exp_4 = cograph_K_N_dp_experiment(&exp4_input);
     
-    exp_suite.add(&exp_4);
+    exp_suite.add(&exp_4);*/
 
     //g1 K1 union
-    /*incremental_experiment_input_int< adj_list_graph<int>> exp5_input(300, 600, 25, 35, 75, k_n, "../exp/ej3/cograph_k1_union_dp");
+    incremental_experiment_input_int< adj_list_graph<int>> exp5_input(100, 400, 25, 35, 100, k_n, "../exp/ej3/cograph_k1_union_dp");
 
     cograph_K_1_union_dp_experiment exp_5 = cograph_K_1_union_dp_experiment(&exp5_input);
     
-    exp_suite.add(&exp_5);*/
+    exp_suite.add(&exp_5);
+
+    //g1 Kn union
+    /*incremental_experiment_input_int< int> exp6_input(100, 400, 25, 35, 100, 3, "../exp/ej3/cograph_k3_union_dp");
+
+    cograph_K_N_union_dp_experiment exp_6 = cograph_K_N_union_dp_experiment(&exp6_input);
+    
+    exp_suite.add(&exp_6);*/
+
 
     exp_suite.run();
 
