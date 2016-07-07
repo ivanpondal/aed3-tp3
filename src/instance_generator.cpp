@@ -70,7 +70,7 @@ void run_known_solution_instance_generation(){
 	// random
 	int n = 5;
 	float c = 0.25;
-	char instance_name[80] = "random_n5_c025";
+	char instance_name[80] = "aleatorio_n5_c025";
 	graph<std::pair<int, int>> *backtracking_solution;
 
 	g1.clear();
@@ -91,7 +91,7 @@ void run_known_solution_instance_generation(){
 	g1.clear();
 	g2.clear();
 	c = 0.5;
-	strncpy(instance_name, "random_n5_c050", 80);
+	strncpy(instance_name, "aleatorio_n5_c050", 80);
 
 	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
 	e_gen.reset();
@@ -107,7 +107,7 @@ void run_known_solution_instance_generation(){
 	g1.clear();
 	g2.clear();
 	c = 0.75;
-	strncpy(instance_name, "random_n5_c075", 80);
+	strncpy(instance_name, "aleatorio_n5_c075", 80);
 
 	graph_factory<int>::add_n_random_vertices(g1, e_gen, n, c);
 	e_gen.reset();
@@ -123,7 +123,7 @@ void run_known_solution_instance_generation(){
 	// co-graph vs complete
 	n = 100;
 	int k = 50;
-	strncpy(instance_name, "cograph_n100_k50", 80);
+	strncpy(instance_name, "cografo_n100_k50", 80);
 
 	g2.clear();
 	srand(MAGIC_SEED);
@@ -140,7 +140,7 @@ void run_known_solution_instance_generation(){
 
 	n = 50;
 	k = 100;
-	strncpy(instance_name, "cograph_n50_k100", 80);
+	strncpy(instance_name, "cografo_n50_k100", 80);
 
 	g2.clear();
 
@@ -159,7 +159,7 @@ void run_known_solution_instance_generation(){
 	// random
 	n = 500;
 	c = 0.25;
-	strncpy(instance_name, "random_subgraph_n500_c025", 80);
+	strncpy(instance_name, "aleatorio_subgrafo_n500_c025", 80);
 
 	g1.clear();
 	g2.clear();
@@ -174,7 +174,7 @@ void run_known_solution_instance_generation(){
 	save_instance(g1, g2, instance_name);
 
 	c = 0.5;
-	strncpy(instance_name, "random_subgraph_n500_c050", 80);
+	strncpy(instance_name, "aleatorio_subgrafo_n500_c050", 80);
 
 	g1.clear();
 	g2.clear();
@@ -188,7 +188,7 @@ void run_known_solution_instance_generation(){
 	save_instance(g1, g2, instance_name);
 
 	c = 0.75;
-	strncpy(instance_name, "random_subgraph_n500_c075", 80);
+	strncpy(instance_name, "aleatorio_subgrafo_n500_c075", 80);
 
 	g1.clear();
 	g2.clear();
@@ -204,7 +204,7 @@ void run_known_solution_instance_generation(){
 	// tree
 
 	n = 500;
-	strncpy(instance_name, "tree_subgraph_n500", 80);
+	strncpy(instance_name, "arbol_subgrafo_n500", 80);
 
 	g1.clear();
 	g2.clear();
@@ -220,7 +220,7 @@ void run_known_solution_instance_generation(){
 
 	// complete
 
-	strncpy(instance_name, "complete_subgraph_n500", 80);
+	strncpy(instance_name, "completo_subgrafo_n500", 80);
 	g1.clear();
 	g2.clear();
 
@@ -234,7 +234,7 @@ void run_known_solution_instance_generation(){
 
 	// cycle
 
-	strncpy(instance_name, "cycle_subgraph_n500", 80);
+	strncpy(instance_name, "ciclo_subgrafo_n500", 80);
 	n = 500;
 
 	g1 = graph_factory<int>::cycle_graph(e_gen, n);
@@ -251,7 +251,7 @@ void run_known_solution_instance_generation(){
 
 	// bipartite
 
-	strncpy(instance_name, "random_bipartite_vs_complete_n500_k500_c050", 80);
+	strncpy(instance_name, "aleatorio_bipartito_vs_completo_n500_k500_c050", 80);
 	c = 0.5;
 	n = 500;
 	k = 500;
@@ -266,7 +266,7 @@ void run_known_solution_instance_generation(){
 	save_solution_entry(optimal_solutions_file, instance_name, g1.m());
 	save_instance(g1, g2, instance_name);
 
-	strncpy(instance_name, "random_bipartite_vs_complete_n250_k500_c050", 80);
+	strncpy(instance_name, "aleatorio_bipartito_vs_completo_n250_k500_c050", 80);
 	c = 0.5;
 	n = 250;
 	k = 500;
@@ -283,7 +283,7 @@ void run_known_solution_instance_generation(){
 
 	// forest
 
-	strncpy(instance_name, "forest_vs_complete_n1000_d10", 80);
+	strncpy(instance_name, "bosque_vs_completo_n1000_d10", 80);
 	int d = 10;
 	n = 1000;
 	c = 0.0;
@@ -300,7 +300,7 @@ void run_known_solution_instance_generation(){
 
 	// random
 
-	strncpy(instance_name, "random_vs_complete_n1000_d10_c050", 80);
+	strncpy(instance_name, "aleatorio_vs_completo_n1000_d10_c050", 80);
 	d = 10;
 	n = 1000;
 	c = 0.5;
@@ -336,7 +336,7 @@ void run_unknown_solution_instance_generation(){
 	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
 	e_gen.reset();
 
-	save_instance(g1, g2, "random_n1000_c025");
+	save_instance(g1, g2, "aleatorio_n1000_c025");
 
 	c = 0.5;
 
@@ -348,7 +348,7 @@ void run_unknown_solution_instance_generation(){
 	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
 	e_gen.reset();
 
-	save_instance(g1, g2, "random_n1000_c050");
+	save_instance(g1, g2, "aleatorio_n1000_c050");
 
 	c = 0.75;
 
@@ -360,7 +360,7 @@ void run_unknown_solution_instance_generation(){
 	graph_factory<int>::add_n_random_vertices(g2, e_gen, n, c);
 	e_gen.reset();
 
-	save_instance(g1, g2, "random_n1000_c075");
+	save_instance(g1, g2, "aleatorio_n1000_c075");
 
 	// tree
 	n = 1000;
@@ -374,7 +374,7 @@ void run_unknown_solution_instance_generation(){
 	graph_factory<int>::add_n_tree_vertices(g2, e_gen, n);
 	e_gen.reset();
 
-	save_instance(g1, g2, "tree_n1000");
+	save_instance(g1, g2, "arbol_n1000");
 
 	// bipartite
 
@@ -389,7 +389,7 @@ void run_unknown_solution_instance_generation(){
 	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, c);
 	e_gen.reset();
 
-	save_instance(g1, g2, "random_bipartite_n500_k500_c050");
+	save_instance(g1, g2, "aleatorio_bipartito_n500_k500_c050");
 
 	c = 0.5;
 	n = 250;
@@ -400,7 +400,7 @@ void run_unknown_solution_instance_generation(){
 	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, c);
 	e_gen.reset();
 
-	save_instance(g1, g2, "random_bipartite_n250_k500_c050");
+	save_instance(g1, g2, "aleatorio_bipartito_n250_k500_c050");
 
 	// disconnected
 
@@ -418,7 +418,7 @@ void run_unknown_solution_instance_generation(){
 	g2 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, c, v);
 	e_gen.reset();
 
-	save_instance(g1, g2, "forest_n1000_d10_v025");
+	save_instance(g1, g2, "bosque_n1000_d10_v025");
 
 	// random
 
@@ -432,7 +432,7 @@ void run_unknown_solution_instance_generation(){
 	g2 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, c, v);
 	e_gen.reset();
 
-	save_instance(g1, g2, "random_n1000_d10_c050_v025");
+	save_instance(g1, g2, "aleatorio_n1000_d10_c050_v025");
 }
 
 int main (int argc, char* argv[]) {

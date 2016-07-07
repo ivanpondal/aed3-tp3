@@ -83,32 +83,32 @@ struct hash_pair_int{
 const std::string generated_instances_directory = "generated_instances";
 
 const std::vector<std::string> known_solution_instances = {
-    "random_n5_c025",
-    "random_n5_c050",
-    "random_n5_c075",
-    "cograph_n100_k50",
-    "cograph_n50_k100",
-    "random_subgraph_n500_c025",
-    "random_subgraph_n500_c050",
-    "random_subgraph_n500_c075",
-    "tree_subgraph_n500",
-    "complete_subgraph_n500",
-    "cycle_subgraph_n500",
-    "random_bipartite_vs_complete_n500_k500_c050",
-    "random_bipartite_vs_complete_n250_k500_c050",
-    "forest_vs_complete_n1000_d10",
-    "random_vs_complete_n1000_d10_c050"
+    "aleatorio_n5_c025",
+    "aleatorio_n5_c050",
+    "aleatorio_n5_c075",
+    "cografo_n100_k50",
+    "cografo_n50_k100",
+    "aleatorio_subgrafo_n500_c025",
+    "aleatorio_subgrafo_n500_c050",
+    "aleatorio_subgrafo_n500_c075",
+    "arbol_subgrafo_n500",
+    "completo_subgrafo_n500",
+    "ciclo_subgrafo_n500",
+    "aleatorio_bipartito_vs_completo_n500_k500_c050",
+    "aleatorio_bipartito_vs_completo_n250_k500_c050",
+    "bosque_vs_completo_n1000_d10",
+    "aleatorio_vs_completo_n1000_d10_c050"
 };
 
 const std::vector<std::string> unknown_solution_instances = {
-    "random_n1000_c025",
-    "random_n1000_c050",
-    "random_n1000_c075",
-    "tree_n1000",
-    "random_bipartite_n500_k500_c050",
-    "random_bipartite_n250_k500_c050",
-    "forest_n1000_d10_v025",
-    "random_n1000_d10_c050_v025"
+    "aleatorio_n1000_c025",
+    "aleatorio_n1000_c050",
+    "aleatorio_n1000_c075",
+    "arbol_n1000",
+    "aleatorio_bipartito_n500_k500_c050",
+    "aleatorio_bipartito_n250_k500_c050",
+    "bosque_n1000_d10_v025",
+    "aleatorio_n1000_d10_c050_v025"
 };
 
 #endif  // AED3_TP3_MAIN_H
