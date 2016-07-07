@@ -19,8 +19,8 @@ struct node_degree_pair_compare{
 };
 
 graph<std::pair<int, int>> *solve_greedy(
-    graph<int> &g1,
-    graph<int> &g2,
+    const graph<int> &g1,
+    const graph<int> &g2,
     bool add_neighbours = false
 );
 
