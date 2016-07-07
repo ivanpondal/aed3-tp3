@@ -8,6 +8,7 @@
 #include <vector>        // vector
 #include <unordered_set> // unordered_set
 #include <utility>
+#include <string>
 
 #include "framework/structures/graph.h"
 #include "framework/utils/element_generator.h"
@@ -75,6 +76,39 @@ struct hash_pair_int{
         seed ^= std::hash<int>()(p.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         return seed;
     }
+};
+
+// Instancias de grafos para experimentar
+
+const std::string generated_instances_directory = "generated_instances";
+
+const std::vector<std::string> known_solution_instances = {
+    "random_n5_c025.ins",
+    "random_n5_c050.ins",
+    "random_n5_c075.ins",
+    "cograph_n100_k50.ins",
+    "cograph_n50_k100.ins",
+    "random_subgraph_n500_c025.ins",
+    "random_subgraph_n500_c050.ins",
+    "random_subgraph_n500_c075.ins",
+    "tree_subgraph_n500.ins",
+    "complete_subgraph_n500.ins",
+    "cycle_subgraph_n500.ins",
+    "random_bipartite_vs_complete_n500_k500_c050.ins",
+    "random_bipartite_vs_complete_n250_k500_c050.ins",
+    "forest_vs_complete_n1000_d10.ins",
+    "random_vs_complete_n1000_d10_c050.ins"
+};
+
+const std::vector<std::string> unknown_solution_instances = {
+    "random_n1000_c025.ins",
+    "random_n1000_c050.ins",
+    "random_n1000_c075.ins",
+    "tree_n1000.ins",
+    "random_bipartite_n500_k500_c050.ins",
+    "random_bipartite_n250_k500_c050.ins",
+    "forest_n1000_d10_v025.ins",
+    "random_n1000_d10_c050_v025.ins"
 };
 
 #endif  // AED3_TP3_MAIN_H

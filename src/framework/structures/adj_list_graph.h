@@ -5,7 +5,8 @@
 #include <unordered_set>
 #include <vector>
 #include <algorithm>  // std::find
-#include "graph.h"
+
+#include "../utils/element_generator.h"
 
 template <typename T, typename H = std::hash<T>>
 class adj_list_graph: public graph<T>{
