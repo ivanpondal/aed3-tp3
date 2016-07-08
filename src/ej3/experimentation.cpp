@@ -72,7 +72,7 @@ void cograph_n_incremental_edges_experiment::solve_instance(incremental_experime
 // Kn coograph
 void cograph_K_N_dp_experiment::load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input){
     e_gen.reset();
-    graph_factory<int>::add_n_vertices_and_all_edges(co_g,e_gen,input->get_delta());;
+    graph_factory<int>::add_n_vertices_and_all_edges(co_g,e_gen,input->get_delta());
     //adj_list_graph<int> co_g = graph_factory<int>::random_co_graph(e_gen, input->get_inc_val());
     cotree_node* cotree = generate_cotree(co_g);
     vec_cotree = vectorize(cotree);
@@ -97,7 +97,7 @@ void cograph_K_1_union_dp_experiment::load_instance(incremental_experiment_input
     vec_cotree = vectorize(cotree);
     dp = vector<vector<subsolution>>(
         vec_cotree.size(),
-        vector<subsolution>(101)
+        vector<subsolution>(201)
     );
 }
 
@@ -117,12 +117,12 @@ void cograph_K_N_union_dp_experiment::load_instance(incremental_experiment_input
     vec_cotree = vectorize(cotree);
     dp = vector<vector<subsolution>>(
         vec_cotree.size(),
-        vector<subsolution>(101)
+        vector<subsolution>(201)
     );
 }
 
 void cograph_K_N_union_dp_experiment::solve_instance(incremental_experiment_input<int, int> *input){
-    solver_dp(dp, vec_cotree,100);
+    solver_dp(dp, vec_cotree,200);
 }
 
 
@@ -177,7 +177,7 @@ void run_experimentation() {
 
     adj_list_graph<int> k_n;
     e_gen.reset();
-    graph_factory<int>::add_n_vertices_and_all_edges(k_n,e_gen,100);
+    graph_factory<int>::add_n_vertices_and_all_edges(k_n,e_gen,300);
     // cout << endl << "k_n : " <<  endl <<  k_n << endl;
 
     experiment_suite exp_suite;
@@ -268,14 +268,14 @@ void run_experimentation() {
     // Solver DP :
 
     //g1 Kn
-    /*incremental_experiment_input_int< adj_list_graph<int>> exp4_input(100, 400, 25, 35, 75, k_n, "../exp/ej3/cograph_kn_dp");
+    incremental_experiment_input_int< adj_list_graph<int>> exp4_input(100, 1000, 0, 5, 100, k_n, "../exp/ej3/cograph_kn_dp");
 
     cograph_K_N_dp_experiment exp_4 = cograph_K_N_dp_experiment(&exp4_input);
     
-    exp_suite.add(&exp_4);*/
+    exp_suite.add(&exp_4);
 
     //g1 K1 union
-    incremental_experiment_input_int< adj_list_graph<int>> exp5_input(100, 400, 25, 35, 100, k_n, "../exp/ej3/cograph_k1_union_dp");
+    incremental_experiment_input_int< adj_list_graph<int>> exp5_input(100, 1000, 0, 5, 100, k_n, "../exp/ej3/cograph_k1_union_dp");
 
     cograph_K_1_union_dp_experiment exp_5 = cograph_K_1_union_dp_experiment(&exp5_input);
     

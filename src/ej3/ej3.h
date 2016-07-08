@@ -202,7 +202,13 @@ void solver_dp(std::vector<std::vector<subsolution>> &dp,std::vector<info_cotree
 
 class cograph_K_1_union_dp_experiment:public incremental_experiment<int, adj_list_graph<int> > {
     public:
-        cograph_K_1_union_dp_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){};
+        cograph_K_1_union_dp_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input)
+        : incremental_experiment(input){
+            for (int i = 0; i < 200; ++i)
+            {
+                co_g.add_node(e_gen.generate(co_g));
+            }
+        };
     private:
         void load_instance(incremental_experiment_input<int, adj_list_graph<int> > *input);
         void solve_instance(incremental_experiment_input<int, adj_list_graph<int> > *input);
@@ -214,7 +220,9 @@ class cograph_K_1_union_dp_experiment:public incremental_experiment<int, adj_lis
 
 class cograph_K_N_dp_experiment:public incremental_experiment<int, adj_list_graph<int> > {
     public:
-        cograph_K_N_dp_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){};
+        cograph_K_N_dp_experiment(const incremental_experiment_input<int, adj_list_graph<int> > *input): incremental_experiment(input){
+            graph_factory<int>::add_n_vertices_and_all_edges(co_g,e_gen,200);
+        };
     private:
         void load_instance(incremental_experiment_input<int, adj_list_graph<int> > *input);
         void solve_instance(incremental_experiment_input<int, adj_list_graph<int> > *input);
@@ -226,7 +234,16 @@ class cograph_K_N_dp_experiment:public incremental_experiment<int, adj_list_grap
 
 class cograph_K_N_union_dp_experiment:public incremental_experiment<int, int > {
     public:
-        cograph_K_N_union_dp_experiment(const incremental_experiment_input<int, int > *input): incremental_experiment(input){};
+        cograph_K_N_union_dp_experiment(const incremental_experiment_input<int, int > *input): incremental_experiment
+        (input){
+            while(co_g.n() < 200){
+                adj_list_graph<int> aux_g;
+                graph_factory<int>::add_n_vertices_and_all_edges(aux_g,e_gen,3);
+                e_gen.reset();
+                co_g.unite(aux_g,e_gen);
+            }
+
+        };
     private:
         void load_instance(incremental_experiment_input<int, int > *input);
         void solve_instance(incremental_experiment_input<int, int > *input);
@@ -260,7 +277,8 @@ class cograph_K_N_union_create_cotree_experiment:public incremental_experiment<i
 
 class cograph_K_N_create_cotree_experiment:public incremental_experiment<int, adj_list_graph<int>> {
     public:
-        cograph_K_N_create_cotree_experiment(const incremental_experiment_input<int, adj_list_graph<int>> *input): incremental_experiment(input){};
+        cograph_K_N_create_cotree_experiment(const incremental_experiment_input<int, adj_list_graph<int>> *input)
+        : incremental_experiment(input){};
     private:
         void load_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
         void solve_instance(incremental_experiment_input<int, adj_list_graph<int>> *input);
