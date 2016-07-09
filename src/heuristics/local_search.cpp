@@ -17,7 +17,7 @@ using namespace std;
 // Forward declarations
 // --------------------
 
-bool improve_solution_0(
+bool improve_solution_1(
     graph<pair<int, int>>* solution,
     graph<int>& g1,
     graph<int>& g2,
@@ -29,7 +29,7 @@ bool improve_solution_0(
     bool strict_comparisons
 );
 
-bool improve_solution_1(
+bool improve_solution_2(
     graph<pair<int, int>>* solution,
     graph<int>& g1,
     graph<int>& g2,
@@ -68,10 +68,10 @@ graph<pair<int, int>>* solve_local_search(
         vector<int>&,
         float,
         bool
-    ) = &improve_solution_0;
+    ) = &improve_solution_1;
 
-    if (neighbourhood_type == 1) {
-        improve_solution = &improve_solution_1;
+    if (neighbourhood_type == 2) {
+        improve_solution = &improve_solution_2;
     }
 
     unsigned int solution_size = start_point.n();
@@ -134,13 +134,13 @@ graph<pair<int, int>>* solve_local_search(
 }
 
 
-// Neighbourhood type 0
+// Neighbourhood type 1
 // --------------------
 
 // Each iteration exchanges one node of g2 in the mapping for one that is not
 // mapped to any node of g1
 
-bool improve_solution_0(
+bool improve_solution_1(
     graph<pair<int, int>>* solution,
     graph<int>& g1,
     graph<int>& g2,
@@ -237,13 +237,13 @@ bool improve_solution_0(
 }
 
 
-// Neighbourhood type 1
+// Neighbourhood type 2
 // --------------------
 
 // Each iteration either exchanges one node of g2 in the mapping for one that
 // is not mapped to any node of g1, or swaps two nodes of g2 in the mapping
 
-bool improve_solution_1(
+bool improve_solution_2(
     graph<pair<int, int>>* solution,
     graph<int>& g1,
     graph<int>& g2,
