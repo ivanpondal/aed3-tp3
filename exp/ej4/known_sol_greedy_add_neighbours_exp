@@ -1,0 +1,15 @@
+aleatorio_n5_c025 2 0 2945.1 580.894
+aleatorio_n5_c050 2 0 6768.06 5906.05
+aleatorio_n5_c075 3 0 4854 440.921
+cografo_n100_k50 49 0 79317.3 3294.61
+cografo_n50_k100 47 0 115664 21291.9
+aleatorio_subgrafo_n500_c025 928 0 1.07628e+06 81035.1
+aleatorio_subgrafo_n500_c050 1363 0 1.13144e+06 12956.8
+aleatorio_subgrafo_n500_c075 1335 0 947041 13685.3
+arbol_subgrafo_n500 287 0 452802 5754.32
+completo_subgrafo_n500 499 0 425574 11229.8
+ciclo_subgrafo_n500 485 0 430247 4299.28
+aleatorio_bipartito_vs_completo_n500_k500_c050 124704 0 5.04183e+07 136100
+aleatorio_bipartito_vs_completo_n250_k500_c050 62216 0 2.47743e+07 75885.7
+bosque_vs_completo_n1000_d10 587 0 3.79322e+06 14979.6
+aleatorio_vs_completo_n1000_d10_c050 1071 0 1.58073e+06 13154

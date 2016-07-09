@@ -8,9 +8,11 @@
 #include <vector>        // vector
 #include <unordered_set> // unordered_set
 #include <utility>
+#include <string>
 
-#include "framework/structures/graph.h"
 #include "framework/utils/element_generator.h"
+#include "framework/utils/io.h"
+#include "framework/structures/graph.h"
 #include "framework/structures/adj_list_graph.h"
 
 extern bool verbose;
@@ -19,28 +21,12 @@ extern bool verbose;
 void show_help(char* bin_path);
 
 // Funciones principales
-struct solution {
-    graph<int>* h;
-    std::vector<int> g1_mapping;
-    std::vector<int> g2_mapping;
-
-    ~solution() {
-        delete h;
-    }
-};
-
 solution run_solver(graph<int>& g1, graph<int>& g2);
 void run_unit_tests();
 void run_experimentation();
 
-// Funciones de entrada/salida
-void read_input(std::istream& is, graph<int>& g1, graph<int>& g2);
-solution pairs_to_solution(const graph<std::pair<int, int>>&);
-void print_solution(std::ostream& os, const solution& sol);
-void print_vector(std::ostream& os, const std::vector<int>& v);
-void print_edges(std::ostream& os, const graph<int>* g);
-
 // Funciones auxiliares
+solution pairs_to_solution(const graph<std::pair<int, int>>&);
 
 // Verifica que una solución sea válida
 bool check_solution(const solution& s, const graph<int>& g1, const graph<int>& g2);
@@ -90,6 +76,39 @@ struct hash_pair_int{
         seed ^= std::hash<int>()(p.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         return seed;
     }
+};
+
+// Instancias de grafos para experimentar
+
+const std::string generated_instances_directory = "generated_instances";
+
+const std::vector<std::string> known_solution_instances = {
+    "aleatorio_n5_c025",
+    "aleatorio_n5_c050",
+    "aleatorio_n5_c075",
+    "cografo_n100_k50",
+    "cografo_n50_k100",
+    "aleatorio_subgrafo_n500_c025",
+    "aleatorio_subgrafo_n500_c050",
+    "aleatorio_subgrafo_n500_c075",
+    "arbol_subgrafo_n500",
+    "completo_subgrafo_n500",
+    "ciclo_subgrafo_n500",
+    "aleatorio_bipartito_vs_completo_n500_k500_c050",
+    "aleatorio_bipartito_vs_completo_n250_k500_c050",
+    "bosque_vs_completo_n1000_d10",
+    "aleatorio_vs_completo_n1000_d10_c050"
+};
+
+const std::vector<std::string> unknown_solution_instances = {
+    "aleatorio_n1000_c025",
+    "aleatorio_n1000_c050",
+    "aleatorio_n1000_c075",
+    "arbol_n1000",
+    "aleatorio_bipartito_n500_k500_c050",
+    "aleatorio_bipartito_n250_k500_c050",
+    "bosque_n1000_d10_v025",
+    "aleatorio_n1000_d10_c050_v025"
 };
 
 #endif  // AED3_TP3_MAIN_H

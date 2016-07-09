@@ -6,7 +6,7 @@
 
 using namespace std;
 
-graph< std::pair<int, int>> *solve_greedy(graph<int> &g1, graph<int> &g2, bool add_neighbours){
+graph< std::pair<int, int>> *solve_greedy(const graph<int> &g1, const graph<int> &g2, bool add_neighbours){
     // >>>>>>>>> add_neighbours
     std::priority_queue<std::pair<int, int>,
                         std::vector< std::pair<int, int>>,
