@@ -99,7 +99,7 @@ bool mcs_backtracking(
                     // Check if the neighbour is in the subgraph
                     if (node_map.find(g1_neighbour) != node_map.end()) {
                         int g2_mapped_node = node_map.at(g1_neighbour);
-                        
+
                         // Check if the neighbour is mapped to a neighbour of the remaining_g2 node-to-map
                         if (g2->adjacent(g2_mapped_node, g2_node)) {
                             // Add edge
