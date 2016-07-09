@@ -1,12 +1,13 @@
 #include <stdlib.h>  // rand
 #include <time.h>    // time
+#include <cassert>
 #include "heuristics.h"
 #include "../framework/utils/chronometer.h"
 
 /*
 **  Local search heuristic
 **  IMPORTANT: This algorithm assumes g2 is larger (has more or the same
-**  amount of vertices) than g2. Adittionaly, If g1 and g2 have the same size,
+**  amount of vertices) than g2. Adittionaly, if g1 and g2 have the same size,
 **  some neighbourhood types may not work properly.
 */
 
@@ -53,18 +54,9 @@ graph<pair<int, int>>* solve_local_search(
     float neighbourhood_proportion,
     bool strict_comparisons
 ) {
-    // We assume #V(g1) < #V(g2), #V(start_point) == #V(g_1)
-    graph<int>* g1p, * g2p;
-    bool swapped = false;
-
-    if (g1.n() <= g2.n()) {
-        g1p = &g1;
-        g2p = &g2;
-    } else {
-        g1p = &g2;
-        g2p = &g1;
-        swapped = true;
-    }
+    // We need #V(g1) < #V(g2), #V(start_point) == #V(g_1)
+    assert(g1.n() <= g2.n());
+    assert(start_point.n() == g1.n());
 
     bool (*improve_solution) (
         graph<pair<int, int>>*,
@@ -92,19 +84,19 @@ graph<pair<int, int>>* solve_local_search(
     unordered_set<int> unmapped_nodes;
     vector<int> unmapped_nodes_vector;
 
-    vector<int> g2_vertices = g2p->get_vertices();
+    vector<int> g2_vertices = g2.get_vertices();
     vector<pair<int, int>> solution_vertices = start_point.get_vertices();
 
 
     // Read start solution as a mapping between g1 and g2 nodes
     for (unsigned int i = 0; i < solution_size; i++) {
-        int g1_node = swapped ? solution_vertices[i].second : solution_vertices[i].first;
-        int g2_node = swapped ? solution_vertices[i].first : solution_vertices[i].second;
+        int g1_node = solution_vertices[i].first;
+        int g2_node = solution_vertices[i].second;
         g2_to_g1_mapping.insert({g2_node, g1_node});
         mapped_nodes.insert(g2_node);
     }
 
-    for (unsigned int i = 0; i < g2p->n(); i++) {
+    for (unsigned int i = 0; i < g2.n(); i++) {
         if (mapped_nodes.find(g2_vertices[i]) == mapped_nodes.end()) {
             unmapped_nodes.insert(g2_vertices[i]);
             unmapped_nodes_vector.push_back(g2_vertices[i]);
@@ -117,28 +109,13 @@ graph<pair<int, int>>* solve_local_search(
     // Here is where the solution will be saved at the end of each iteration
     graph<pair<int, int>>* ret;
 
-    if (! swapped) {
-        ret = start_point.clone();
-    }
-    else {
-        ret = new adj_list_graph<pair<int, int>, hash_pair_int>;
-        for (unsigned int i = 0; i < solution_vertices.size(); i++) {
-            ret->add_node({solution_vertices[i].second, solution_vertices[i].first});
-        }
-        for (unsigned int i = 0; i < solution_vertices.size(); i++) {
-            pair<int, int> curr_vertex = {solution_vertices[i].second, solution_vertices[i].first};
-            vector<pair<int, int>> neigh = start_point.neighbours(solution_vertices[i]);
-            for (unsigned int j = 0; j < neigh.size(); j++) {
-                ret->add_edge(curr_vertex, {neigh[j].second, neigh[j].first});
-            }
-        }
-    }
+    ret = start_point.clone();
 
     while (! stop && (iteration_limit < 0 || iteration_count < iteration_limit)) {
         bool any_improvement = improve_solution(
             ret,
-            *g1p,
-            *g2p,
+            g1,
+            g2,
             g2_to_g1_mapping,
             mapped_nodes,
             unmapped_nodes,
@@ -290,13 +267,10 @@ bool improve_solution_1(
     vector<int> best_new_edges_1;
     vector<int> best_new_edges_2;
 
-    int checked_neighbours = 0;
-
     for (unsigned int i = 0; i < g2.n(); i++) {
         bool i_mapped = mapped_nodes.find(g2_vertices[i]) != mapped_nodes.end();
         for (unsigned int j = 0; j < i; j++) {
             if (rand() < neighbourhood_proportion * RAND_MAX) {
-                checked_neighbours++;
                 bool j_mapped = mapped_nodes.find(g2_vertices[j]) != mapped_nodes.end();
 
                 action_type action;
@@ -307,7 +281,7 @@ bool improve_solution_1(
                 int lost_edges;
                 vector<int> new_edges_1;
                 vector<int> new_edges_2;
-                int edge_diff;
+                int edge_diff = -1;  // to avoid trying to make invalid moves
 
                 if (i_mapped && j_mapped) {
                     // cout << "  try SWAP  " << g2_vertices[i] << " <-> " << g2_vertices[j] << endl;
@@ -406,8 +380,6 @@ bool improve_solution_1(
             }
         }
     }
-
-    // cout << "neighbourhood size: " << checked_neighbours << endl;
 
     if (any_improvement) {
         if (best_action == swap) {
