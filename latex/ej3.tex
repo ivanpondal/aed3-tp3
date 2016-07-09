@@ -207,124 +207,39 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
 
     
 
-    Para la solucion del DP se hicieron 2 experimentos:
+    Para la solucion del DP se hicieron tres experimentos:
 
     \begin{enumerate}
-        \item Se aumento la cantidad de nodos de $K_n$ y fijo un cografo .
-        \item Se aumento la cantidad de nodos del cografo y fijo un $K_n$. 
+        \item Se Varia los nodos del cografo ($n_1$) y se fija el $K_n$ en 100 nodos, se varia la cantidad de aristas del cografo para ver como afecta al solver DP . Se esperan funciones lineales diferriendo en una constante, dependiendo de como este conectado el cografo. Con este experimento se espera probar la dependencia lineal de $n_1$.
+        \item Se varia el cografo en $n$, siendo el cografo un $K_n$  y el segundo grafo en $K_{n/2}$. Se espera funcion cubica , con la cual se pretende mostrar la dependecia cuadratica de $n_2$ y confirmar la depencia lineal de $n_1$.
+        \item Se varia el cografo en $n$, siendo el cografo un $K_n$  y el segundo grafo en $K_{log(n)}$. Se espera una funcion de la pint $xlog^2(x)$ , con la cual se pretende mostrar la dependecia cuadratica de $n_2$ y confirmar la depencia lineal de $n_1$.
     \end{enumerate}
 
-    Para la creacion del coarbol se hicieron dos experimentos:
+    Para la creacion del coarbol se hicieron tres experimentos:
 
     \begin{enumerate}
+
+        \item Se toma la union de $K_1$, con lo cual se fija la cantidad de aristas en $0$ ($m_1$) y se varia la cantidad de nodos del cografo($n_1$). Se espera una funcion cuadratica, con la cual se quiere mostrar la depencia cuadratica de $n_1$.
+        \item Se toma la union de $K_3$, cada 3 nuevos nodos hay 3 nuevas aristas , logrando una dependia lineal $m_1 = n_1$. Se espera una funcion cuadratica con una constante más alta que la union de $K_1$. Con lo cual se espera probar parcialmente la influencia de $m_1$ y confirmar la dependecia cuadratica de $n_1$
+        \item Se toma un $K_n$ , con lo cual se tiene una dependencia cuadratica $m_1 = n_1(n_1 - 1)$. Se espera una funcion cuadratica, con la cual se pretende mostrar la influencia de $m_2$.
+
+    \end{enumerate}
+
+
+    Se experimentó con la creacion del cotree y con la solucion del DP por separado para 
+     tener un mayor control de las variables.
+
+ 
+   \subsubsection{ Experimentos con el solver DP}
+
+
     
-        \item Se fijo un $K_n$ y un $n_1$ y vario probabilidad de hacer join ($c$) en la creacion del cografo. Asi podemos variar crecientemente la cantidad de aristas.
-        \item Se fijo la cantidad de aristas en uno y se vario la cantidad de nodos del cografo
-
-    \end{enumerate}
-
-
-    Se hicieron 4 experimentos para probar la complejidad del algoritmo completo:
-
-    \begin{enumerate}
-    \item Se aumento la cantidad de nodos del cografo y fijo un $K_n$. 
-    \item Se aumento la cantidad de nodos de $K_n$ y fijo un cografo .
-    \item Se aumento la cantidad de nodos de $K_n$ y el cografo en proporción de 2 nodos a 1 . Por cada 2 nodos que se aumenta en el cografo se aumenta 1 en el $K_n$.
-    \item Se fijo un $K_n$ y un $n_1$ y vario probabilidad de hacer join ($c$) en la creacion del cografo. Asi podemos variar crecientemente la cantidad de aristas.
-    \end{enumerate}
-
-    Se experimentó con la creacion del cotree, con la solucion del DP y finalmente con el algoritmo completo.
-    Esto se hizo para tener un mayor control de las variables a la hora de experimentar.
-
-    La cre
-
     \begin{figure}[H]
         \centering
         \begin{tikzpicture}
             \begin{axis}[
                     title={},
-                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
-                    ylabel={Tiempo de ejecución (nanosegundos)},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_k1_union_create_cotree};
-                \addplot[color=red] table[x index=0, y expr={ 9 * (x*x) }]{../exp/ej3/cograph_k1_union_create_cotree};
-                \legend{$T_{n_1}$,$ C * x^2 $}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{lalala Solo ejecuto la creación del cotree}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
-                    ylabel={Tiempo de ejecución (nanosegundos)},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_k3_union_create_cotree};
-                \addplot[color=red] table[x index=0, y expr={  125 * (x*x) }]{../exp/ej3/cograph_k3_union_create_cotree};
-                \legend{$T_{n_1}$,$ C * x^2 $}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{lalala Solo ejecuto la creación del cotree}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
-                    ylabel={Tiempo de ejecución (nanosegundos)},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_kn_create_cotree};
-                \addplot[color=red] table[x index=0, y expr={ 9 * (x*x*x) }]{../exp/ej3/cograph_kn_create_cotree};
-                \legend{$T_{n_1}$,$ C * x^3 $}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{lalala Solo ejecuto la creación del cotree}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-    DP !!!
-    cograph kn dp
-
-     \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
+                    xlabel={Se Varia los nodos del cografo ($n_1$) y se fija el $K_n$ en 100 nodos.},
                     ylabel={Tiempo de ejecución (nanosegundos)},
                     scaled x ticks=false,
                     scaled y ticks=false,
@@ -336,22 +251,27 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
                     xmin=100
                 ]
                 \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_kn_dp};
-                \addplot[color=red] table[x index=0, y expr={ 900000 * (x) }]{../exp/ej3/cograph_kn_dp};
-                \legend{$T_{n_1}$,$ C * x $}
+                \addplot[color=blue] table[x index=0,y index=1]{../exp/ej3/cograph_k1_union_dp};
+                \addplot[color=violet] table[x index=0,y index=1]{../exp/ej3/cograph_k10_union_dp};
+
+                \addplot[color=red] table[x index=0, y expr={ 500000 * (x) }]{../exp/ej3/cograph_kn_dp};
+                \legend{$T_{k_n}$,$T_{k_1}$,$T_{k_{10}}$,$ C * x $}
             \end{axis}
         \end{tikzpicture}
-        \caption{lalala Solo ejecuto la creación del cotree}
+        \caption{Se ejecuto la resolucion del DP. como $n_2 = 100$ nos queda una complejidad $O(n1* 100^2)$ = $O(n1)$ }
         \label{fig:exp3:var-nym-base}
     \end{figure}
 
-    cograph kn dp / x
+    Se puede ver que la constante depende del la familia del grafo , ya que $T_{k_n}$ y $T_{k_1}$ tiene una constante muy parecida , ya que uno es el complemento del otro. Queda ver con diversas familias de cografos para ver como afecta al la creacion de coarboles.Se puede esperar mientras más balanceado sea el coarbol más grande sera la constante, ya que en cada paso tendria que probar hijos izquierdos por hijos derechos en el DP.
+
+    
 
      \begin{figure}[H]
         \centering
         \begin{tikzpicture}
             \begin{axis}[
                     title={},
-                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
+                    xlabel={Se Varia los nodos del cografo ($n_1$) y se fija el $K_n$ en 100 nodos.},
                     ylabel={Tiempo de ejecución (nanosegundos)},
                     scaled x ticks=false,
                     scaled y ticks=false,
@@ -361,84 +281,20 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
                     legend pos=north west,
                     legend cell align=left,
                     xmin=100
-                ]
-                \addplot[color=black] table[x index=0,y expr={ \thisrowno{1}/(x)} ]{../exp/ej3/cograph_kn_dp};
-                \addplot[color=red] table[x index=0, y expr={ 900000 }]{../exp/ej3/cograph_kn_dp};
-                \legend{$T_{n_1}$,$ C * x $}
+                ];
+                \addplot[color=black] table[x index=0,y expr={\thisrowno{1}/(x)} ]{../exp/ej3/cograph_kn_dp};
+                \addplot[color=blue] table[x index=0,y expr={\thisrowno{1}/(x)} ]{../exp/ej3/cograph_k1_union_dp};
+                \addplot[color=violet] table[x index=0,y expr={\thisrowno{1}/(x)} ]{../exp/ej3/cograph_k10_union_dp};
+                \addplot[color=red] table[x index=0, y expr={ 500000 }]{../exp/ej3/cograph_kn_dp};
+                \legend{$T_{k_n}$,$T_{k_1}$,$T_{k_{10}}$,$ C * x $}
             \end{axis}
         \end{tikzpicture}
-        \caption{lalala Solo ejecuto la creación del cotree}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-    cograph k1 union dp
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
-                    ylabel={Tiempo de ejecución (nanosegundos)},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=100
-                ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_k1_union_dp};
-                \addplot[color=red] table[x index=0, y expr={ 5000 * (x) }]{../exp/ej3/cograph_k1_union_dp};
-                \legend{$T_{n_1}$,$ C * x $}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{lalala Solo ejecuto la creación del cotree}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-    cograph k3 union dp
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Se fija la cantidad de aristas en una  y aumento la cantidad de nodos ($n_1$) del cografo.},
-                    ylabel={Tiempo de ejecución (nanosegundos)},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=100
-                ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_k3_union_dp};
-                \addplot[color=red] table[x index=0, y expr={ 5* (x) }]{../exp/ej3/cograph_k3_union_dp};
-                \legend{$T_{n_1}$,$ C * x $}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{lalala Solo ejecuto la creación del cotree}
+        \caption{Se divide por $n_1$, para mostrar que $C =  500000$ lo acota.}
         \label{fig:exp3:var-nym-base}
     \end{figure}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 
     \begin{figure}[H]
@@ -446,35 +302,7 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
         \begin{tikzpicture}
             \begin{axis}[
                     title={},
-                    xlabel={Vario la cantidad de nodos del cografo ($n_1$) },
-                    ylabel={Tiempo de ejecución (nanosegundos)},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=200
-                ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_nodes};
-                \addplot[color=red] table[x index=0, y expr={  2500 * (x*x)  }]{../exp/ej3/cograph_incremental_nodes};
-
-                \legend{$T_{(co_n)}$, $ C * x^2 $}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
-        ($T_{co_n}$) .}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Vario la cantidad de nodos del grafo completo ($n_2$)},
+                    xlabel={Se varia los nodos del cografo, siendo  un $K_n$  y el segundo grafo tiene le mitad de nodos.},
                     ylabel={Tiempo de ejecución (nanosegundos)},
                     scaled x ticks=false,
                     scaled y ticks=false,
@@ -485,22 +313,21 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
                     legend cell align=left,
                     xmin=0
                 ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/complete_graph_incremental_nodes};
-
-                \legend{$T_{(k_n)}$}
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_kn_and_k_n_div_2_dp};
+                \addplot[color=red] table[x index=0, y expr={ 10 * (x*x*x) }]{../exp/ej3/cograph_kn_and_k_n_div_2_dp};
+                \legend{$T_{k_n}$,$ C * x^3 $}
             \end{axis}
         \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n_2$
-        ($(k_n)$) .}
+        \caption{Se ejecuto la resolucion del DP. como $n_2 = n_1/2$ nos queda una complejidad $O(n_1* (n_1/2)^2)$ = $O(n_1^3)$}
         \label{fig:exp3:var-nym-base}
     \end{figure}
 
-     \begin{figure}[H]
+    \begin{figure}[H]
         \centering
         \begin{tikzpicture}
             \begin{axis}[
                     title={},
-                    xlabel={Aumento la cantidad de nodos ($n_1$) del grafo completo y del cografo ($n_2$)},
+                    xlabel={Se varia los nodos del cografo, siendo  un $K_n$  y el segundo grafo tiene le mitad de nodos.},
                     ylabel={Tiempo de ejecución (nanosegundos)},
                     scaled x ticks=false,
                     scaled y ticks=false,
@@ -511,26 +338,25 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
                     legend cell align=left,
                     xmin=0
                 ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/complete_graph_and_cograph_incremental_nodes};
-                \addplot[color=red] table[x index=0, y expr={ 8 * (x*x*x) }]{../exp/ej3/complete_graph_and_cograph_incremental_nodes};
-
-                \legend{$T_{(k_n y co_n)}$, $ C * x^3$}
+                \addplot[color=black] table[x index=0,y expr={\thisrowno{1}/(x*x*x)}]{../exp/ej3/cograph_kn_and_k_n_div_2_dp};
+                \addplot[color=red] table[x index=0, y expr={ 10}]{../exp/ej3/cograph_kn_and_k_n_div_2_dp};
+                \legend{$T_{k_{n/2}}$,$ C $}
             \end{axis}
         \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n_1$ y  $n_2$
-        ($T_{(k_n y co_n)}$).}
+        \caption{Se divide por $n_1^2$, para mostrar, que $C =  10$ lo acota.  }
         \label{fig:exp3:var-nym-base}
     \end{figure}
 
+    
 
 
-
-     \begin{figure}[H]
+    
+    \begin{figure}[H]
         \centering
         \begin{tikzpicture}
             \begin{axis}[
                     title={},
-                    xlabel={Fijo el $K_n$ ($n_1$)y la cantidad de nodos del cografo ($n_2$)y aumento la cantidad de aristas del cografo.},
+                    xlabel={Se varia el cografo en $n$, siendo el cografo un $K_n$  y el segundo grafo en $K_{ln(n)}$.},
                     ylabel={Tiempo de ejecución (nanosegundos)},
                     scaled x ticks=false,
                     scaled y ticks=false,
@@ -541,13 +367,66 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
                     legend cell align=left,
                     xmin=0
                 ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_edges};
-                \addplot[color=red] table[x index=0, y expr={  (19000000 * x) + 9000000 ) }]{../exp/ej3/cograph_incremental_edges};
-
-                \legend{$T_{m_2}$,$ C * x $ }
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_kn_and_k_log_n_dp};
+                \addplot[color=red] table[x index=0, y expr={ 135 * x * ln(x) * ln(x) }]{../exp/ej3/cograph_kn_and_k_log_n_dp};
+       
+                \legend{$T_{k_{ln(n)}}$,$ C * x * ln^2(x) $}
             \end{axis}
         \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al fijar el $K_n$ ($n_1$)y la cantidad de nodos del cografo ($n_2$) y variar la probabilidad de hacer un join al crear el cografo. Variamos la probabilidad entre $0 y 1$ y la llamamos $c$}
+        \caption{Se ejecuto la resolucion del DP. como $n_2 = ln(n_1)$ nos queda una complejidad $O(n_1 * ln^2(n_1))$}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Se varia el cografo en $n$, siendo el cografo un $K_n$  y el segundo grafo en $K_{ln(n)}$.},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                
+                \addplot[color=black] table[x index=0,y expr={\thisrowno{1}/(x)}]{../exp/ej3/cograph_kn_and_k_log_n_dp};
+                \addplot[color=red] table[x index=0, y expr={ 135 * ln(x) * ln(x)  }]{../exp/ej3/cograph_kn_and_k_log_n_dp};
+                \legend{$T_{k_{ln(n)}}$,$ C * ln^2(x) $}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Se divide por $n_1$, para mostrar que $C * ln^2(x)$ lo acota. }
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Se varia el cografo en $n$, siendo el cografo un $K_n$  y el segundo grafo en $K_{ln(n)}$.},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                
+                \addplot[color=black] table[x index=0,y expr={\thisrowno{1}/(x * ln(x) * ln(x)) }]{../exp/ej3/cograph_kn_and_k_log_n_dp};
+                \addplot[color=red] table[x index=0, y expr={ 135 }]{../exp/ej3/cograph_kn_and_k_log_n_dp};
+                \legend{$T_{k_{ln(n)}}$,$ C $}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Se divide por $x * ln^2(x)$, para mostrar, que $C =  135$ lo acota.}
         \label{fig:exp3:var-nym-base}
     \end{figure}
 
@@ -555,12 +434,47 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
 
 
 
-     \begin{figure}[H]
+
+
+
+
+    \subsubsection{Experimentos con la creacion del coarbol}
+
+
+
+
+    \begin{figure}[H]
         \centering
         \begin{tikzpicture}
             \begin{axis}[
                     title={},
-                    xlabel={Fijo el cografo y vario la cantidad de nodos del $K_n$ ($n_2$), ejecuto solo la resolución del DP},
+                    xlabel={Se fija la cantidad de aristas en $0$ ($m_1$) y se varia la cantidad de nodos del cografo($n_1$).},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_k1_union_create_cotree};
+                \addplot[color=red] table[x index=0, y expr={ 12 * (x*x) }]{../exp/ej3/cograph_k1_union_create_cotree};
+                \legend{$T_{K_1}$,$ C * x^2 $}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Se ejecuta la creacion del coarbol. como $m_2 = 0$ nos queda una complejidad $O(n_1(n_1 + 0))$ = $O(n_1^2$}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+
+       \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Se fija la cantidad de aristas en $0$ ($m_1$) y se varia la cantidad de nodos del cografo($n_1$).},
                     ylabel={Tiempo de ejecución (nanosegundos)},
                     scaled x ticks=false,
                     scaled y ticks=false,
@@ -570,26 +484,24 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
                     legend pos=north west,
                     legend cell align=left,
                     xmin=0,
-                    ymax= 77500000
+                    ymax= 50
                 ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/complete_graph_incremental_nodes_dp};
-                \addplot[color=red] table[x index=0, y expr={  1200 * (x*x)  }]{../exp/ej3/complete_graph_incremental_nodes_dp};
-
-                \legend{$T_(K_n)$, $ C * x^2 $}
+                \addplot[color=black] table[x index=0,y expr={\thisrowno{1}/(x*x)}]{../exp/ej3/cograph_k1_union_create_cotree};
+                \addplot[color=red] table[x index=0, y expr={ 12 }]{../exp/ej3/cograph_k1_union_create_cotree};
+                \legend{$T_{K_1}$,$ C $}
             \end{axis}
         \end{tikzpicture}
-        \caption{lalala}
+        \caption{Se divide por $n_1^2$, para mostrar, que $C =  12$ lo acota.}
         \label{fig:exp3:var-nym-base}
     \end{figure}
 
 
-
-       \begin{figure}[H]
+    \begin{figure}[H]
         \centering
         \begin{tikzpicture}
             \begin{axis}[
                     title={},
-                    xlabel={Vario el cografo ($n_1$) y fijo la cantidad de nodos del $K_n$, ejecuto solo la resolución del DP},
+                    xlabel={Se toma la uniones de $K_3$},
                     ylabel={Tiempo de ejecución (nanosegundos)},
                     scaled x ticks=false,
                     scaled y ticks=false,
@@ -598,17 +510,117 @@ En total el algoritmo termina teniendo una complejidad de $O(n_1((n_1 + m_1) + (
                     height=0.5\textwidth,
                     legend pos=north west,
                     legend cell align=left,
-                    xmin=300
+                    xmin=0
                 ]
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_incremental_nodes_dp};
-                \addplot[color=red] table[x index=0, y expr={  190000 * x ) }]{../exp/ej3/cograph_incremental_nodes_dp};
-
-                \legend{$T_{(n_1)}$, $ C * x $ }
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_k3_union_create_cotree};
+                \addplot[color=red] table[x index=0, y expr={  140 * (x*x) }]{../exp/ej3/cograph_k3_union_create_cotree};
+                \legend{$T_{K_3}$,$ C * x^2 $}
             \end{axis}
         \end{tikzpicture}
-        \caption{lalala}
+        \caption{Se ejecuta la creación del cotree. Como $m_1 = n_1$ nos queda una complejidad $O(n_1(n_1 + n_1))$ = $O(n_1^2)$}
         \label{fig:exp3:var-nym-base}
     \end{figure}
+
+      \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Se toma la uniones de $K_3$.},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0,
+                    ymax= 200
+                ]
+                \addplot[color=black] table[x index=0,y expr={\thisrowno{1}/(x*x)}]{../exp/ej3/cograph_k3_union_create_cotree};
+                \addplot[color=red] table[x index=0, y expr={140}]{../exp/ej3/cograph_k3_union_create_cotree};
+                \legend{$T_{K_3}$,$ C $}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Se divide por $n_1^2$, para mostrar, que $C =  140$ lo acota.}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+
+
+
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Se toma un $K_{n_1}$},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej3/cograph_kn_create_cotree};
+                \addplot[color=red] table[x index=0, y expr={ 17 * (x*x*x) }]{../exp/ej3/cograph_kn_create_cotree};
+                \legend{$T_{k_{n_1}}$,$ C * x^3 $}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Se ejecuta la creación del cotree. Como $m_1 = n_1(n_1 - 1) = n_1^2 -n_1 $ nos queda una complejidad  $O(n_1(n_1 + n_1^2 -n_1))$ = $O(n_1^3)$ }
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+     \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={Se toma un $K_{n_1}$},
+                    ylabel={Tiempo de ejecución (nanosegundos)},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0,
+                    ymax= 50
+                ]
+                \addplot[color=black] table[x index=0,y expr={\thisrowno{1}/(x*x*x)}]{../exp/ej3/cograph_kn_create_cotree};
+                \addplot[color=red] table[x index=0, y expr={ 17 }]{../exp/ej3/cograph_kn_create_cotree};
+                \legend{$T_{k_{n_1}}$,$C$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Se divide por $n_1^3$, para mostrar, que $C =  17$ lo acota.}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    \subsubsection{Concluciones}
+    
+    Se puede concluir que armar el cotree tiene una complejidad $O(n_1(n_1 + m_1))$ y resolver el DP $O(n_1 * (n_2)^2 )$.
+    Como el agoritmo, arma el cotree y despues resuelve el DP , nos queda una complejidad de $O(n_1(n_1 + m_1)) + O(n_1 * (n_2)^2 )$ = $O(n_1((n_1 + m_1) + (n_2)^2 ))$.
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
 
 
 
