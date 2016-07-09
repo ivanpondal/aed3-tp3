@@ -5,9 +5,163 @@
 
 /*
 **  Local search heuristic
+**  IMPORTANT: This algorithm assumes g2 is larger (has more or the same
+**  amount of vertices) than g2. Adittionaly, If g1 and g2 have the same size,
+**  some neighbourhood types may not work properly.
 */
 
 using namespace std;
+
+
+// Forward declarations
+// --------------------
+
+bool improve_solution_0(
+    graph<pair<int, int>>* solution,
+    graph<int>& g1,
+    graph<int>& g2,
+    unordered_map<int, int>& g2_to_g1_mapping,
+    unordered_set<int>& mapped_nodes,
+    unordered_set<int>& unmapped_nodes,
+    vector<int>& unmapped_nodes_vector,
+    float neighbourhood_proportion,
+    bool strict_comparisons
+);
+
+bool improve_solution_1(
+    graph<pair<int, int>>* solution,
+    graph<int>& g1,
+    graph<int>& g2,
+    unordered_map<int, int>& g2_to_g1_mapping,
+    unordered_set<int>& mapped_nodes,
+    unordered_set<int>& unmapped_nodes,
+    vector<int>& unmapped_nodes_vector,
+    float neighbourhood_proportion,
+    bool strict_comparisons
+);
+
+
+// Main heuristic structure
+// ------------------------
+
+graph<pair<int, int>>* solve_local_search(
+    graph<int>& g1,
+    graph<int>& g2,
+    graph<pair<int, int>>& start_point,
+    int neighbourhood_type,
+    int iteration_limit,
+    float neighbourhood_proportion,
+    bool strict_comparisons
+) {
+    // We assume #V(g1) < #V(g2), #V(start_point) == #V(g_1)
+    graph<int>* g1p, * g2p;
+    bool swapped = false;
+
+    if (g1.n() <= g2.n()) {
+        g1p = &g1;
+        g2p = &g2;
+    } else {
+        g1p = &g2;
+        g2p = &g1;
+        swapped = true;
+    }
+
+    bool (*improve_solution) (
+        graph<pair<int, int>>*,
+        graph<int>&,
+        graph<int>&,
+        unordered_map<int, int>&,
+        unordered_set<int>&,
+        unordered_set<int>&,
+        vector<int>&,
+        float,
+        bool
+    ) = &improve_solution_0;
+
+    if (neighbourhood_type == 1) {
+        improve_solution = &improve_solution_1;
+    }
+
+    unsigned int solution_size = start_point.n();
+
+    // This will store the node in g1 that corresponds to each node in g2
+    unordered_map<int, int> g2_to_g1_mapping;
+
+    // This will keep track of g2 vertices which are (not) mapped to any vertex in g1
+    unordered_set<int> mapped_nodes;
+    unordered_set<int> unmapped_nodes;
+    vector<int> unmapped_nodes_vector;
+
+    vector<int> g2_vertices = g2p->get_vertices();
+    vector<pair<int, int>> solution_vertices = start_point.get_vertices();
+
+
+    // Read start solution as a mapping between g1 and g2 nodes
+    for (unsigned int i = 0; i < solution_size; i++) {
+        int g1_node = swapped ? solution_vertices[i].second : solution_vertices[i].first;
+        int g2_node = swapped ? solution_vertices[i].first : solution_vertices[i].second;
+        g2_to_g1_mapping.insert({g2_node, g1_node});
+        mapped_nodes.insert(g2_node);
+    }
+
+    for (unsigned int i = 0; i < g2p->n(); i++) {
+        if (mapped_nodes.find(g2_vertices[i]) == mapped_nodes.end()) {
+            unmapped_nodes.insert(g2_vertices[i]);
+            unmapped_nodes_vector.push_back(g2_vertices[i]);
+        }
+    }
+
+    bool stop = false;
+    int iteration_count = 0;
+
+    // Here is where the solution will be saved at the end of each iteration
+    graph<pair<int, int>>* ret;
+
+    if (! swapped) {
+        ret = start_point.clone();
+    }
+    else {
+        ret = new adj_list_graph<pair<int, int>, hash_pair_int>;
+        for (unsigned int i = 0; i < solution_vertices.size(); i++) {
+            ret->add_node({solution_vertices[i].second, solution_vertices[i].first});
+        }
+        for (unsigned int i = 0; i < solution_vertices.size(); i++) {
+            pair<int, int> curr_vertex = {solution_vertices[i].second, solution_vertices[i].first};
+            vector<pair<int, int>> neigh = start_point.neighbours(solution_vertices[i]);
+            for (unsigned int j = 0; j < neigh.size(); j++) {
+                ret->add_edge(curr_vertex, {neigh[j].second, neigh[j].first});
+            }
+        }
+    }
+
+    while (! stop && (iteration_limit < 0 || iteration_count < iteration_limit)) {
+        bool any_improvement = improve_solution(
+            ret,
+            *g1p,
+            *g2p,
+            g2_to_g1_mapping,
+            mapped_nodes,
+            unmapped_nodes,
+            unmapped_nodes_vector,
+            neighbourhood_proportion,
+            strict_comparisons
+        );
+        if (! any_improvement) {
+            stop = true;
+        }
+
+        iteration_count++;
+    }
+
+    return ret;
+}
+
+
+// Neighbourhood type 0
+// --------------------
+
+// Each iteration exchanges one node of g2 in the mapping for one that is not
+// mapped to any node of g1
 
 bool improve_solution_0(
     graph<pair<int, int>>* solution,
@@ -105,6 +259,13 @@ bool improve_solution_0(
     }
 }
 
+
+// Neighbourhood type 1
+// --------------------
+
+// Each iteration either exchanges one node of g2 in the mapping for one that
+// is not mapped to any node of g1, or swaps two nodes of g2 in the mapping
+
 bool improve_solution_1(
     graph<pair<int, int>>* solution,
     graph<int>& g1,
@@ -129,10 +290,13 @@ bool improve_solution_1(
     vector<int> best_new_edges_1;
     vector<int> best_new_edges_2;
 
+    int checked_neighbours = 0;
+
     for (unsigned int i = 0; i < g2.n(); i++) {
         bool i_mapped = mapped_nodes.find(g2_vertices[i]) != mapped_nodes.end();
         for (unsigned int j = 0; j < i; j++) {
             if (rand() < neighbourhood_proportion * RAND_MAX) {
+                checked_neighbours++;
                 bool j_mapped = mapped_nodes.find(g2_vertices[j]) != mapped_nodes.end();
 
                 action_type action;
@@ -186,6 +350,9 @@ bool improve_solution_1(
                             new_edges_2.push_back(node_2_neigh[k]);
                         }
                     }
+                    // cout << "      lost edges:  " << lost_edges  << endl;
+                    // cout << "      new edges 1: " << new_edges_1 << endl;
+                    // cout << "      new edges 2: " << new_edges_2 << endl;
 
                     edge_diff = new_edges_1.size() + new_edges_2.size() - lost_edges;
                     // cout << "    edge diff: " << edge_diff << endl;
@@ -216,6 +383,9 @@ bool improve_solution_1(
                         }
                     }
 
+                    // cout << "      lost edges: " << lost_edges  << endl;
+                    // cout << "      new edges:  " << new_edges_1 << endl;
+
                     edge_diff = new_edges_1.size() - lost_edges;
                     // cout << "    edge diff: " << edge_diff << endl;
                 }
@@ -236,6 +406,8 @@ bool improve_solution_1(
             }
         }
     }
+
+    // cout << "neighbourhood size: " << checked_neighbours << endl;
 
     if (any_improvement) {
         if (best_action == swap) {
@@ -301,118 +473,7 @@ bool improve_solution_1(
 
         return true;
     } else {
+        // cout << "no improvements are possible" << endl;
         return false;
     }
-}
-
-graph<pair<int, int>>* solve_local_search(
-    graph<int>& g1,
-    graph<int>& g2,
-    graph<pair<int, int>>& start_point,
-    int neighbourhood_type,
-    int iteration_limit,
-    float neighbourhood_proportion,
-    bool strict_comparisons
-) {
-    // We assume #V(g1) < #V(g2), #V(start_point) == #V(g_1)
-    graph<int>* g1p, * g2p;
-    bool swapped = false;
-
-    if (g1.n() <= g2.n()) {
-        g1p = &g1;
-        g2p = &g2;
-    } else {
-        g1p = &g2;
-        g2p = &g1;
-        swapped = true;
-    }
-
-    bool (*improve_solution) (
-        graph<pair<int, int>>*,
-        graph<int>&,
-        graph<int>&,
-        unordered_map<int, int>&,
-        unordered_set<int>&,
-        unordered_set<int>&,
-        vector<int>&,
-        float,
-        bool
-    ) = &improve_solution_0;
-
-    if (neighbourhood_type == 1) {
-        improve_solution = &improve_solution_1;
-    }
-
-    unsigned int solution_size = start_point.n();
-
-    // This will store the node in g1 that corresponds to each node in g2
-    unordered_map<int, int> g2_to_g1_mapping;
-
-    // This will keep track of g2 vertices which are (not) mapped to any vertex in g1
-    unordered_set<int> mapped_nodes;
-    unordered_set<int> unmapped_nodes;
-    vector<int> unmapped_nodes_vector;
-
-    vector<int> g2_vertices = g2p->get_vertices();
-    vector<pair<int, int>> solution_vertices = start_point.get_vertices();
-
-
-    // Read start solution as a mapping between g1 and g2 nodes
-    for (unsigned int i = 0; i < solution_size; i++) {
-        int g1_node = swapped ? solution_vertices[i].second : solution_vertices[i].first;
-        int g2_node = swapped ? solution_vertices[i].first : solution_vertices[i].second;
-        g2_to_g1_mapping.insert({g2_node, g1_node});
-        mapped_nodes.insert(g2_node);
-    }
-
-    for (unsigned int i = 0; i < g2p->n(); i++) {
-        if (mapped_nodes.find(g2_vertices[i]) == mapped_nodes.end()) {
-            unmapped_nodes.insert(g2_vertices[i]);
-            unmapped_nodes_vector.push_back(g2_vertices[i]);
-        }
-    }
-
-    bool stop = false;
-    int iteration_count = 0;
-
-    // Here the solution will be saved at the end of each iteration
-    graph<pair<int, int>>* ret;
-
-    if (! swapped) {
-        ret = start_point.clone();
-    }
-    else {
-        ret = new adj_list_graph<pair<int, int>, hash_pair_int>;
-        for (unsigned int i = 0; i < solution_vertices.size(); i++) {
-            ret->add_node({solution_vertices[i].second, solution_vertices[i].first});
-        }
-        for (unsigned int i = 0; i < solution_vertices.size(); i++) {
-            pair<int, int> curr_vertex = {solution_vertices[i].second, solution_vertices[i].first};
-            vector<pair<int, int>> neigh = start_point.neighbours(solution_vertices[i]);
-            for (unsigned int j = 0; j < neigh.size(); j++) {
-                ret->add_edge(curr_vertex, {neigh[j].second, neigh[j].first});
-            }
-        }
-    }
-
-    while (! stop && (iteration_limit < 0 || iteration_count < iteration_limit)) {
-        bool any_improvement = improve_solution(
-            ret,
-            *g1p,
-            *g2p,
-            g2_to_g1_mapping,
-            mapped_nodes,
-            unmapped_nodes,
-            unmapped_nodes_vector,
-            neighbourhood_proportion,
-            strict_comparisons
-        );
-        if (! any_improvement) {
-            stop = true;
-        }
-
-        iteration_count++;
-    }
-
-    return ret;
 }

@@ -28,10 +28,10 @@ graph<std::pair<int, int>>* solve_local_search(
     graph<int>& g1,
     graph<int>& g2,
     graph<std::pair<int, int>>& start_point,
-    int neighbourhood_type = 0,
-    int iteration_limit = -1,
-    // int neighbourhood_limit = -1,
-    float neighbourhood_proportion = 1,
+    int neighbourhood_type = 0,               // 0 or 1
+    int iteration_limit = -1,                 // -1 indicates no limit
+    // int neighbourhood_limit = -1,          // discarded parameter
+    float neighbourhood_proportion = 1,       // between 0 and 1
     bool strict_comparisons = true
 );
 

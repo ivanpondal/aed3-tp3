@@ -77,27 +77,31 @@ void show_help(char* bin_path) {
 
 // Funciones auxiliares
 
-solution pairs_to_solution(const graph<std::pair<int, int>>& g) {
+solution pairs_to_solution(const graph<std::pair<int, int>>& g, bool invert) {
     solution ret;
     ret.h = new adj_list_graph<int>();
 
-
-    std::vector<std::pair<int, int>> vert = g.get_vertices();
+    std::vector<std::pair<int, int>> vertices = g.get_vertices();
     std::unordered_map<std::pair<int, int>, int, hash_pair_int> mapping;
 
-    for (unsigned int i = 0; i < vert.size(); i++)
+    for (unsigned int i = 0; i < vertices.size(); i++)
     {
         ret.h->add_node(i);
-        mapping.insert({vert[i], i});
-        ret.g1_mapping.push_back(vert[i].first);
-        ret.g2_mapping.push_back(vert[i].second);
+        pair<int, int> vertex = invert
+                                ? std::make_pair(vertices[i].second, vertices[i].first)
+                                : vertices[i];
+        mapping.insert({vertex, i});
+        ret.g1_mapping.push_back(vertex.first);
+        ret.g2_mapping.push_back(vertex.second);
     }
 
-    for (unsigned int i = 0; i < vert.size(); i++) {
-        vector<pair<int,int>> neigh = g.neighbours(vert[i]);
+    for (unsigned int i = 0; i < vertices.size(); i++) {
+        vector<pair<int,int>> neigh = g.neighbours(vertices[i]);
 
         for (uint j = 0; j < neigh.size(); j++) {
-            pair<int, int> curr_neigh = neigh[j];
+            pair<int, int> curr_neigh = invert
+                                        ? std::make_pair(neigh[j].second, neigh[j].first)
+                                        : neigh[j];
             int mapped_neigh = mapping[curr_neigh];
             if (mapped_neigh < (int) i) {
                 ret.h->add_edge(i, mapped_neigh);

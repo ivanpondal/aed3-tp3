@@ -26,7 +26,7 @@ void run_unit_tests();
 void run_experimentation();
 
 // Funciones auxiliares
-solution pairs_to_solution(const graph<std::pair<int, int>>&);
+solution pairs_to_solution(const graph<std::pair<int, int>>&, bool invert = false);
 
 // Verifica que una solución sea válida
 bool check_solution(const solution& s, const graph<int>& g1, const graph<int>& g2);

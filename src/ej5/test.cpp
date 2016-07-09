@@ -197,7 +197,7 @@ void test_crossed_square() {
     delete mcs;
 }
 
-void compare_with_greedy() {
+void compare_neighbourhoods() {
     chronometer timer;
     element_generator_int e_gen;
     graph<std::pair<int, int>>* start_point;
@@ -205,9 +205,10 @@ void compare_with_greedy() {
     double time;
 
     // CYCLES
-    std::cout << "CYCLES" << std::endl;
+    std::cout << "Graph type: CYCLES" << std::endl;
     e_gen.reset();
     adj_list_graph<int> g1 = graph_factory<int>::cycle_graph(e_gen, 2000);
+    e_gen.reset();
     adj_list_graph<int> g2 = graph_factory<int>::cycle_graph(e_gen, 6000);
 
     timer.start();
@@ -218,7 +219,7 @@ void compare_with_greedy() {
     std::cout << "    time: " << time << " seconds" << std::endl;
 
     timer.start();
-    h = solve_local_search(g1, g2, *start_point, 0, 100, .4);
+    h = solve_local_search(g1, g2, *start_point, 0, -1, .01);
     time = timer.stop() / 1000000000;
     std::cout << "  L SRCH 0: " << h->n() << " nodes, " << h->m() << " edges";
     std::cout << (check_solution(pairs_to_solution(*h), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
@@ -226,7 +227,7 @@ void compare_with_greedy() {
     delete h;
 
     timer.start();
-    h = solve_local_search(g1, g2, *start_point, 1, 100, .4);
+    h = solve_local_search(g1, g2, *start_point, 1, -1, .01);
     time = timer.stop() / 1000000000;
     std::cout << "  L SRCH 1: " << h->n() << " nodes, " << h->m() << " edges";
     std::cout << (check_solution(pairs_to_solution(*h), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
@@ -236,11 +237,12 @@ void compare_with_greedy() {
     delete start_point;
 
     // TREES
-    std::cout << "TREES" << std::endl;
+    std::cout << "Graph type: TREES" << std::endl;
     e_gen.reset();
     adj_list_graph<int> g3, g4;
-    graph_factory<int>::add_n_tree_vertices(g3, e_gen, 1000);
-    graph_factory<int>::add_n_tree_vertices(g4, e_gen, 1500);
+    graph_factory<int>::add_n_tree_vertices(g3, e_gen, 512);
+    e_gen.reset();
+    graph_factory<int>::add_n_tree_vertices(g4, e_gen, 1024);
     timer.start();
     start_point = solve_greedy(g3, g4, true);
     time = timer.stop() / 1000000000;
@@ -249,7 +251,7 @@ void compare_with_greedy() {
     std::cout << "    time: " << time << " seconds" << std::endl;
 
     timer.start();
-    h = solve_local_search(g3, g4, *start_point, 0, 100, .4);
+    h = solve_local_search(g3, g4, *start_point, 0, -1, .01);
     time = timer.stop() / 1000000000;
     std::cout << "  L SRCH 0: " << h->n() << " nodes, " << h->m() << " edges";
     std::cout << (check_solution(pairs_to_solution(*h), g3, g4) ? " (valid)" : " (invalid)") << std::endl;
@@ -257,7 +259,7 @@ void compare_with_greedy() {
     delete h;
 
     timer.start();
-    h = solve_local_search(g3, g4, *start_point, 1, 100, .4);
+    h = solve_local_search(g3, g4, *start_point, 1, -1, .01);
     time = timer.stop() / 1000000000;
     std::cout << "  L SRCH 1: " << h->n() << " nodes, " << h->m() << " edges";
     std::cout << (check_solution(pairs_to_solution(*h), g3, g4) ? " (valid)" : " (invalid)") << std::endl;
@@ -275,7 +277,7 @@ void compare_with_cograph_exact() {
     double time;
 
     // COGRAPHS
-    std::cout << "COGRAPHS" << std::endl;
+    std::cout << "Graph type: COGRAPHS (Comparing with exact algorithm)" << std::endl;
     e_gen.reset();
     adj_list_graph<int> g1 = graph_factory<int>::random_co_graph(e_gen, 512);
     adj_list_graph<int> g2;
@@ -288,27 +290,30 @@ void compare_with_cograph_exact() {
     std::cout << "    time: " << time << " seconds" << std::endl;
 
     timer.start();
-    start_point = solve_greedy(g1, g2);
+    start_point = solve_greedy(g2, g1);
     time = timer.stop() / 1000000000;
-    std::cout << "  GREEDY: " << start_point->n() << " nodes, " << start_point->m() << " edges";
-    std::cout << (check_solution(pairs_to_solution(*start_point), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
+    std::cout << "  GREEDY: " << start_point->n() << " nodes, " << start_point->m() << " edges ("
+              << (float) start_point->m() / (float) exact_solution.h->m() * 100 << "\% exact)";
+    std::cout << (check_solution(pairs_to_solution(*start_point), g2, g1) ? " (valid)" : " (invalid)") << std::endl;
     std::cout << "    time: " << time << " seconds" << std::endl;
 
     timer.start();
-    h = solve_local_search(g1, g2, *start_point, 0, 100, .4);
+    h = solve_local_search(g2, g1, *start_point, 0, -1, .005);
     time = timer.stop() / 1000000000;
-    std::cout << "  L SRCH 0: " << h->n() << " nodes, " << h->m() << " edges";
-    std::cout << (check_solution(pairs_to_solution(*h), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
+    std::cout << "  L SRCH 0: " << h->n() << " nodes, " << h->m() << " edges ("
+              << (float) h->m() / (float) exact_solution.h->m() * 100 << "\% exact)";
+    std::cout << (check_solution(pairs_to_solution(*h), g2, g1) ? " (valid)" : " (invalid)") << std::endl;
     std::cout << "    time: " << time << " seconds" << std::endl;
     delete h;
 
-    // timer.start();
-    // h = solve_local_search(g1, g2, *start_point, 1, 100, .4);
-    // time = timer.stop() / 1000000000;
-    // std::cout << "  L SRCH 1: " << h->n() << " nodes, " << h->m() << " edges";
-    // std::cout << (check_solution(pairs_to_solution(*h), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
-    // std::cout << "    time: " << time << " seconds" << std::endl;
-    // delete h;
+    timer.start();
+    h = solve_local_search(g2, g1, *start_point, 1, -1, .005);
+    time = timer.stop() / 1000000000;
+    std::cout << "  L SRCH 1: " << h->n() << " nodes, " << h->m() << " edges ("
+              << (float) h->m() / (float) exact_solution.h->m() * 100 << "\% exact)";
+    std::cout << (check_solution(pairs_to_solution(*h), g2, g1) ? " (valid)" : " (invalid)") << std::endl;
+    std::cout << "    time: " << time << " seconds" << std::endl;
+    delete h;
 
     delete start_point;
 }
@@ -318,6 +323,6 @@ void run_unit_tests() {
     RUN_TEST(test_c8);
     RUN_TEST(test_triangles);
     RUN_TEST(test_crossed_square);
-    // compare_with_greedy();
+    compare_neighbourhoods();
     compare_with_cograph_exact();
 }
