@@ -249,10 +249,10 @@ aún no han sido mapeados. Como en cada llamado se mapea un par de nodos, la
 cantidad de nodos por mapear va disminuyendo en cada nivel.
 
 Para el nivel $i$ la cantidad de veces que se hace el llamado es de
-$(n_1 - i) \times (n_2 - i)$, que es resultado de probar todos los posibles
+$(n_1 - i)  (n_2 - i)$, que es resultado de probar todos los posibles
 pares entre los nodos restantes de ambos grafos. De esta forma, la cantidad de
 llamados en un nivel es de
-$\frac{n_1! \times n_2!}{(n_1 - i)! \times (n_2 - i)!}$.
+$\frac{n_1!  n_2!}{(n_1 - i)!  (n_2 - i)!}$.
 
 Ahora se hará enfoque en la complejidad del algoritmo en para cada nivel $i$.
 
@@ -260,7 +260,7 @@ Ahora se hará enfoque en la complejidad del algoritmo en para cada nivel $i$.
 \item Se recorren linealmente los nodos restantes para saber si es posible
 efectuar la poda de la suma de grados. $\ord(n_1 - i)$.
 \item Dentro del doble ciclo anidado que se ejecuta
-$(n_1 - i) \times (n_2 - i)$ veces
+$(n_1 - i)  (n_2 - i)$ veces
 \begin{itemize}
 \item Copiar el mapa. $\ord(i)$.
 \item Clonar subgrafo. $\ord(i)$
@@ -278,81 +278,94 @@ $ \ord(n_1 + n_2 - 2i))=$
 $\sum_{k = 1}^{n_1 - i} \sum_{j = 1}^{n_2 - i} (\ord(deg(v_{kj}) +$
 $ \ord(n_1 + n_2))=$
 
-$\ord((n_1 - i) \times (n_2 - i) \times (n_1 + n_2)) + \sum_{k = 1}^{n_1 - i}$
+$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2)) + \sum_{k = 1}^{n_1 - i}$
 $ \sum_{j = 1}^{n_2 - i} \ord(deg(v_{kj}))$.
 
 Puede acotarse superiormente el grado de $v_{kj}$ por $n_1$ ya que no puede
 tener más de $n_1 - 1$ vecinos. Entonces la complejidad es
 
-$\ord((n_1 - i) \times (n_2 - i) \times (n_1 + n_2)) + \sum_{k = 1}^{n_1 - i}$
+$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2)) + \sum_{k = 1}^{n_1 - i}$
 $\sum_{j = 1}^{n_2 - i} \ord(n_1)=$
 
-$\ord((n_1 - i) \times (n_2 - i) \times (n_1 + n_2)) + \ord((n_1 - i) \times$
-$(n_2 - i) \times n_1)=$
+$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2)) + \ord((n_1 - i) $
+$(n_2 - i)  n_1)=$
 
-$\ord((n_1 - i) \times (n_2 - i) \times (n_1 + n_2 + n_1))=$
+$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2 + n_1))=$
 
-$\ord((n_1 - i) \times (n_2 - i) \times (n_1 + n_2))$.
+$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2))$.
 \end{itemize}
 
 Por lo tanto la complejidad en cada nivel $i$ es $\ord(n_1 - i) +$
-$\ord((n_1 - i) \times (n_2 - i) \times (n_1 + n_2)) = \ord((n_1 - i) \times$
-$ (n_2 - i) \times (n_1 + n_2))$.
+$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2)) = \ord((n_1 - i) $
+$ (n_2 - i)  (n_1 + n_2))$.
 
 La cantidad de niveles que tiene el árbol de ejecución es de $n_1$ ya que se
 hacen llamados recursivos hasta que uno de los grafos tenga todos sus nodos
 mapeados. Como ya vimos en cada nivel se hacen
-$\frac{n_1! \times n_2!}{(n_1 - i)! \times (n_2 - i)!}$ llamados, por lo que
+$\frac{n_1!  n_2!}{(n_1 - i)!  (n_2 - i)!}$ llamados, por lo que
 la cantidad total de llamados es de
-$\sum_{i = 0}^{n_1} \frac{n_1! \times n_2!}{(n_1 - i)! \times (n_2 - i)!}$.
+$\sum_{i = 0}^{n_1} \frac{n_1!  n_2!}{(n_1 - i)!  (n_2 - i)!}$.
 
 Puede acotarse esta cantidad de llamados superiormente de modo que sea
-$\ord(n_1 \times \frac{n_1! \times n_2!}{(n_2 - n_1)!})$ siendo $n_1$ la
-cantidad de niveles y $\frac{n_1! \times n_2!}{(n_2 - n_1)!}$ la de hojas.
+$\ord(n_1  \frac{n_1!  n_2!}{(n_2 - n_1)!})$ siendo $n_1$ la
+cantidad de niveles y $\frac{n_1!  n_2!}{(n_2 - n_1)!}$ la de hojas.
+
+~
 
 Entonces la complejidad total del algoritmo es
 
-$\sum_{i = 0}^{n_1}[\frac{n_1! \times n_2!}{(n_1 - i)! \times (n_2 - i)!}$
-$\times \ord((n_1 - i) \times (n_2 - i) \times (n_1 + n_2))]=$
+$\sum_{i = 0}^{n_1}[\frac{n_1!  n_2!}{(n_1 - i)!  (n_2 - i)!}$
+$ \ord((n_1 - i)  (n_2 - i)  (n_1 + n_2))]=$
+$\ord(n_1  \frac{n_1!  n_2!}{(n_2 - n_1)!}) $
+$\sum_{i = 0}^{n_1}\ord((n_1 - i)  (n_2 - i)$
+$ (n_1 + n_2))$.
 
-$\ord(n_1 \times \frac{n_1! \times n_2!}{(n_2 - n_1)!}) \times$
-$\sum_{i = 0}^{n_1}\ord((n_1 - i) \times (n_2 - i)$
-$\times (n_1 + n_2))$.
+~
 
 Desarrollando
+$\sum_{i = 0}^{n_1}\ord((n_1 - i)  (n_2 - i)$
+$ (n_1 + n_2))=$
+$(n_1 + n_2)  \sum_{i = 0}^{n_1}\ord((n_1 - i)  (n_2 - i))$
 
-$\sum_{i = 0}^{n_1}\ord((n_1 - i) \times (n_2 - i)$
-$\times (n_1 + n_2))=$.
-
-$(n_1 + n_2) \times \sum_{i = 0}^{n_1}\ord((n_1 - i) \times (n_2 - i))$
+~
 
 Sea $j = n_1 - i$ y por consecuente $i = n_1 - j$ se verifica que
 
-$\ord((n_1 + n_2)) \times \sum_{i = 0}^{n_1} \ord((n_1 - i) \times (n_2 - i))=$
+$\ord((n_1 + n_2))  \sum_{i = 0}^{n_1} \ord((n_1 - i)  (n_2 - i))=$
 
-$\ord((n_1 + n_2)) \times \sum_{j = 0}^{n_1} (\ord(j) \times (n_2 - n_1 + j))=$
+$\ord((n_1 + n_2))  \sum_{j = 0}^{n_1} (\ord(j)  (n_2 - n_1 + j))=$
 
-$\ord((n_1 + n_2)) \times \sum_{j = 0}^{n_1} (\ord(j^2) + j \times (n_2 - n_1))=$
+$\ord((n_1 + n_2))  \sum_{j = 0}^{n_1} (\ord(j^2) + j  (n_2 - n_1))=$
 
-$\ord((n_1 + n_2)) \times \ord(\sum_{j = 0}^{n_1} j^2) + (n_2 - n_1) \times \sum_{j = 0}^{n_1} j)=$
+$\ord((n_1 + n_2))  \ord(\sum_{j = 0}^{n_1} j^2) + (n_2 - n_1)  \sum_{j = 0}^{n_1} j)=$
 
-$\ord((n_1 + n_2)) \times \ord(n_1^3 + (n_2 - n_1) \times n_1^2)=$
+$\ord((n_1 + n_2))  \ord(\frac{1}{6}n_1(n_1 + 1)(2n_1 + 1) + \frac{1}{2}(n_2 - n_1)n_1(n_1 + 1))=$
 
-$\ord((n_1 + n_2)) \times \ord(n_1^3 + n_2 \times n_1^2 - n_1^3)=$
+$\ord((n_1 + n_2))  \ord(\frac{1}{6}(2n_1^3 + 3n_1^2 + n_1) + \frac{1}{2}(n_2 - n_1)(n_1^2 + n_1))=$
 
-$\ord((n_1 + n_2)) \times \ord(n_2 \times n_1^2)=$
+$\ord((n_1 + n_2))  \ord(\frac{1}{6}(2n_1^3 + 3n_1^2 + n_1) + \frac{1}{2}(n_1^2n_2 - n_1^3 + n_1n_2 - n_1^2))=$
 
-$\ord((n_1 + n_2) \times n_2 \times n_1^2)$
+$\ord((n_1 + n_2))  \ord(\frac{1}{6}(2n_1^3 + 3n_1^2 + n_1) + \frac{1}{6}(3n_1^2n_2 - 3n_1^3 + 3n_1n_2 - 3n_1^2))=$
+
+$\ord((n_1 + n_2))  \ord(\frac{1}{6}(2n_1^3 + 3n_1^2 + n_1 + 3n_1^2n_2 - 3n_1^3 + 3n_1n_2 - 3n_1^2))=$
+
+$\ord((n_1 + n_2))  \ord(\frac{1}{6}(-n_1^3 + n_1 + 3n_1^2n_2 + 3n_1n_2))=$
+
+$\ord((n_1 + n_2))  \ord(\frac{1}{6}n_1(-n_1^2 + 1 + 3n_1n_2 + 3n_2))=$
+
+$\ord((n_1 + n_2))  \ord(n_1^2n_2)=$
+
+$\ord((n_1 + n_2)  n_2  n_1^2)$
 
 ~
 
 Finalmente, la complejidad del algoritmo es
-$\ord(n_1 \times \frac{n_1! \times n_2!}{(n_2 - n_1)!}) \times$
-$\ord((n_1 + n_2) \times n_2 \times n_1^2)=$
+$\ord(n_1  \frac{n_1!  n_2!}{(n_2 - n_1)!}) $
+$\ord((n_1 + n_2)  n_2  n_1^2)=$
 
 \begin{center}
-$\ord(\frac{n_1! \times n_2!}{(n_2 - n_1)!} \times$
-$(n_1 + n_2) \times n_2 \times n_1^3)$
+$\ord(\frac{n_1!  n_2!}{(n_2 - n_1)!} $
+$(n_1 + n_2)  n_2  n_1^3)$
 \end{center}
 % \subsection{Experimentación}
 
