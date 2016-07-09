@@ -49,12 +49,23 @@ void test_c5() {
     start_point->add_edge({3, 14}, {4, 13});
     start_point->add_edge({5, 15}, {1, 11});
 
-    graph<std::pair<int, int>>* mcs = solve_local_search(*graph1, *graph2, *start_point);
+    graph<std::pair<int, int>>* mcs1 = solve_local_search(*graph1, *graph2, *start_point, 1);
+    graph<std::pair<int, int>>* mcs2 = solve_local_search(*graph1, *graph2, *start_point, 2);
+
+    ASSERT_EQ(mcs1->n(), 5);
+    ASSERT_EQ(mcs1->m(), 3);
+
+    ASSERT_EQ(mcs2->n(), 5);
+    ASSERT_EQ(mcs2->m(), 5);
+
+    ASSERT(check_solution(pairs_to_solution(*mcs1), *graph1, *graph2));
+    ASSERT(check_solution(pairs_to_solution(*mcs2), *graph1, *graph2));
 
     delete graph1;
     delete graph2;
     delete start_point;
-    delete mcs;
+    delete mcs1;
+    delete mcs2;
 }
 
 void test_c8() {
@@ -108,12 +119,23 @@ void test_c8() {
     start_point->add_edge({3, 14}, {4, 13});
     start_point->add_edge({6, 17}, {7, 16});
 
-    graph<std::pair<int, int>>* mcs = solve_local_search(*graph1, *graph2, *start_point);
+    graph<std::pair<int, int>>* mcs1 = solve_local_search(*graph1, *graph2, *start_point, 1);
+    graph<std::pair<int, int>>* mcs2 = solve_local_search(*graph1, *graph2, *start_point, 2);
+
+    ASSERT_EQ(mcs1->n(), 8);
+    ASSERT_EQ(mcs1->m(), 5);
+
+    ASSERT_EQ(mcs2->n(), 8);
+    ASSERT_EQ(mcs2->m(), 8);
+
+    ASSERT(check_solution(pairs_to_solution(*mcs1), *graph1, *graph2));
+    ASSERT(check_solution(pairs_to_solution(*mcs2), *graph1, *graph2));
 
     delete graph1;
     delete graph2;
     delete start_point;
-    delete mcs;
+    delete mcs1;
+    delete mcs2;
 }
 
 void test_triangles() {
@@ -138,18 +160,29 @@ void test_triangles() {
     graph2->add_edge(7, 8);
 
     graph<std::pair<int, int>>* start_point = new adj_list_graph<std::pair<int, int>, hash_pair_int>();
-    start_point->add_node({1, 7});
+    start_point->add_node({1, 5});
     start_point->add_node({2, 6});
     start_point->add_node({3, 8});
-    start_point->add_edge({1, 7}, {3, 8});
+    start_point->add_edge({1, 5}, {2, 6});
     start_point->add_edge({2, 6}, {3, 8});
 
-    graph<std::pair<int, int>>* mcs = solve_local_search(*graph1, *graph2, *start_point);
+    graph<std::pair<int, int>>* mcs1 = solve_local_search(*graph1, *graph2, *start_point, 1);
+    graph<std::pair<int, int>>* mcs2 = solve_local_search(*graph1, *graph2, *start_point, 2);
+
+    ASSERT_EQ(mcs1->n(), 3);
+    ASSERT_EQ(mcs1->m(), 3);
+
+    ASSERT_EQ(mcs2->n(), 3);
+    ASSERT_EQ(mcs2->m(), 3);
+
+    ASSERT(check_solution(pairs_to_solution(*mcs1), *graph1, *graph2));
+    ASSERT(check_solution(pairs_to_solution(*mcs2), *graph1, *graph2));
 
     delete graph1;
     delete graph2;
     delete start_point;
-    delete mcs;
+    delete mcs1;
+    delete mcs2;
 }
 
 void test_crossed_square() {
@@ -173,6 +206,7 @@ void test_crossed_square() {
     graph2->add_node(5);
     graph2->add_edge(0,1);
     graph2->add_edge(0,2);
+    graph2->add_edge(1,4);
     graph2->add_edge(2,3);
     graph2->add_edge(2,4);
     graph2->add_edge(3,4);
@@ -188,13 +222,23 @@ void test_crossed_square() {
     start_point->add_edge({8,0},{6,2});
     start_point->add_edge({6,2},{7,3});
 
-    graph<std::pair<int, int>>* mcs = solve_local_search(*graph1, *graph2, *start_point);
-    // ASSERT_EQ(mcs->m(), 5);
+    graph<std::pair<int, int>>* mcs1 = solve_local_search(*graph1, *graph2, *start_point, 1);
+    graph<std::pair<int, int>>* mcs2 = solve_local_search(*graph1, *graph2, *start_point, 2);
+
+    ASSERT_EQ(mcs1->n(), 4);
+    ASSERT_EQ(mcs1->m(), 4);
+
+    ASSERT_EQ(mcs2->n(), 4);
+    ASSERT_EQ(mcs2->m(), 5);
+
+    ASSERT(check_solution(pairs_to_solution(*mcs1), *graph1, *graph2));
+    ASSERT(check_solution(pairs_to_solution(*mcs2), *graph1, *graph2));
 
     delete graph1;
     delete graph2;
     delete start_point;
-    delete mcs;
+    delete mcs1;
+    delete mcs2;
 }
 
 void compare_neighbourhoods() {
@@ -219,17 +263,17 @@ void compare_neighbourhoods() {
     std::cout << "    time: " << time << " seconds" << std::endl;
 
     timer.start();
-    h = solve_local_search(g1, g2, *start_point, 0, -1, .01);
+    h = solve_local_search(g1, g2, *start_point, 1, -1, .01);
     time = timer.stop() / 1000000000;
-    std::cout << "  L SRCH 0: " << h->n() << " nodes, " << h->m() << " edges";
+    std::cout << "  L SRCH 1: " << h->n() << " nodes, " << h->m() << " edges";
     std::cout << (check_solution(pairs_to_solution(*h), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
     std::cout << "    time: " << time << " seconds" << std::endl;
     delete h;
 
     timer.start();
-    h = solve_local_search(g1, g2, *start_point, 1, -1, .01);
+    h = solve_local_search(g1, g2, *start_point, 2, -1, .01);
     time = timer.stop() / 1000000000;
-    std::cout << "  L SRCH 1: " << h->n() << " nodes, " << h->m() << " edges";
+    std::cout << "  L SRCH 2: " << h->n() << " nodes, " << h->m() << " edges";
     std::cout << (check_solution(pairs_to_solution(*h), g1, g2) ? " (valid)" : " (invalid)") << std::endl;
     std::cout << "    time: " << time << " seconds" << std::endl;
     delete h;
@@ -244,24 +288,24 @@ void compare_neighbourhoods() {
     e_gen.reset();
     graph_factory<int>::add_n_tree_vertices(g4, e_gen, 1024);
     timer.start();
-    start_point = solve_greedy(g3, g4, true);
+    start_point = solve_greedy(g3, g4);
     time = timer.stop() / 1000000000;
     std::cout << "  GREEDY: " << start_point->n() << " nodes, " << start_point->m() << " edges";
     std::cout << (check_solution(pairs_to_solution(*start_point), g3, g4) ? " (valid)" : " (invalid)") << std::endl;
     std::cout << "    time: " << time << " seconds" << std::endl;
 
     timer.start();
-    h = solve_local_search(g3, g4, *start_point, 0, -1, .01);
+    h = solve_local_search(g3, g4, *start_point, 1, -1, .01);
     time = timer.stop() / 1000000000;
-    std::cout << "  L SRCH 0: " << h->n() << " nodes, " << h->m() << " edges";
+    std::cout << "  L SRCH 1: " << h->n() << " nodes, " << h->m() << " edges";
     std::cout << (check_solution(pairs_to_solution(*h), g3, g4) ? " (valid)" : " (invalid)") << std::endl;
     std::cout << "    time: " << time << " seconds" << std::endl;
     delete h;
 
     timer.start();
-    h = solve_local_search(g3, g4, *start_point, 1, -1, .01);
+    h = solve_local_search(g3, g4, *start_point, 2, -1, .01);
     time = timer.stop() / 1000000000;
-    std::cout << "  L SRCH 1: " << h->n() << " nodes, " << h->m() << " edges";
+    std::cout << "  L SRCH 2: " << h->n() << " nodes, " << h->m() << " edges";
     std::cout << (check_solution(pairs_to_solution(*h), g3, g4) ? " (valid)" : " (invalid)") << std::endl;
     std::cout << "    time: " << time << " seconds" << std::endl;
     delete h;
@@ -298,18 +342,18 @@ void compare_with_cograph_exact() {
     std::cout << "    time: " << time << " seconds" << std::endl;
 
     timer.start();
-    h = solve_local_search(g2, g1, *start_point, 0, -1, .005);
+    h = solve_local_search(g2, g1, *start_point, 1, -1, .005);
     time = timer.stop() / 1000000000;
-    std::cout << "  L SRCH 0: " << h->n() << " nodes, " << h->m() << " edges ("
+    std::cout << "  L SRCH 1: " << h->n() << " nodes, " << h->m() << " edges ("
               << (float) h->m() / (float) exact_solution.h->m() * 100 << "\% exact)";
     std::cout << (check_solution(pairs_to_solution(*h), g2, g1) ? " (valid)" : " (invalid)") << std::endl;
     std::cout << "    time: " << time << " seconds" << std::endl;
     delete h;
 
     timer.start();
-    h = solve_local_search(g2, g1, *start_point, 1, -1, .005);
+    h = solve_local_search(g2, g1, *start_point, 2, -1, .005);
     time = timer.stop() / 1000000000;
-    std::cout << "  L SRCH 1: " << h->n() << " nodes, " << h->m() << " edges ("
+    std::cout << "  L SRCH 2: " << h->n() << " nodes, " << h->m() << " edges ("
               << (float) h->m() / (float) exact_solution.h->m() * 100 << "\% exact)";
     std::cout << (check_solution(pairs_to_solution(*h), g2, g1) ? " (valid)" : " (invalid)") << std::endl;
     std::cout << "    time: " << time << " seconds" << std::endl;
