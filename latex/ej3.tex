@@ -125,21 +125,101 @@ aprovecha esta representación para obtener el subgrafo buscado.
 A continuación, se demostrarán una serie de resultados que serán necesarios
 para asegurar la correctitud de los algoritmos presentados más adelante.
 
+\begin{lema} Sea $G$ un cografo. Si $H \subseteq G$ es un subgrafo inducido de
+$G$, entonces $H$ es un cografo.
+\end{lema}
+\begin{proof}
+Por inducción estructural, utilizando la definición recursiva de cografo.
+\begin{enumerate}
+    \item Caso base: $G = K_1$. En este caso, necesariamente, $H = K_1$, que
+    es un cografo.
+    \item Caso recursivo: $G = G_1 \cup G_2$ o $G = G_1 \times G_2$, con $G_1$
+    y $G_2$ cografos. Se supone, por hipótesis inductiva, que todo subgrafo
+    inducido de los mismos es, a su vez, un cografo. Existen dos
+    posibilidades:
+    \begin{enumerate}
+        \item $H \subseteq G_1$ o $H \subseteq G_2$, en cuyo caso la hipótesis
+    inductiva asegura que $H$ es un cografo.
+        \item Hay nodos de $H$ tanto en $G_1$ como en $G_2$. En tal caso, sean
+    $H_1$ y $H_2$ los subgrafos inducidos en $G_1$ y $G_2$, respectivamente,
+    por los nodos correspondientes de $H$. Por hipótesis inductiva, $H_1$ y
+    $H_2$ son cografos. Notar que si $G = G_1 \cup G_2$, entonces $H = H_1
+    \cup H_2$, mientras que si $G = G_1 \times G_2$, entonces $H = H_1 \times
+    H_2$. En ambos casos, $H$ resulta ser un cografo. \qedhere
+    \end{enumerate}
+\end{enumerate}
+\end{proof}
+
 \subsubsection{Construcción del coárbol}
-Para construir el coárbol correspondiente a un cografo dado, se aprovecha la
-en cografos de menor tamaño hasta obtener un conjunto de vértices aislados.
-El algoritmo admite una sencilla formulación recursiva: si el cografo consiste
-en un vértice aislado, el coárbol tendrá un único nodo representando este
-vértice. En caso contrario, el cografo será la unión o el \emph{join} de dos
-cografos; el coárbol que lo represente tendrá como raíz un nodo etiquetado con
-esa operación, del cual colgarán los coárboles correspondientes a los dos
-cografos sobre los cuales esta se aplica.
+Para construir el coárbol correspondiente a un cografo dado, se descompone el
+mismo en cografos de menor tamaño hasta obtener un conjunto de vértices
+aislados. El algoritmo admite una sencilla formulación recursiva: si el
+cografo consiste en un vértice aislado, el coárbol tendrá un único nodo
+representando este vértice. En caso contrario, el cografo será la unión o el
+\emph{join} de dos cografos; el coárbol que lo represente tendrá como raíz un
+nodo etiquetado con esa operación, del cual colgarán los coárboles
+correspondientes a los dos cografos sobre los cuales esta se aplica.
+
+\bigskip
+\begin{algorithm}[H]
+    \SetAlgoVlined
+    \caption{Construcción del coárbol correspondiente a un cografo}
+    \Input{Un cografo $G = (V, E)$ con $N$ nodos y $M$ aristas, representado
+    como listas de adyacencia.}
+    \Output{El coárbol binario correspondiente a $G$.}
+
+    $G\comp$ $\gets$ complemento de $G$ \;
+    \textit{nodo\_inicial} $\gets$
+    $\langle$subgrafo: $G$, padre: \textit{ninguno}, lado: \textit{ninguno}$\rangle$ \;
+    \textit{a\_expandir} $\gets$ cola de nodos vacía \;
+    \textit{a\_expandir}.encolar(\textit{nodo\_inicial}) \;
+
+    \While{\textit{a\_expandir} no esté vacía} {
+        \textit{subgrafo\_actual} $\gets$ \textit{a\_expandir}.desencolar().subgrafo \;
+        \textit{padre\_actual} $\gets$ \textit{a\_expandir}.desencolar().padre \;
+        \textit{lado\_actual} $\gets$ \textit{a\_expandir}.desencolar().lado \;
+        $cc_1$ $\gets$ componente conexa de ($G$ restringido a) \textit{subgrafo\_actual} \;
+        \eIf{$cc_1$ tiene la misma cantidad de nodos que \textit{subgrafo\_actual}} {
+            $cc_1$ $\gets$ componente conexa de ($G\comp$ restringido a) el complemento de \textit{subgrafo\_actual} \;
+            \textit{operación} $\gets$ $\times$ \;
+        } {
+            \textit{operación} $\gets$ $\cup$ \;
+        }
+        $cc_2$ $\gets$ \textit{subgrafo\_actual} $-$ $cc_1$ \;
+        \textit{nuevo\_nodo} $\gets$ nodo representando a \textit{operación} \;
+        \eIf{\textit{padre\_actual} $==$ \textit{ninguno}} {
+            \textit{raíz\_cotree} $\gets$ \textit{nuevo\_nodo} \;
+        } {
+            \eIf{\textit{lado\_actual} $==$ \textit{izquierda}} {
+                \textit{padre\_actual}.setear\_hijo\_izquierdo(\textit{nuevo\_nodo}) \;
+            } {
+                \textit{padre\_actual}.setear\_hijo\_derecho(\textit{nuevo\_nodo}) \;
+            }
+        }
+        \eIf{$cc_1$ tiene exactamente 1 nodo} {
+            \textit{nuevo\_nodo}.setear\_hijo\_izquierdo($cc_1$.obtener\_nodo()) \;
+        } {
+            \textit{a\_expandir}.encolar($\langle cc_1$, \textit{nuevo\_nodo}, \textit{izquierda}$\rangle$) \;
+        }
+        \eIf{$cc_2$ tiene exactamente 1 nodo} {
+            \textit{nuevo\_nodo}.setear\_hijo\_derecho($cc_2$.obtener\_nodo()) \;
+        } {
+            \textit{a\_expandir}.encolar($\langle cc_2$, \textit{nuevo\_nodo}, \textit{derecha}$\rangle$) \;
+        }
+    }
+    % $cotree$ $\gets$ cotree correspondiente a $G$ \;
+    % $DP$ $\gets$ grilla de dimensiones $(2 \times N - 1) \times K$, donde
+    % cada fila representa a uno de los vértices del coárbol de $G$, y cada
+    % columna,
+    \Return{\textit{raíz\_cotree}}
+\end{algorithm}
+\bigskip
 
 \subsubsection{Búsqueda del subgrafo máximo}
 Para encontrar el subgrafo de $G$ con $K < N$ nodos y máxima cantidad de
 aristas, se diseñó un algoritmo utilizando la técnica de programación
 dinámica. El esquema detrás de la formulación recursiva de este algoritmo es
-la siguiente:
+el siguiente:
 
 \begin{enumerate}
     \item Si $K = 0$, la solución del algoritmo es un grafo sin nodos ni
@@ -169,14 +249,15 @@ donde
 \[
     S(G, K) = \begin{cases}
         \lbrace \operatorname{MCS}(G_1, k) \cup \operatorname{MCS}(G_2, K -
-        k) \ \vert\ 0 \leq k \leq K \rbrace & \text{si } G = (G_1 \cup G_2) \\
+        k) \ \vert\ 0 \leq k \leq \#V(G_1) \rbrace & \text{si } G = (G_1 \cup G_2) \\
         \lbrace \operatorname{MCS}(G_1, k) \times \operatorname{MCS}(G_2, K -
-        k) \ \vert\ 0 \leq k \leq K \rbrace & \text{si } G = (G_1 \times G_2)
+        k) \ \vert\ 0 \leq k \leq \#V(G_1) \rbrace & \text{si } G = (G_1 \times G_2)
     \end{cases}
 \]
 
+\bigskip
 \begin{algorithm}[H]
-    % \caption{Búsqueda del }
+    \caption{Subgrafo máximo de un cografo}
     \Input{Un cografo $G = (V, E)$ con $N$ nodos y $M$ aristas, y un natural
         $K < N$.}
     \Output{Un subgrafo $H \subseteq G$ con $K$ nodos que maximice la cantidad
@@ -188,7 +269,7 @@ donde
     columna,
     \Return{($DP_{N,M}$, $camino$)}
 \end{algorithm}
-
+\bigskip
 
 El algoritmo planteado para la búsqueda del máximo subgrafo
 
