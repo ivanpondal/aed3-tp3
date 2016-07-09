@@ -28,7 +28,7 @@ solution run_solver(graph<int>& g1, graph<int>& g2) {
     }
 
     graph<pair<int, int>>* start_point = solve_greedy(*small_graph, *large_graph);
-    graph<pair<int, int>>* h = solve_local_search(*small_graph, *large_graph, *start_point);
+    graph<pair<int, int>>* h = solve_local_search(*small_graph, *large_graph, *start_point, 1);
 
     solution ret = pairs_to_solution(*h, invert);
 
