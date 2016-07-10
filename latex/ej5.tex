@@ -28,6 +28,98 @@ respectivas.
 
 \subsection{Vecindades planteadas}
 
+El principal elemento a definir a la hora de plantear una heurística de
+búsqueda local es qué soluciones se considerarán vecinas. Es decir, es
+necesario plantear una \emph{relación de vecindad} entre el espacio de
+soluciones del problema. Para esto, será útil adoptar de nuevo el enfoque
+de ver a una solución de \acr{MCS} como un mapeo $s : V(G_1) \to V(G_2)$.
+De esta forma, se define el espacio de soluciones posibles del problema como
+\[ S = \lbrace s : V(G_1) \to V(G_2) \ \vert\ s \text{ es inyectiva}
+\rbrace \]
+y se plantean dos alternativas para definir una relación simétrica $N
+\subseteq S \times S$.
+Luego, dada una solución del problema $s \in S$, la heurística
+explorará todas las soluciones vecinas de $s$, es decir, aquellas que se
+relacionen con $s$ a través de $N$.
+
+Una característica que se tuvo en cuenta a la hora de definir las vecindades
+fue que cualquier solución fuera alcanzable desde cualquier otra, moviéndose
+sucesivas veces entre soluciones vecinas.
+
+A continuación se describen las dos vecindades planteadas, junto con el
+pseudocódigo del algoritmo que itera sobre cada una de ellas y selecciona,
+dada una solución cualquiera, la mejor entre sus soluciones vecinas, y una
+estimación teórica de la complejidad temporal de dicha iteración.
+
+\subsubsection{Vecindad $N_1$}
+Dos soluciones $s, s' \in S$ se consideran vecinas en la vecindad $N_1$
+si $s'$ es el resultado de modificar el mapeo de exactamente uno de los nodos
+de $G_1$ en $s$, asignándole un nodo de $G_2$ que esté libre en $s$. Es
+decir, $(s, s') \in N_1$ si y solo si
+\begin{itemize}
+    \item $(\exists \ v \in G_1)\ s(v) \neq s'(v)$, y
+    \item $(\forall \ w \in G_1)\ w \neq v \Rightarrow s(w) = s'(w)$.
+\end{itemize}
+
+Es importante notar que esta vecindad no está bien definida, y por lo tanto no
+puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics{imagenes/ex5_vecindad1.pdf}
+    \caption{Ejemplo de soluciones vecinas que es posible obtener mediante la
+    vecindad $N_1$.}
+    \label{fig:ej5:vecindad1}
+\end{figure}
+
+% Pseudocódigo de una iteración
+
+% Complejidad temporal
+
+\subsubsection{Vecindad $N_2$}
+Dos soluciones $s, s' \in S$ se consideran vecinas en la vecindad $N_2$
+si $s'$ es el resultado de aplicar sobre $s$ alguno de estos cambios:
+\begin{itemize}
+    \item \textsc{Permutación:} permutar los mapeos de dos nodos de $G_1$, de
+    forma tal que $s'(v_1) = s(v_2)$ y $s'(v_2) = s(v_1)$. Formalmente,
+    \begin{itemize}
+        \item $(\exists \ v_1, v_2 \in G_1)\ s'(v_1) = s(v_2)$ y $s'(v_2) = s
+        (v_1)$, y
+        \item $(\forall \ w \in G_1)\ w \neq v_1$ y $w \neq v_2
+        \Rightarrow s(w) = s'(w)$.
+    \end{itemize}
+    \item \textsc{Intercambio:} la misma operación que define la vecindad
+    $N_1$, es decir, modificar el mapeo de exactamente uno de los nodos
+    de $G_1$, asignándole un nodo de $G_2$ que esté libre en $s$. Formalmente,
+    \begin{itemize}
+        \item $(\exists \ v \in G_1)\ s(v) \neq s'(v)$, y
+        \item $(\forall \ w \in G_1)\ w \neq v \Rightarrow s(w) = s'(w)$.
+    \end{itemize}
+\end{itemize}
+
+La vecindad $N_2$ no tiene problemas de definición en el caso de que $\#V(G_1)
+= \#V (G_2)$.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics{imagenes/ex5_vecindad2.pdf}
+    \caption{Soluciones vecinas que es posible obtener mediante la vecindad
+    $N_2$.}
+    \label{fig:ej5:vecindad2}
+\end{figure}
+
+Cabe destacar que la vecindad $N_1$ está contenida en la vecindad $N_2$,
+siendo esta última considerablemente más grande. Desde un punto de vista
+computacional, esto tiene como desventaja inmediata un mayor costo a la hora
+de recorrer y explorar la vecindad, pero corre con la ventaja de que resulta
+posible pasar de una solución dada a cualquier otra en una cantidad de
+iteraciones menor (se puede decir que $N_2$ es una vecindad más
+\emph{densamente conectada} que $N_1$).
+
+% Pseudocódigo de una iteración
+
+% Complejidad temporal
+
 \subsection{Implementación}
 
 \subsection{Complejidad temporal}
