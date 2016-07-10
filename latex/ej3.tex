@@ -83,38 +83,33 @@ grafos son operaciones asociativas.
 \end{figure}
 
 \subsection{Resolución algorítmica}
-Sean $G_1 = K_{N_1}$ un grafo completo de $N_1$ nodos (que tendrá por lo tanto
-$M_1 = \frac{N_1 \times (N_1 - 1)}{2}$ aristas), y $G_2$ un cografo con $N_2$
-nodos y $M_2$ aristas. A la hora de resolver el problema de encontrar el \acr
-{MCS} entre $G_1$ y $G_2$, pueden distinguirse estos dos casos:
+Sean $G_1$ un cografo con $N_1$ nodos y $M_1$ aristas, y $G_2 = K_{N_2}$ un
+grafo completo de $N_2$ nodos (que tendrá por lo tanto $M_2 = \frac{N_2 \times
+(N_2 - 1)}{2}$ aristas). A la hora de resolver el problema de encontrar el
+\acr {MCS} entre $G_1$ y $G_2$, pueden distinguirse estos dos casos:
 \begin{enumerate}
-    \item $N_1 \geq N_2$. Dado que $G_1$ es un grafo completo, todo
-    subgrafo que tenga $N_1$ o menos aristas, y en particular $G_2$,
-    es isomorfo a algún subgrafo de $G_1$. Como, trivialmente, $G_2$ es
-    isomorfo a sí mismo, basta tomar $G_2$ como solución del problema.
-    \item $N_1 < N_2$. En este caso, sea $H$ un grafo isomorfo a algún
-    subgrafo de $G_2$; $H$ resultará isomorfo a algún subgrafo de $G_1$ si
-    y solo si su cantidad de nodos es menor o igual que $N_1$. Si $H$ tiene
-    menos de $N_1$ nodos, puede extenderse a algún grafo $\tilde{H} \supseteq
-    H$ que tenga $N_1$ nodos y también sea isomorfo a un subgrafo de $G_2$.
-    Es directo que $\tilde{H}$ resulta isomorfo a algún subgrafo de $G_1$ y
+    \item $N_1 \leq N_2$. Dado que $G_2$ es un grafo completo, todo
+    subgrafo que tenga $N_2$ o menos nodos, y en particular $G_1$,
+    es isomorfo a algún subgrafo de $G_2$. Como, trivialmente, $G_1$ es
+    isomorfo a sí mismo, basta tomar $G_1$ como solución del problema.
+    \item $N_1 > N_2$. En este caso, sea $H$ un grafo isomorfo a algún
+    subgrafo de $G_1$; $H$ resultará isomorfo a algún subgrafo de $G_2$ si
+    y solo si su cantidad de nodos es menor o igual que $N_2$. Si $H$ tiene
+    menos de $N_2$ nodos, puede extenderse a algún grafo $\tilde{H} \supseteq
+    H$ que tenga $N_2$ nodos y también sea isomorfo a un subgrafo de $G_1$.
+    Es directo que $\tilde{H}$ resulta isomorfo a algún subgrafo de $G_2$ y
     que su cantidad de aristas es mayor o igual que la de $H$. Entonces, si
     $H$ era solución óptima de \acr{MCS}, claramente $\tilde{H}$ también lo
     es. De esto se sigue que para resolver este caso del problema, basta con
-    tomar un subgrafo de $G_2$ que tenga exactamente $N_1$ nodos y maximice la
+    tomar un subgrafo de $G_1$ que tenga exactamente $N_2$ nodos y maximice la
     cantidad de aristas.
 \end{enumerate}
 
 Dado que la resolución del primer caso es trivial, durante el resto de esta
-sección se asumirá que $N_1 < N_2$. Se llamará $K = N_1$, $G = G_2$, $N = N_2$
-y $M = M_2$, y se explicará la solución planteada al problema de encontrar un
+sección se asumirá que $N_1 > N_2$. Se llamará $G = G_1$, $N = N_1$, $M = M_1$
+y $K = N_2$, y se explicará la solución planteada al problema de encontrar un
 subgrafo de un cografo $G$ que tenga exactamente $K$ vértices y cantidad de
-aristas máxima.
-
-En general, el problema de determinar para un grafo dado el subgrafo con
-determinada cantidad de vértices que maximice la cantidad de aristas es
-NP-completo, y por lo tanto, no se conoce un algoritmo eficiente para
-resolverlo. No obstante, aprovechando la hipótesis de que $G$ es un cografo,
+aristas máxima. Aprovechando la hipótesis de que $G$ es un cografo,
 es posible solucionar el problema en tiempo polinomial.
 
 La solución propuesta tiene dos etapas. En primer lugar, se crea el coárbol
