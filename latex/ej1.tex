@@ -10,3 +10,47 @@
 %    diferencias entre dicho problema y MCS, y explicar qué aplicaciones tiene
 %    este problema en la química. No es parte de este TP resolver el problema
 %    del paper, en todo caso es problema del Doc.
+
+Entre las diversas aplicaciones que tiene el problema de \acr{MCS}, cabe
+destacar las relacionadas con el campo de la química y la biología molecular,
+en las que pone el foco el trabajo de Ehrlich y Rarey\cite{ehrlich}. Los
+grafos constituyen una forma muy conveniente e intuitiva de representar la
+estructura de una molécula, con la ventaja agregada de poder aprovechar el
+gran conocimiento computacional existente sobre el tema. En este contexto,
+resolver el problema de \acr{MCS} resulta de gran utilidad para buscar
+subestructuras comunes entre dos moléculas dadas, o cuantificar la similitud
+entre las mismas.
+
+El artículo engloba, bajo el nombre general de \acr{MCS}, a dos problemas
+similares, denominados \acr{MCES} (\emph{maximum common edge subgraph}) y
+\acr{MCIS} (\emph{maximum common induced subgraph}). El primero de ellos
+coincide con el problema que se estudiará en este trabajo: dados dos grafos,
+encontrar el subgrafo común a ambos con máxima cantidad de aristas. El
+segundo, en cambio, consiste en encontrar un grafo con la mayor cantidad
+posible de nodos que sea isomorfo, simultáneamente, a un subgrafo inducido de
+otros dos grafos.
+
+Dentro del contexto de aplicación estudiado por el paper, los grafos
+utilizados presentan ciertas particularidades. Con frecuencia, al modelar
+estructuras moleculares, se utilizan etiquetas para indicar propiedades de los
+átomos o enlaces representados por cada uno de los nodos o aristas,
+respectivamente. Luego, cuando se desea resolver \acr{MCS} para encontrar
+subestructuras comunes a dos moléculas, solo pueden mapearse átomos o enlaces
+cuyas etiquetas coincidan, agregando una nueva restricción al problema que no
+está presente en la versión que será abordada en este trabajo.
+
+En el trabajo citado, se hace un recorrido por diversos escenarios en los que
+resulta aplicable \acr{MCS}, la mayoría de ellos en el área de la biología
+molecular. Se mencionan dos grandes categorías de problemas: los relacionados
+con pequeñas moléculas orgánicas, como las drogas, y los concernientes a
+moléculas grandes, por ejemplo, las proteínas. Algunos de los incluidos en el
+primer grupo son la obtención de métricas de similitud estructural que
+permiten la clasificación de compuestos en familias o la predición de sus
+efectos activos, el mapeo de átomos y enlaces entre reactivos y productos en
+reacciones, y la elaboración de modelos matemáticos para cuantificar
+la relación entre estructura y la actividad de compuestos químicos. En el
+segundo grupo, se puede mencionar tanto la búsqueda de semejanzas
+estructurales entre moléculas a escala global como la identificación de
+similitudes de carácter local; estas útimas resultan de utilidad para procesar
+grandes bases de datos y elaborar hipótesis acerca del origen evolutivo y las
+funciones desempeñadas por las proteínas.
