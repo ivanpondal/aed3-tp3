@@ -1,3 +1,67 @@
-% \setcounter{secnumdepth}{0}
-% \section{Introducción}
-% \setcounter{secnumdepth}{1}
+\section*{Introducción}
+\addcontentsline{toc}{section}{Introducción}
+
+En el presente trabajo, se explorarán distintos alogoritmos para la resolución
+del problema de grafos conocido como \emph{máximo subgrafo común}, o
+\acr{MCS} (\emph{maximum commom subgraph}). Este problema consiste en
+encontrar, dados dos grafos cualesquiera, un tercer grafo que sea,
+simultáneamente, isomorfo a algún subgrafo de los dos primeros, y con la
+máxima cantidad posible de aristas.
+
+Más formalmente, si $G_1 = (V_1, E_1)$ y $G_2 = (V_2, E_2)$ son dos grafos
+simples, el problema de máximo subgrafo común consiste en encontrar un grafo
+$H = (V_H, E_H)$, isomorfo tanto a un subgrafo de $G_1$ como a un subgrafo
+de $G_2$ que maximice $\#E(H)$.
+
+Encontrar el \acr{MCS} entre dos grafos es un problema NP-
+completo\cite{garey}, por lo que, a menos que $\text{P} = \text{NP}$, no
+existen algoritmos que permitan resolver el caso general en tiempo polinomial.
+Por este motivo, el problema es abordado en este trabajo desde dos enfoques
+distintos, según se favorezca la exactitud o el rendimiento temporal de las
+soluciones.
+
+En primer lugar, se presentan dos algoritmos exactos: uno de complejidad
+temporal exponencial que resuelve el caso general aplicando la técnica de
+\emph{backtracking}, y otro restringido a un caso particular del problema
+(cuando se tienen como entrada un grafo completo y un \emph {cografo}), cuya
+complejidad temporal es polinomial. A continuación, se exploran tres
+soluciones heurísticas (heurística golosa, heurística de búsqueda local, y
+metaheurística \emph{tabu search}), que renuncian a la exactitud del enfoque
+previo en pos de lograr una complejidad polinomial para el caso general. Por
+último, se realiza un comparativo entre los resultados obtenidos para
+distintos tipos de grafos utilizando cada una de las técnicas, extrayendo
+conclusiones acerca de la calidad y la eficiencia de las mismas.
+
+\subsection*{Consideraciones generales}
+\addcontentsline{toc}{subsection}{Consideraciones generales}
+
+Es importante notar que el problema de \acr{MCS} admite una formulación
+equivalente, donde el subgrafo común buscado, $H$, es visto como un mapeo
+biyectivo entre un subconjunto de los nodos de $G_1$ y un subconjunto de los
+nodos de $G_2$. Más aún, suponiendo sin pérdida de generalidad que $\#V(G_1)
+\leq \#V(G_2)$, esto es, que $G_1$ tiene una cantidad de nodos menor o igual
+que la de $G_2$, el mapeo puede tomarse considerando la totalidad de los nodos
+de $G_1$. Esto se debe a que, si ya se cuenta con una solución cuya cantidad
+de aristas es máxima y que no utiliza todos los nodos de $G_1$, esta puede
+extenderse para incluir los nodos faltantes sin perjudicar su optimalidad,
+siendo los mismos mapeados a nodos arbitarios de $G_2$. Dado que esta
+interpretación del problema simplifica la formulación e implementación de
+muchos de los procedimientos expuestos en este trabajo, será utilizada
+asiduamente a lo largo del mismo.
+
+Todos los algoritmos presentados en el trabajo fueron implementados en el
+lenguaje C++, utilizando en varios casos funciones y estructuras de datos
+provistas por la biblioteca estándar del lenguaje. Estas implementaciones
+fueron sometidas a diversas pruebas experimentales, durante las
+cuales se tuvieron en cuenta las siguientes consideraciones generales:
+
+\begin{itemize}
+\item Solo se midió el costo temporal de generar las soluciones,
+omitiendo el demandado para la lectura y escritura de los datos.
+\item Para la medición de los tiempos de ejecución, se utilizaron los
+métodos proporcionados por el \emph{header} \texttt{chrono} de la
+biblioteca estándar de C++. Los tiempos fueron medidos en nanosegundos.
+% \item Todas las pruebas se corrieron en las computadoras del Laboratorio 4
+% del Departamento de Computación (\acr{FCEN} - \acr{UBA}).
+% \item Todos los experimentos aleatorios se realizaron con semilla de valor 7.
+\end{itemize}
