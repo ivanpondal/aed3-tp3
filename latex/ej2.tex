@@ -15,9 +15,9 @@
 \subsection{Introducción}
 En este ejercicio, se busca encontrar un algoritmo exacto para resolver, en
 tiempo exponencial, el problema del \acr{MCS} entre dos grafos cualquiera.
-Para ello utilizamos el método de \textit{Backtracking}. Este método es
-extremadamete costoso tanto temporal como espacialmente, por lo que no sólo
-es recomendable sino condición del ejercicio realizar podas y estrategias que
+Para ello, se utiliza la técnica de \textit{backtracking}. Este método es
+extremadamente costoso tanto temporal como espacialmente, por lo que no solo
+es recomendable sino necesario realizar podas y estrategias que
 permitan mejorar los tiempos de resolución.
 
 \subsection{Resolución}
@@ -26,17 +26,17 @@ ambos grafos, y así tomar un grafo común con la mayor cantidad de aristas de
 entre todas las combinaciones de mapeos.
 
 Dentro de la función principal, aquella que emplea la técnica de
-\textit{Backtracking}, se hace uso de ambos grafos, otro grafo que representa
-el subgrafo común máximo dentro de la rama de ejecución (inicialmente
+\textit{backtracking}, se hace uso de ambos grafos, otro grafo que representa
+el subgrafo común máximo dentro de la rama actual de ejecución (inicialmente
 vacío), dos listas enlazadas (una para cada grafo) que contienen
-los ids de los nodos aún no mapeados en esta rama de ejecución, y un mapa
-implementado sobre una tabla de hash que contiene los mapeos hechos en esa
+los IDs de los nodos aún no mapeados en esta rama de ejecución, y un mapa
+implementado sobre una tabla de \emph{hash} que contiene los mapeos hechos en esa
 rama de ejecución.
 
-~
+\vspace{1em}
 
 \begin{algorithm}[H]
-    \caption{MCSBacktracking}
+    \caption{\acr{MCS} exacto, utilizando \emph{backtracking}}
     \label{algo:backtracking}
 
     \Input{Dos grafos $g_1$ y $g_2$ donde los nodos se representan con enteros,
@@ -87,15 +87,17 @@ rama de ejecución.
 
     $mcs$ $\gets$ $maxMCS$
 
-    \Return{veradero}
+    \Return{verdadero}
 \end{algorithm}
 
-Lo que se expone en el algoritmo \ref{algo:backtracking} es el pseudocódigo
-del algoritmo principal. Por simplicidad, evitaremos las podas del algoritmo
-momentaneamente. Posteriormente ahondaremos en ellas.
+\vspace{1em}
+
+Lo que se expone en el Algoritmo \ref{algo:backtracking} es el pseudocódigo
+del algoritmo principal. Por simplicidad, se omiten momentáneamente las podas
+del algoritmo; posteriormente se ahondará en ellas.
 
 Se iteran $l_1$ y $l_2$
-mediante dos ciclos anidados para de esta forma probar todos los elementos de
+mediante dos ciclos anidados para, de esta forma, probar todos los elementos de
 $l_1$ contra todos los de $l_2$ formando todos los pares de nodos posibles.
 Dentro de la doble iteración se prueba el mapeo de los dos nodos seleccionados
 actualizando las listas de nodos restantes y el mapa, y se hace el llamado
@@ -109,19 +111,19 @@ Una vez terminados los ciclos se le asigna la mayor de las copias de
 
 Se puede apreciar en el pseudocódigo anterior la existencia de una condición
 para asignar el \textit{mcs} obtenido a la variable que almacena el máximo de
-las iteraciones tras el llamado recursivo (aparte de la que verifica si es
-mayor en cantidad de aristas). Se pide que el resultado del llamado haya sido
+las iteraciones tras el llamado recursivo (además de la que verifica si es
+su cantidad de aristas es mayor). Se pide que el resultado del llamado haya sido
 válido, que es lo mismo que pedir que el valor retornado por la misma sea
-verdadero. Esto pareciera no tener sentido, ya que en todos los casos el valor
-devuelto es verdadero, pero eso es porque no están incluídas las podas. La
-forma de podar el árbol de ejución que utilizamos hace uso de esa condición,
+verdadero. Esto podría parecer no tener sentido, ya que en todos los casos el valor
+devuelto es verdadero, pero la razón de esto es que no están incluidas las podas. La
+forma de podar el árbol de ejecución que utilizamos hace uso de esa condición;
 si se decide cortar la rama de ejecución entonces se devuelve falso y esta
 estructura evitará chequeos innecesarios.
 
-Las podas implementadas fueron las siguentes:
+Las podas implementadas fueron las siguientes:
 
 \begin{enumerate}
-\item Verificar que la suma de los grados de los nodos que aun no han sido
+\item Verificar que la suma de los grados de los nodos que aún no han sido
 mapeados pueda ser mayor que la máxima cantidad de aristas alcanzada hasta
 el momento. De no ser así, se detiene y se corta la rama que está siendo
 explorada.
@@ -129,34 +131,34 @@ explorada.
 mismo grafo.
 \end{enumerate}
 
-La verificación de la suma de los grados es sencilla. Consta de recorrer la
+La verificación de la suma de los grados es sencilla. Consiste en recorrer la
 lista de nodos restantes e ir sumando los grados de cada uno de ellos. Si esa
 suma junto con la cantidad de ejes del \textit{mcs} actual no puede superar
 a la cantidad de ejes del máximos \textit{mcs} alcanzado en alguna de las
-ramas de la ejecución previamente visitadas, entonces no tiene caso seguir
+ramas de la ejecución previamente visitadas, entonces no tiene sentido seguir
 porque no es posible llegar a una mejor solución, por lo que se corta la
 ejecución.
 
 Para esto se hace uso de una estructura condicional que termina el llamado
 devolviendo falso. Esta estructura es lo primero que se ejecuta cuando se hace
-el llamado recursivo. Veamos un pseudocódigo.
+el llamado recursivo. A continuación puede verse el pseudocódigo de la poda.
 
 \begin{algorithm}
-    \caption{Poda de suma de grados}
+    \caption{Poda: suma de grados}
     \If {$mcs$.m() + sumaDeGrados($l_1$) $\leq$ $maximaCantEjes$} {
         \Return{falso}
     }
 \end{algorithm}
 
 $maximaCantEjes$ es una referencia a una variable que es pasada por parámetro
-en el llamado recursivo y que se acutaliza si se encuentra un mejor
+en el llamado recursivo y que se actualiza si se encuentra un mejor
 \textit{mcs}.
 
 La otra poda se enfoca en evitar inspeccionar una solución cuya rama de
-ejecución es equivalente a una visitada anteriormente. Por ejemplo, tomemos
+ejecución es equivalente a una visitada anteriormente. A modo de ejemplo, sean
 los grafos $A$ y $B$ con nodos $a_1, ..., a_n$ y $b_1, ..., b_k$. Durante la
 ejecución del algoritmo se mapearán todas las posibles combinaciones entre
-los nodos de estos grafos. Al mapearlos hay un orden que intríncecamente
+los nodos de estos grafos. Al mapearlos hay un orden que intrínsecamente
 determina cual es el mejor grafo en común, es decir, según que par de nodos
 se mapeen, en el siguiente llamado recursivo el mapeo de otros dos nodos
 será más eficiente o no en cuestión de cantidad de aristas del \textit{mcs}.
@@ -168,7 +170,7 @@ Por esto es que la intención de esta poda es evitar llegar a un grafo con el
 mismo conjunto de nodos mapeados, para así ahorrar llamados.
 
 A continuación puede verse la imagen de un ejemplo de dos grafos junto con el
-árbol de mapeos que se formailustrando la idea.
+árbol de mapeos que se forma, ilustrando la idea.
 
 \begin{center}
 \includegraphics[width=.45\textwidth]{imagenes/ex2_grafos.pdf}
@@ -182,10 +184,10 @@ subgrafos comunes máximos isomorfos.
 \end{center}
 
 Para lograr esto utilizamos una referencia a una variable que es pasada por
-parametro en el llamado recursivo que almacena conjuntos de pares. La idea es
+parámetro en el llamado recursivo que almacena conjuntos de pares. La idea es
 que antes de hacer un llamado recursivo se busque dentro de este conjunto
-si mi actual conjunto de mapeos ya ha sido visitado. De ser así entonces no se
-hace el llamado sino que continúa la iteración formando un nuevo par para ser
+si el actual conjunto de mapeos ya ha sido visitado. De ser así entonces no se
+hace el llamado sino que continúa la iteración, formando un nuevo par para ser
 mapeado en lugar del que ha sido rechazado.
 
 El problema con esta idea es que tiene un costo temporal demasiado alto, al
@@ -196,17 +198,17 @@ mapeados aumenta, se vuelve más costoso, y a su vez, menos provechoso debido
 a que al llegar a un nivel más profundo en la rama de ejecución, la cantidad
 de llamados que pueden ser omitidos es menor.
 
-De modo que decidimos hacer efectiva esta poda únicamente para el segundo
+Por esta razón, se decidió hacer efectiva esta poda únicamente para el segundo
 nivel del árbol de ejecución. De esta forma las estructuras posibles se
-simplificarían lo suficiente como para requerir una baja complejidad temporal.
-Y además es el nivel en el que mas ramas se pueden descartarse.
+simplifican lo suficiente como para requerir una baja complejidad temporal;
+además, es el nivel en el que más ramas pueden descartarse.
 
 La implementación de esta poda se realiza dentro del ciclo anidado, justo
-después de haber elegido los nodos candidatos a ser mapeados. Veamos un
-pseudocódigo.
+después de haber elegido los nodos candidatos a ser mapeados. A continuación
+puede verse el pseudocódigo de la poda.
 
 \begin{algorithm}
-    \caption{Poda permutaciones}
+    \caption{Poda: permutaciones}
     \If {$mcs$.n() == 1} {
         $permutacion$ $\gets$ tupla con el primer par mapeado y el par actual \;
         \If {$permutaciones$.esta($permutacion$)} {
@@ -218,29 +220,29 @@ pseudocódigo.
     }
 \end{algorithm}
 
-$permutaciones$ es un conjunto implementado sobre un conjunto de hash.
+$permutaciones$ es un conjunto implementado sobre un conjunto de \emph{hash}.
 
 La cantidad de hojas del árbol de ejecución que se ahorran es igual al
 producto entre la cantidad de mapeos posibles en cada nivel, desde el tercero
 hasta el último. La cantidad de mapeos posibles en un nivel es igual al
-producto entre la cantidad de nodos restantes de cada grafo. Entonces la
-cantidad de hojas ahorradas es igual a $(n_1 - 2) \times (n_2 - 2) \times
-(n_1 - 3) \times (n_2 - 3) \times ... \times 1 \times (n_2 - n_1 + 1)$ si
+producto entre la cantidad de nodos restantes de cada grafo. Entonces, la
+cantidad de hojas ahorradas es igual a $(N_1 - 2) \times (N_2 - 2) \times
+(N_1 - 3) \times (N_2 - 3) \times \dots \times 1 \times (N_2 - N_1 + 1)$ si
 suponemos que el segundo grafo es mayor o igual que el primero. Esto es
-equivalente a $\frac{(n_1 - 2)! \times (n_2 - 2)!}{(n_2 - n_1)!}$, por lo que
-fácilmente puede apreciarse por qué esta poda resultaría buena.
+equivalente a $\frac{(N_1 - 2)! \times (N_2 - 2)!}{(N_2 - N_1)!}$, por lo que
+fácilmente puede apreciarse por qué esta poda resulta buena.
 
-En un principio pensábamos que estas podas no resultarían demasiado efectivas,
-e incluso dudábamos si el costo de cada una no pudiese significar una
-desmejora en relación a la ganancia. Nos equivocamos. Ambas podas no sólo
-acabaron siendo muy buenas, sino fundamentales a medida que el tamaño de los
+En un principio se pensó que estas podas no resultarían demasiado efectivas,
+dudando incluso de si el costo de cada una no podría significar una
+desmejora en relación a la ganancia. No obstante, ambas podas no solo
+acabaron siendo muy buenas, sino incluso fundamentales a medida que el tamaño de los
 grafos crecía.
 
 \subsection{Complejidad}
 
 Para medir la complejidad del algoritmo, en principio, se analizará el
-árbol de ejecución dado por el mismo. Se definen $n_1$ y $n_2$ las cantidades
-de nodos de los grafos, y se supone $n_1 \leq n_2$. Por cada llamado de
+árbol de ejecución dado por el mismo. Se definen $N_1$ y $N_2$, las cantidades
+de nodos de los grafos, y se supone $N_1 \leq N_2$. Por cada llamado de
 la función, se hace una cantidad de llamados recursivos que depende de en qué
 nivel del árbol de ejecución se encuentre actualmente el algoritmo. Esto es
 así debido a que el llamado recursivo se encuentra dentro del ciclo anidado,
@@ -249,124 +251,110 @@ aún no han sido mapeados. Como en cada llamado se mapea un par de nodos, la
 cantidad de nodos por mapear va disminuyendo en cada nivel.
 
 Para el nivel $i$ la cantidad de veces que se hace el llamado es de
-$(n_1 - i)  (n_2 - i)$, que es resultado de probar todos los posibles
+$(N_1 - i)  (N_2 - i)$, que es resultado de probar todos los posibles
 pares entre los nodos restantes de ambos grafos. De esta forma, la cantidad de
 llamados en un nivel es de
-$\frac{n_1!  n_2!}{(n_1 - i)!  (n_2 - i)!}$.
+$\frac{N_1!  N_2!}{(N_1 - i)!  (N_2 - i)!}$.
 
-Ahora se hará enfoque en la complejidad del algoritmo en para cada nivel $i$.
+Ahora se hará foco en la complejidad del algoritmo en para cada nivel $i$.
 
 \begin{itemize}
 \item Se recorren linealmente los nodos restantes para saber si es posible
-efectuar la poda de la suma de grados. $\ord(n_1 - i)$.
+efectuar la poda de la suma de grados. $\ord(N_1 - i)$.
 \item Dentro del doble ciclo anidado que se ejecuta
-$(n_1 - i)  (n_2 - i)$ veces
-\begin{itemize}
-\item Copiar el mapa. $\ord(i)$.
-\item Clonar subgrafo. $\ord(i)$
-\item Agregar nodo. $\ord(i)$
-\item Agregar ejes al nuevo nodo del \textit{mcs}. Lineal sobre la cantidad de
-vecinos del nuevo nodo.
-\item Mover iteradores hasta la posicion correspondiente.
-$\ord(n_1 - i + n_2 - i)$
+$(N_1 - i)  (N_2 - i)$ veces
+    \begin{itemize}
+    \item Copiar el mapa. $\ord(i)$.
+    \item Clonar subgrafo. $\ord(i)$
+    \item Agregar nodo. $\ord(i)$
+    \item Agregar ejes al nuevo nodo del \acr{MCS}. Lineal sobre la cantidad de
+    vecinos del nuevo nodo.
+    \item Mover iteradores hasta la posición correspondiente.
+    $\ord(N_1 - i + N_2 - i)$
+    \end{itemize}
+
+    Entones, el doble ciclo tiene complejidad
+
+    \begin{align*}
+    \sum_{k = 1}^{N_1 - i} \sum_{j = 1}^{N_2 - i} (\ord(i) + & \ord(\deg(v_{kj}) +
+     \ord(N_1 + N_2 - 2i)) \\
+    =& \sum_{k = 1}^{N_1 - i} \sum_{j = 1}^{N_2 - i} (\ord(\deg(v_{kj}) +
+     \ord(N_1 + N_2)) \\
+    =& \ord((N_1 - i)  (N_2 - i)  (N_1 + N_2)) + \sum_{k = 1}^{N_1 - i}
+     \sum_{j = 1}^{N_2 - i} \ord(\deg(v_{kj}))
+    \end{align*}
+
+    Puede acotarse superiormente el grado de $v_{kj}$ por $N_1$, ya que no puede
+    tener más de $N_1 - 1$ vecinos. Entonces, la complejidad es
+
+    \begin{align*}
+    \ord((N_1 - i) & (N_2 - i)  (N_1 + N_2)) + \sum_{k = 1}^{N_1 - i}
+    \sum_{j = 1}^{N_2 - i} \ord(N_1) \\
+    =& \ord((N_1 - i)  (N_2 - i)  (N_1 + N_2)) + \ord((N_1 - i)
+    (N_2 - i)  N_1) \\
+    =& \ord((N_1 - i)  (N_2 - i)  (N_1 + N_2 + N_1)) \\
+    =& \ord((N_1 - i)  (N_2 - i)  (N_1 + N_2))
+    \end{align*}
+
 \end{itemize}
-Entones el doble ciclo tiene complejidad
 
-$\sum_{k = 1}^{n_1 - i} \sum_{j = 1}^{n_2 - i} (\ord(i) + \ord(deg(v_{kj}) +$
-$ \ord(n_1 + n_2 - 2i))=$
+Por lo tanto la complejidad en el nivel $i$ es $\ord(N_1 - i) +$
+$\ord((N_1 - i)  (N_2 - i)  (N_1 + N_2)) = \ord((N_1 - i) $
+$ (N_2 - i)  (N_1 + N_2))$.
 
-$\sum_{k = 1}^{n_1 - i} \sum_{j = 1}^{n_2 - i} (\ord(deg(v_{kj}) +$
-$ \ord(n_1 + n_2))=$
-
-$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2)) + \sum_{k = 1}^{n_1 - i}$
-$ \sum_{j = 1}^{n_2 - i} \ord(deg(v_{kj}))$.
-
-Puede acotarse superiormente el grado de $v_{kj}$ por $n_1$ ya que no puede
-tener más de $n_1 - 1$ vecinos. Entonces la complejidad es
-
-$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2)) + \sum_{k = 1}^{n_1 - i}$
-$\sum_{j = 1}^{n_2 - i} \ord(n_1)=$
-
-$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2)) + \ord((n_1 - i) $
-$(n_2 - i)  n_1)=$
-
-$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2 + n_1))=$
-
-$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2))$.
-\end{itemize}
-
-Por lo tanto la complejidad en cada nivel $i$ es $\ord(n_1 - i) +$
-$\ord((n_1 - i)  (n_2 - i)  (n_1 + n_2)) = \ord((n_1 - i) $
-$ (n_2 - i)  (n_1 + n_2))$.
-
-La cantidad de niveles que tiene el árbol de ejecución es de $n_1$ ya que se
+La cantidad de niveles que tiene el árbol de ejecución es $N_1$, ya que se
 hacen llamados recursivos hasta que uno de los grafos tenga todos sus nodos
-mapeados. Como ya vimos en cada nivel se hacen
-$\frac{n_1!  n_2!}{(n_1 - i)!  (n_2 - i)!}$ llamados, por lo que
+mapeados. Como se vio anteriormente, en cada nivel se hacen
+$\frac{N_1!  N_2!}{(N_1 - i)!  (N_2 - i)!}$ llamados, por lo que
 la cantidad total de llamados es de
-$\sum_{i = 0}^{n_1} \frac{n_1!  n_2!}{(n_1 - i)!  (n_2 - i)!}$.
+$\sum_{i = 0}^{N_1} \frac{N_1!  N_2!}{(N_1 - i)!  (N_2 - i)!}$.
 
 Puede acotarse esta cantidad de llamados superiormente de modo que sea
-$\ord(n_1  \frac{n_1!  n_2!}{(n_2 - n_1)!})$ siendo $n_1$ la
-cantidad de niveles y $\frac{n_1!  n_2!}{(n_2 - n_1)!}$ la de hojas.
+$\ord \left(N_1  \frac{N_1!  N_2!}{(N_2 - N_1)!} \right)$ siendo $N_1$ la
+cantidad de niveles y $\frac{N_1!  N_2!}{(N_2 - N_1)!}$ la de hojas.
 
-~
+Entonces, la complejidad total del algoritmo es
 
-Entonces la complejidad total del algoritmo es
-
-$\sum_{i = 0}^{n_1}[\frac{n_1!  n_2!}{(n_1 - i)!  (n_2 - i)!}$
-$ \ord((n_1 - i)  (n_2 - i)  (n_1 + n_2))]=$
-$\ord(n_1  \frac{n_1!  n_2!}{(n_2 - n_1)!}) $
-$\sum_{i = 0}^{n_1}\ord((n_1 - i)  (n_2 - i)$
-$ (n_1 + n_2))$.
-
-~
+\begin{multline*}
+\sum_{i = 0}^{N_1}\left[\frac{N_1!  N_2!}{(N_1 - i)!  (N_2 - i)!}
+\ord((N_1 - i)  (N_2 - i)  (N_1 + N_2))\right] \\
+= \ord\left(N_1  \frac{N_1!  N_2!}{(N_2 - N_1)!})
+\sum_{i = 0}^{N_1}\ord((N_1 - i)  (N_2 - i)
+(N_1 + N_2)\right)
+\end{multline*}
 
 Desarrollando
-$\sum_{i = 0}^{n_1}\ord((n_1 - i)  (n_2 - i)$
-$ (n_1 + n_2))=$
-$(n_1 + n_2)  \sum_{i = 0}^{n_1}\ord((n_1 - i)  (n_2 - i))$
 
-~
+\[
+\sum_{i = 0}^{N_1}\ord((N_1 - i)  (N_2 - i)
+ (N_1 + N_2))=
+(N_1 + N_2)  \sum_{i = 0}^{N_1}\ord((N_1 - i)  (N_2 - i))
+\]
 
-Sea $j = n_1 - i$ y por consecuente $i = n_1 - j$ se verifica que
+Sea $j = N_1 - i$ y por consecuente $i = N_1 - j$; se verifica que
 
-$\ord((n_1 + n_2))  \sum_{i = 0}^{n_1} \ord((n_1 - i)  (n_2 - i))=$
-
-$\ord((n_1 + n_2))  \sum_{j = 0}^{n_1} (\ord(j)  (n_2 - n_1 + j))=$
-
-$\ord((n_1 + n_2))  \sum_{j = 0}^{n_1} (\ord(j^2) + j  (n_2 - n_1))=$
-
-$\ord((n_1 + n_2))  \ord(\sum_{j = 0}^{n_1} j^2) + (n_2 - n_1)  \sum_{j = 0}^{n_1} j)=$
-
-$\ord((n_1 + n_2))  \ord(\frac{1}{6}n_1(n_1 + 1)(2n_1 + 1) + \frac{1}{2}(n_2 - n_1)n_1(n_1 + 1))=$
-
-$\ord((n_1 + n_2))  \ord(\frac{1}{6}(2n_1^3 + 3n_1^2 + n_1) + \frac{1}{2}(n_2 - n_1)(n_1^2 + n_1))=$
-
-$\ord((n_1 + n_2))  \ord(\frac{1}{6}(2n_1^3 + 3n_1^2 + n_1) + \frac{1}{2}(n_1^2n_2 - n_1^3 + n_1n_2 - n_1^2))=$
-
-$\ord((n_1 + n_2))  \ord(\frac{1}{6}(2n_1^3 + 3n_1^2 + n_1) + \frac{1}{6}(3n_1^2n_2 - 3n_1^3 + 3n_1n_2 - 3n_1^2))=$
-
-$\ord((n_1 + n_2))  \ord(\frac{1}{6}(2n_1^3 + 3n_1^2 + n_1 + 3n_1^2n_2 - 3n_1^3 + 3n_1n_2 - 3n_1^2))=$
-
-$\ord((n_1 + n_2))  \ord(\frac{1}{6}(-n_1^3 + n_1 + 3n_1^2n_2 + 3n_1n_2))=$
-
-$\ord((n_1 + n_2))  \ord(\frac{1}{6}n_1(-n_1^2 + 1 + 3n_1n_2 + 3n_2))=$
-
-$\ord((n_1 + n_2))  \ord(n_1^2n_2)=$
-
-$\ord((n_1 + n_2)  n_2  n_1^2)$
-
-~
+\begin{align*}
+\ord((N_1 + N_2)) & \sum_{i = 0}^{N_1} \ord((N_1 - i)  (N_2 - i)) \\
+=& \ord((N_1 + N_2))  \sum_{j = 0}^{N_1} (\ord(j)  (N_2 - N_1 + j)) \\
+=& \ord((N_1 + N_2))  \sum_{j = 0}^{N_1} (\ord(j^2) + j  (N_2 - N_1)) \\
+=& \ord((N_1 + N_2))  \ord\left(\sum_{j = 0}^{N_1} j^2 + (N_2 - N_1)  \sum_{j = 0}^{N_1} j\right) \\
+=& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}N_1(N_1 + 1)(2N_1 + 1) + \frac{1}{2}(N_2 - N_1)N_1(N_1 + 1)\right) \\
+=& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}(2N_1^3 + 3N_1^2 + N_1) + \frac{1}{2}(N_2 - N_1)(N_1^2 + N_1)\right) \\
+=& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}(2N_1^3 + 3N_1^2 + N_1) + \frac{1}{2}(N_1^2N_2 - N_1^3 + N_1N_2 - N_1^2)\right) \\
+=& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}(2N_1^3 + 3N_1^2 + N_1) + \frac{1}{6}(3N_1^2N_2 - 3N_1^3 + 3N_1N_2 - 3N_1^2)\right) \\
+=& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}(2N_1^3 + 3N_1^2 + N_1 + 3N_1^2N_2 - 3N_1^3 + 3N_1N_2 - 3N_1^2)\right) \\
+=& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}(-N_1^3 + N_1 + 3N_1^2N_2 + 3N_1N_2)\right) \\
+=& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}N_1(-N_1^2 + 1 + 3N_1N_2 + 3N_2)\right) \\
+=& \ord((N_1 + N_2))  \ord(N_1^2N_2) \\
+=& \ord((N_1 + N_2)  N_2  N_1^2)
+\end{align*}
 
 Finalmente, la complejidad del algoritmo es
-$\ord(n_1  \frac{n_1!  n_2!}{(n_2 - n_1)!}) $
-$\ord((n_1 + n_2)  n_2  n_1^2)=$
+\[
+\ord\left(N_1 \frac{N_1!  N_2!}{(N_2 - N_1)!}\right) \ord((N_1 + N_2)  N_2  N_1^2) =
+\ord\left(\frac{N_1!  N_2!}{(N_2 - N_1)!} (N_1 + N_2)  N_2  N_1^3\right)
+\]
 
-\begin{center}
-$\ord(\frac{n_1!  n_2!}{(n_2 - n_1)!} $
-$(n_1 + n_2)  n_2  n_1^3)$
-\end{center}
 % \subsection{Experimentación}
 
 % Cubrir un amplio espectro.
