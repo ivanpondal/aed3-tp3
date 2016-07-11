@@ -63,13 +63,6 @@ class cograph_n_incremental_edges_experiment:public incremental_experiment<float
 
 
 
-// Calculate DP solution
-
-struct subsolution {
-    int edge_count;
-    std::vector<int> vertices;
-};
-
 void solver_dp(std::vector<std::vector<subsolution>> &dp,std::vector<info_cotree_node> &vec_cotree, uint g2_n);
 
 // probe n1 lineal dependecy
