@@ -6,6 +6,7 @@
 #include "framework/utils/graph_factory.h"
 #include "framework/utils/element_generator_int.h"
 #include "exact/exact.h"
+#include "heuristics/heuristics.h"
 
 #define MAGIC_SEED 42
 
@@ -435,9 +436,43 @@ void run_unknown_solution_instance_generation(){
 	save_instance(g1, g2, "aleatorio_n1000_d10_c050_v025");
 }
 
+void run_greedy_solution_instance_generation(){
+	ofstream greedy_solutions_file;
+	greedy_solutions_file.open("../exp/greedy_solutions");
+
+	element_generator_int e_gen;
+	adj_list_graph<int> g1, g2;
+
+	// arbol vs completo
+
+	// random
+	int n1 = 1000;
+	int n2 = 500;
+	char instance_name[80] = "arbol_n1000_vs_completo_n500";
+	graph<pair<int, int>> *greedy_solution;
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n1);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n2);
+	e_gen.reset();
+
+	greedy_solution = solve_greedy(g1,g2);
+	save_solution_entry(greedy_solutions_file, instance_name, greedy_solution->m());
+	delete greedy_solution;
+
+
+
+
+}
+
 int main (int argc, char* argv[]) {
-	// instances were we know the optimum solution
-	run_known_solution_instance_generation();
-	// instances were we don't
-	run_unknown_solution_instance_generation();
+	// // instances were we know the optimum solution
+	// run_known_solution_instance_generation();
+	// // instances were we don't
+	// run_unknown_solution_instance_generation();
+	// greedy instances 
+	run_greedy_solution_instance_generation();
 }
