@@ -12,7 +12,7 @@ INSTANCE_GENERATOR_EXECUTABLE=instance_generator
 INSTANCE_GENERATOR_OBJECT=$(addsuffix .o, $(INSTANCE_GENERATOR_EXECUTABLE))
 
 # excercise variables
-EXECUTABLES_BASE=ej2 ej3 ej4 ej5 #exercise1 excercise2 ... exerciseN
+EXECUTABLES_BASE=ej2 ej3 ej4 ej5 ej6 #exercise1 excercise2 ... exerciseN
 
 EXECUTABLES=$(addsuffix _solver, $(EXECUTABLES_BASE))
 MAIN_OBJECT=main.o
@@ -45,7 +45,7 @@ EXACT_OBJECTS_DIR=$(addprefix $(EXACT_DIR)/,$(EXACT_OBJECTS))
 # heuristics variables
 HEURISTICS_DIR=heuristics
 HEURISTICS_HEADER=heuristics.h
-HEURISTICS_OBJECTS=greedy.o local_search.o
+HEURISTICS_OBJECTS=greedy.o local_search.o tabu.o
 HEURISTICS_OBJECTS_DIR=$(addprefix $(HEURISTICS_DIR)/,$(HEURISTICS_OBJECTS))
 
 VPATH=$(addprefix $(FRAMEWORK_DIR)/,$(FRAMEWORK_FOLDERS)) $(EXACT_DIR) $(HEURISTICS_DIR)
