@@ -155,5 +155,12 @@ graph<int>* induced_supgraph(
     const graph<int>& g,
     const std::vector<int>& subgraph_vertices
 );
+// Calculate DP solution
+struct subsolution {
+ int edge_count;
+ std::vector<int> vertices;
+};
+
+void solver_dp(std::vector<std::vector<subsolution>> &dp,std::vector<info_cotree_node> &vec_cotree, uint g2_n);
 
 #endif	// EXACT_H
