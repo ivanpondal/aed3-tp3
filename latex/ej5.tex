@@ -72,7 +72,56 @@ puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
     \label{fig:ej5:vecindad1}
 \end{figure}
 
-% Pseudocódigo de una iteración
+\noindent\textbf{Pseudocódigo de una iteración}
+\bigskip
+
+\begin{algorithm}[H]
+    \SetAlgoVlined
+    \caption{Iteración de la vecindad $N_1$}
+    \Input{Dos grafos $G_1$ y $G_2$, con $\#V(G_1) < \#V(G_2)$, y un tercer
+    grafo \textit{solución}, cuyos nodos son pares de $V(G_1) \times V(G_2)$,
+    representando la solución a \acr{MCS} que se pretende mejorar. Este último
+    grafo será modificado por el algoritmo.}
+    \Output{Un valor de verdad indicando si se pudo mejorar la solución.}
+    \textit{hay\_mejora} $\gets$ \textsf{falso} \;
+    \textit{mejor\_diferencia\_ejes} $\gets$ 0 \;
+
+    \ForEach{vértice $(v, w)$ de \textit{solución}} {
+        \ForEach{vértice $w'$ de $G_2$ que no esté en el mapeo} {
+            \textit{cant\_aristas\_perdidas} $\gets$ grado de $(v, w)$ en \textit{solución} \;
+            \textit{aristas\_nuevas} $\gets$ vector vacío \;
+            \ForEach {vecino $\tilde{w}$ de $w_2$ en $G_2$} {
+                \If{$\tilde{w}$ está en el mapeo} {
+                    $\tilde{v}$ $\gets$ nodo de $G_1$ al que está mapeado $\tilde{w}$ \;
+                    \If{$\tilde{v}$ es vecino de $v$ en $G_1$} {
+                        agregar $(\tilde{v}, \tilde{w})$ \textit{aristas\_nuevas} \;
+                    }
+                }
+            }
+            \textit{diferencia\_aristas} $\gets$ (tamaño de \textit{aristas\_nuevas})
+                $-$ \textit{cant\_aristas\_perdidas} \;
+            \If{\textit{diferencia\_ejes} $>$ \textit{mejor\_diferencia\_ejes}} {
+                \textit{hay\_mejora} $\gets$ \textsf{verdadero} \;
+                \textit{mejor\_diferencia\_ejes} $\gets$ \textit{diferencia\_ejes} \;
+                \textit{mejor\_para\_eliminar} $\gets$ $(v, w)$ \;
+                \textit{mejor\_para\_agregar} $\gets$ $(v, w')$ \;
+                \textit{mejor\_aristas\_nuevas} $\gets$ \textit{aristas\_nuevas} \;
+            }
+        }
+    }
+    \eIf{\textit{hay\_mejora}} {
+        eliminar el nodo \textit{mejor\_para\_eliminar} de \textit{solución} \;
+        agregar el nodo \textit{mejor\_para\_agregar} a \textit{solución} \;
+        \ForEach{par $(\tilde{v}, \tilde{w})$ en \textit{aristas\_nuevas}} {
+            agregar en \textit{solución} una arista entre
+                \textit{mejor\_para\_agregar} y $(\tilde{v}, \tilde{w})$ \;
+        }
+        \Return{\textsf{verdadero}}
+    } {
+        \Return{\textsf{falso}}
+    }
+\end{algorithm}
+\bigskip
 
 % Complejidad temporal
 
@@ -121,7 +170,5 @@ iteraciones menor (se puede decir que $N_2$ es una vecindad más
 % Complejidad temporal
 
 \subsection{Implementación}
-
-\subsection{Complejidad temporal}
 
 \subsection{Experimentación}
