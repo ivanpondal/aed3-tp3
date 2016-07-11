@@ -360,13 +360,49 @@ $\ord((n_1 + n_2)  n_2  n_1^2)$
 ~
 
 Finalmente, la complejidad del algoritmo es
-$\ord(n_1  \frac{n_1!  n_2!}{(n_2 - n_1)!}) $
-$\ord((n_1 + n_2)  n_2  n_1^2)=$
+$\ord(n_1  \frac{n_1!  n_2!}{(n_2 - n_1)!}) \ord((n_1 + n_2)  n_2  n_1^2)=$
 
 \begin{center}
-$\ord(\frac{n_1!  n_2!}{(n_2 - n_1)!} $
-$(n_1 + n_2)  n_2  n_1^3)$
+$\ord(\frac{n_1!  n_2!}{(n_2 - n_1)!} (n_1 + n_2)  n_2  n_1^3)$
 \end{center}
-% \subsection{Experimentación}
 
-% Cubrir un amplio espectro.
+\subsection{Experimentación}
+
+Como fue visto anteriormente, la complejidad del algoritmo es
+$\ord(\frac{n_1!  n_2!}{(n_2 - n_1)!} (n_1 + n_2)  n_2  n_1^3)$ siempre que
+valga $n_1 \leq n_2$.
+
+Cubrir un amplio espectro.
+
+Para evitar la interferencia en las mediciones de la morfología del grafo, se
+fijó cada experimento para una familia de grafos determinada. Así, se tiene un
+mayor control de las variables involucradas. Sin embargo, para verificar que
+la cota teórica de complejidad no se cumple de forma accidental, sino que vale
+para grafos de cualquier tipo, se probó con varias familias distintas.
+
+\begin{figure}[H]
+    \label{fig:exp2:n_1=n_2}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                title={},
+                xlabel={Cantidad de nodos ($n_1$)},
+                ylabel={Tiempo de ejecución (nanosegundos)},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=north west,
+                legend cell align=left,
+                ymode=log
+                % xmin=100
+            ]
+            \addplot[color=black] table[x index=0,y index=1]{../exp/ej2/equal_complete_vs_complete};
+            \addplot[color=blue] table[x index=0,y index=1]{../exp/ej2/equal_tree_vs_tree};
+
+            \legend{$T_{(co_n)}$}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Tiempos de ejecución observados para $n_1 = n_2$.}
+\end{figure}
