@@ -51,8 +51,8 @@ pseudocódigo del algoritmo que itera sobre cada una de ellas y selecciona,
 dada una solución cualquiera, la mejor entre sus soluciones vecinas, y una
 estimación teórica de la complejidad temporal de dicha iteración.
 
-\subsubsection{Vecindad $N_1$}
-Dos soluciones $s, s' \in S$ se consideran vecinas en la vecindad $N_1$
+\subsubsection{Vecindad I}
+Dos soluciones $s, s' \in S$ se consideran vecinas en la vecindad I
 si $s'$ es el resultado de modificar el mapeo de exactamente uno de los nodos
 de $G_1$ en $s$, asignándole un nodo de $G_2$ que esté libre en $s$. Es
 decir, $(s, s') \in N_1$ si y solo si
@@ -68,7 +68,7 @@ puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
     \centering
     \includegraphics{imagenes/ex5_vecindad1.pdf}
     \caption{Ejemplo de soluciones vecinas que es posible obtener mediante la
-    vecindad $N_1$.}
+    vecindad I.}
     \label{fig:ej5:vecindad1}
 \end{figure}
 
@@ -77,14 +77,14 @@ puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
 
 \begin{algorithm}[H]
     \SetAlgoVlined
-    \caption{Iteración de la vecindad $N_1$}
+    \caption{Iteración de la vecindad I}
     \Input{Dos grafos $G_1$ y $G_2$, con $\#V(G_1) < \#V(G_2)$, y un tercer
     grafo \textit{solución}, cuyos nodos son pares de $V(G_1) \times V(G_2)$,
     representando la solución a \acr{MCS} que se pretende mejorar. Este último
     grafo será modificado por el algoritmo.}
     \Output{Un valor de verdad indicando si se pudo mejorar la solución.}
     \textit{hay\_mejora} $\gets$ \textsf{falso} \;
-    \textit{mejor\_diferencia\_ejes} $\gets$ 0 \;
+    \textit{mejor\_diferencia\_aristas} $\gets$ 0 \;
 
     \ForEach{vértice $(v, w)$ de \textit{solución}} {
         \ForEach{vértice $w'$ de $G_2$ que no esté en el mapeo} {
@@ -94,15 +94,15 @@ puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
                 \If{$\tilde{w}$ está en el mapeo} {
                     $\tilde{v}$ $\gets$ nodo de $G_1$ al que está mapeado $\tilde{w}$ \;
                     \If{$\tilde{v}$ es vecino de $v$ en $G_1$} {
-                        agregar $(\tilde{v}, \tilde{w})$ \textit{aristas\_nuevas} \;
+                        agregar $(\tilde{v}, \tilde{w})$ a \textit{aristas\_nuevas} \;
                     }
                 }
             }
-            \textit{diferencia\_aristas} $\gets$ (tamaño de \textit{aristas\_nuevas})
+            \textit{diferencia\_aristas} $\gets$ $\vert$\textit{aristas\_nuevas}$\vert$
                 $-$ \textit{cant\_aristas\_perdidas} \;
-            \If{\textit{diferencia\_ejes} $>$ \textit{mejor\_diferencia\_ejes}} {
+            \If{\textit{diferencia\_aristas} $>$ \textit{mejor\_diferencia\_aristas}} {
                 \textit{hay\_mejora} $\gets$ \textsf{verdadero} \;
-                \textit{mejor\_diferencia\_ejes} $\gets$ \textit{diferencia\_ejes} \;
+                \textit{mejor\_diferencia\_aristas} $\gets$ \textit{diferencia\_aristas} \;
                 \textit{mejor\_para\_eliminar} $\gets$ $(v, w)$ \;
                 \textit{mejor\_para\_agregar} $\gets$ $(v, w')$ \;
                 \textit{mejor\_aristas\_nuevas} $\gets$ \textit{aristas\_nuevas} \;
@@ -112,7 +112,7 @@ puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
     \eIf{\textit{hay\_mejora}} {
         eliminar el nodo \textit{mejor\_para\_eliminar} de \textit{solución} \;
         agregar el nodo \textit{mejor\_para\_agregar} a \textit{solución} \;
-        \ForEach{par $(\tilde{v}, \tilde{w})$ en \textit{aristas\_nuevas}} {
+        \ForEach{par $(\tilde{v}, \tilde{w})$ en \textit{mejor\_aristas\_nuevas}} {
             agregar en \textit{solución} una arista entre
                 \textit{mejor\_para\_agregar} y $(\tilde{v}, \tilde{w})$ \;
         }
@@ -125,8 +125,8 @@ puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
 
 % Complejidad temporal
 
-\subsubsection{Vecindad $N_2$}
-Dos soluciones $s, s' \in S$ se consideran vecinas en la vecindad $N_2$
+\subsubsection{Vecindad II}
+Dos soluciones $s, s' \in S$ se consideran vecinas en la vecindad II
 si $s'$ es el resultado de aplicar sobre $s$ alguno de estos cambios:
 \begin{itemize}
     \item \textsc{Permutación:} permutar los mapeos de dos nodos de $G_1$, de
@@ -138,7 +138,7 @@ si $s'$ es el resultado de aplicar sobre $s$ alguno de estos cambios:
         \Rightarrow s(w) = s'(w)$.
     \end{itemize}
     \item \textsc{Intercambio:} la misma operación que define la vecindad
-    $N_1$, es decir, modificar el mapeo de exactamente uno de los nodos
+    I, es decir, modificar el mapeo de exactamente uno de los nodos
     de $G_1$, asignándole un nodo de $G_2$ que esté libre en $s$. Formalmente,
     \begin{itemize}
         \item $(\exists \ v \in G_1)\ s(v) \neq s'(v)$, y
@@ -146,26 +146,152 @@ si $s'$ es el resultado de aplicar sobre $s$ alguno de estos cambios:
     \end{itemize}
 \end{itemize}
 
-La vecindad $N_2$ no tiene problemas de definición en el caso de que $\#V(G_1)
+La vecindad II no tiene problemas de definición en el caso de que $\#V(G_1)
 = \#V (G_2)$.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics{imagenes/ex5_vecindad2.pdf}
     \caption{Soluciones vecinas que es posible obtener mediante la vecindad
-    $N_2$.}
+    II.}
     \label{fig:ej5:vecindad2}
 \end{figure}
 
-Cabe destacar que la vecindad $N_1$ está contenida en la vecindad $N_2$,
+Cabe destacar que la vecindad I está contenida en la vecindad II,
 siendo esta última considerablemente más grande. Desde un punto de vista
 computacional, esto tiene como desventaja inmediata un mayor costo a la hora
 de recorrer y explorar la vecindad, pero corre con la ventaja de que resulta
 posible pasar de una solución dada a cualquier otra en una cantidad de
 iteraciones menor (se puede decir que $N_2$ es una vecindad más
-\emph{densamente conectada} que $N_1$).
+\emph{densamente conectada} que I).
 
-% Pseudocódigo de una iteración
+\noindent\textbf{Pseudocódigo de una iteración}
+\bigskip
+
+\begin{algorithm}[H]
+    \SetAlgoVlined
+    \caption{Iteración de la vecindad II}
+    \Input{Dos grafos $G_1$ y $G_2$, con $\#V(G_1) < \#V(G_2)$, y un tercer
+    grafo \textit{solución}, cuyos nodos son pares de $V(G_1) \times V(G_2)$,
+    representando la solución a \acr{MCS} que se pretende mejorar. Este último
+    grafo será modificado por el algoritmo.}
+    \Output{Un valor de verdad indicando si se pudo mejorar la solución.}
+    \textit{hay\_mejora} $\gets$ \textsf{falso} \;
+    \textit{mejor\_diferencia\_aristas} $\gets$ 0 \;
+
+    \ForEach{vértice $w_1$ de $G_2$} {
+        \ForEach{vértice $w_2$ de $G_2$} {
+            \textit{diferencia\_aristas} $\gets$ $0$ \;
+            \uIf{$w_1$ y $w_2$ están en el mapeo} {
+                (Código extraido como Algoritmo \ref{alg:ej5:vec2:permutacion})
+            }
+            \ElseIf{$w_1$ está en el mapeo o $w_2$ está en el mapeo} {
+                (Código extraido como Algoritmo \ref{alg:ej5:vec2:intercambio})
+            }
+            \If{\textit{diferencia\_aristas} $>$ \textit{mejor\_diferencia\_aristas}} {
+                \textit{hay\_mejora} $\gets$ \textsf{verdadero} \;
+                \textit{mejor\_diferencia\_aristas} $\gets$ \textit{diferencia\_aristas} \;
+                \textit{mejor\_acción} $\gets$ \textit{acción} \;
+                \textit{mejor\_1} $\gets$ $(v_1, w_1)$ \;
+                \textit{mejor\_2} $\gets$ $(v_2, w_2)$ \;
+                \textit{mejor\_aristas\_nuevas\_1} $\gets$ \textit{aristas\_nuevas\_1} \;
+                \textit{mejor\_aristas\_nuevas\_2} $\gets$ \textit{aristas\_nuevas\_2} \;
+            }
+        }
+    }
+    \eIf{\textit{hay\_mejora}} {
+        \uIf{\textit{mejor\_acción} $=$ \textsf{permutación}} {
+            eliminar los nodos \textit{mejor\_1} y \textit{mejor\_2} de \textit{solución} \;
+            \textit{nuevo\_1} $\gets$ (\textit{mejor\_1}.primero, \textit{mejor\_2}.segundo) \;
+            \textit{nuevo\_2} $\gets$ (\textit{mejor\_2}.primero, \textit{mejor\_1}.segundo) \;
+            agregar los nodos \textit{nuevo\_1} y \textit{nuevo\_2} a \textit{solución}\;
+            \If {\textit{mejor\_1} y \textit{mejor\_2} eran adyacentes en \textit{solución}} {
+                agregar en \textit{solución} una arista entre \textit{mejor\_1} y \textit{mejor\_2} \;
+            }
+            \ForEach{par $(\tilde{v}, \tilde{w})$ en \textit{mejor\_aristas\_nuevas\_1}} {
+                agregar en \textit{solución} una arista entre
+                    \textit{mejor\_1} y $(\tilde{v}, \tilde{w})$ \;
+            }
+            \ForEach{par $(\tilde{v}, \tilde{w})$ en \textit{mejor\_aristas\_nuevas\_2}} {
+                agregar en \textit{solución} una arista entre
+                    \textit{mejor\_2} y $(\tilde{v}, \tilde{w})$ \;
+            }
+        }
+        \ElseIf{\textit{mejor\_accion} $=$ \textsf{intercambio}} {
+            eliminar el nodo \textit{mejor\_1} de \textit{solución} \;
+            agregar el nodo \textit{mejor\_2} a \textit{solución} \;
+            \ForEach{par $(\tilde{v}, \tilde{w})$ en \textit{mejor\_aristas\_nuevas\_1}} {
+                agregar en \textit{solución} una arista entre
+                    \textit{mejor\_1} y $(\tilde{v}, \tilde{w})$ \;
+            }
+        }
+        \Return{\textsf{verdadero}}
+    } {
+        \Return{\textsf{falso}}
+    }
+\end{algorithm}
+\bigskip
+
+\begin{algorithm}[H]
+    \SetAlgoVlined
+    \caption{Iteración de la vecindad II (Sección correspondiente a la acción \textsc{Permutación})}
+    \label{alg:ej5:vec2:permutacion}
+    \textit{acción} $\gets$ \textsf{permutación} \;
+    $v_1$ $\gets$ nodo de $G_1$ al que está mapeado $w_1$ \;
+    $v_2$ $\gets$ nodo de $G_1$ al que está mapeado $w_2$ \;
+    \textit{cant\_aristas\_perdidas} $\gets$ (grado de $(v_1, w_1)$ en \textit{solución}) +
+        (grado de $(v_2, w_2)$ en \textit{solución}) \;
+    \If{$(v_1, w_1)$ es adyacente a $(v_2, w_2)$ en \textit{solución}} {
+        \textit{cant\_aristas\_perdidas} $\gets$ \textit{cant\_aristas\_perdidas} $-$ $2$ \;
+    }
+    \textit{aristas\_nuevas\_1} $\gets$ vector vacío \;
+    \ForEach{vecino $\tilde{w}$ de $w_1$ en $G_2$} {
+        \If{$\tilde{w} \neq w_2$ y $\tilde{w}$ está en el mapeo} {
+            $\tilde{v}$ $\gets$ nodo de $G_1$ al que está mapeado $\tilde{w}$ \;
+            \If{$\tilde{v}$ es vecino de $v_1$ en $G_1$} {
+                agregar $(\tilde{v}, \tilde{w})$ a \textit{aristas\_nuevas\_1} \;
+            }
+        }
+    }
+    \textit{aristas\_nuevas\_2} $\gets$ vector vacío \;
+    \ForEach{vecino $\tilde{w}$ de $w_2$ en $G_2$} {
+        \If{$\tilde{w} \neq w_1$ y $\tilde{w}$ está en el mapeo} {
+            $\tilde{v}$ $\gets$ nodo de $G_1$ al que está mapeado $\tilde{w}$ \;
+            \If{$\tilde{v}$ es vecino de $v_2$ en $G_1$} {
+                agregar $(\tilde{v}, \tilde{w})$ a \textit{aristas\_nuevas\_2} \;
+            }
+        }
+    }
+    \textit{diferencia\_aristas} $\gets$ $\vert$\textit{aristas\_nuevas\_1}$\vert$ $+$
+        $\vert$\textit{aristas\_nuevas\_2}$\vert$ $-$ \textit{cant\_aristas\_perdidas} \;
+\end{algorithm}
+\bigskip
+
+\begin{algorithm}[H]
+    \SetAlgoVlined
+    \caption{Iteración de la vecindad II (Sección correspondiente a la acción \textsc{Intercambio})}
+    \label{alg:ej5:vec2:intercambio}
+    \textit{acción} $\gets$ \textsf{intercambio} \;
+    \If{$w_1$ no forma parte del mapeo} {
+        llamar $w_1$ a $w_2$ y viceversa (para poder asumir
+            que $w_1$ es el nodo que está mapeado) \;
+    }
+    $v_1$ $\gets$ nodo de $G_1$ al que está mapeado $w_1$ \;
+    $v_2$ $\gets$ $v_1$ \;
+    \textit{cant\_aristas\_perdidas} $\gets$ grado de $(v_1, w_1)$ en \textit{solución} \;
+    \textit{aristas\_nuevas\_1} $\gets$ vector vacío \;
+    \ForEach {vecino $\tilde{w}$ de $w_2$ en $G_2$} {
+        \If{$\tilde{w}$ está en el mapeo} {
+            $\tilde{v}$ $\gets$ nodo de $G_1$ al que está mapeado $\tilde{w}$ \;
+            \If{$\tilde{v}$ es vecino de $v_1$ en $G_1$} {
+                agregar $(\tilde{v}, \tilde{w})$ a \textit{aristas\_nuevas\_1} \;
+            }
+        }
+    }
+    \textit{diferencia\_aristas} $\gets$ $\vert$\textit{aristas\_nuevas}$\vert$
+        $-$ \textit{cant\_aristas\_perdidas} \;
+\end{algorithm}
+\bigskip
 
 % Complejidad temporal
 
