@@ -111,4 +111,8 @@ const std::vector<std::string> unknown_solution_instances = {
     "aleatorio_n1000_d10_c050_v025"
 };
 
+const std::vector<std::string> greedy_solution_instances = {
+    "greedy_solution_instances"
+};
+
 #endif  // AED3_TP3_MAIN_H
