@@ -48,8 +48,12 @@ sucesivas veces entre soluciones vecinas.
 
 A continuación se describen las dos vecindades planteadas, junto con el
 pseudocódigo del algoritmo que itera sobre cada una de ellas y selecciona,
-dada una solución cualquiera, la mejor entre sus soluciones vecinas, y una
-estimación teórica de la complejidad temporal de dicha iteración.
+dada una solución cualquiera, la mejor entre sus soluciones vecinas. También
+se calcula, en cada caso, una cota teórica para la complejidad de dicho
+algoritmo. Para esto se tienen en cuenta las estructuras utilizadas al
+implementarlo; muchas de las operaciones que se consideran $\ord(1)$ lo son en
+realidad al considerar el costo amortizado, dado que varios de los mapeos
+necesarios se implementan mediante tablas de \emph{hash}.
 
 \subsubsection{Vecindad I}
 Dos soluciones $s, s' \in S$ se consideran vecinas en la vecindad I
