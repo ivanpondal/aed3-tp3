@@ -93,7 +93,7 @@ void quality_exp_local_search_without_swap::clean_solution() {
 
 void g1_vs_g2_neighbourhood_1_proportion_incremental_experiment::load_instance(incremental_experiment_input<float,
 	star_solution >*input) {
-	cout << "neighbourhood_proportion :  " << input->get_inc_val() << endl;
+	//cout << "neighbourhood_proportion :  " << input->get_inc_val() << endl;
 	// cout << "g1.n() :  " << input->get_subject().g1.n()<< endl;
 	// cout << "g2.n() :  " << input->get_subject().g2.n()<< endl;
 
@@ -102,9 +102,27 @@ void g1_vs_g2_neighbourhood_1_proportion_incremental_experiment::load_instance(i
 int g1_vs_g2_neighbourhood_1_proportion_incremental_experiment::solve_instance(incremental_experiment_input<float,
 	star_solution > *input){
 	// solve_local_search(graph<int>&, graph<int>&, graph<std::pair<int, int> >&, int, int, float, bool)
-		graph<pair<int, int>>* h = solve_local_search(input->get_subject().g1, input->get_subject().g2,
+	graph<pair<int, int>>* h = solve_local_search(input->get_subject().g1, input->get_subject().g2,
 		*input->get_subject().greedy_solve,1,-1,input->get_inc_val(),true);
-	cout << "h->m() :  " << h->m() << endl;
+	//cout << "h->m() :  " << h->m() << endl;
+	return h->m();
+
+}
+
+void g1_vs_g2_neighbourhood_2_proportion_incremental_experiment::load_instance(incremental_experiment_input<float,
+	star_solution >*input) {
+	//cout << "neighbourhood_proportion :  " << input->get_inc_val() << endl;
+	// cout << "g1.n() :  " << input->get_subject().g1.n()<< endl;
+	// cout << "g2.n() :  " << input->get_subject().g2.n()<< endl;
+
+}
+
+int g1_vs_g2_neighbourhood_2_proportion_incremental_experiment::solve_instance(incremental_experiment_input<float,
+	star_solution > *input){
+	// solve_local_search(graph<int>&, graph<int>&, graph<std::pair<int, int> >&, int, int, float, bool)
+		graph<pair<int, int>>* h = solve_local_search(input->get_subject().g1, input->get_subject().g2,
+		*input->get_subject().greedy_solve,2,-1,input->get_inc_val(),true);
+	//cout << "h->m() :  " << h->m() << endl;
 	return h->m();
 
 }
@@ -118,7 +136,8 @@ void run_experimentation(){
 	experiment_suite  neighbourhood_proportion_calibrate_exp_suite;
 	
 	// quality exp
-	int repetitions_val = 1;
+	int repetitions_val = 3;
+	int sample_val = 20;
 
 	// // quality local_search_2_exp
 	// quality_exp_local_search_with_swap local_search_2_exp(
@@ -138,9 +157,7 @@ void run_experimentation(){
 
 
 
-	// neighbourhood proportion calibrate
 	
-	// neighbourhood 1
 	element_generator_int e_gen;
 	// generate graph families
 	adj_list_graph<int> big_tree;
@@ -150,15 +167,34 @@ void run_experimentation(){
 	graph_factory<int>::add_n_tree_vertices(small_tree, e_gen, 400);
 	
 	e_gen.reset();
-	adj_list_graph<int> complete;
-	graph_factory<int>::add_n_vertices_and_all_edges(complete, e_gen, 400);
+	adj_list_graph<int> big_complete;
+	graph_factory<int>::add_n_vertices_and_all_edges(big_complete, e_gen, 400);
+	e_gen.reset();
+	adj_list_graph<int> small_complete;
+	graph_factory<int>::add_n_vertices_and_all_edges(small_complete, e_gen, 400);
 	e_gen.reset();
 	adj_list_graph<int> big_cicle = graph_factory<int>::cycle_graph(e_gen, 800);
+	e_gen.reset();
 	adj_list_graph<int> small_cicle = graph_factory<int>::cycle_graph(e_gen, 400);
+	e_gen.reset();
+	adj_list_graph<int> big_bipartite_low_edges = graph_factory<int>::random_bipartite_graph(e_gen, 200, 200,0.1f);
+	e_gen.reset();
+	adj_list_graph<int> small_bipartite_low_edges = graph_factory<int>::random_bipartite_graph(e_gen, 100, 100,0.1f);
+	e_gen.reset();
+	adj_list_graph<int> big_bipartite_some_edges = graph_factory<int>::random_bipartite_graph(e_gen, 200, 200,0.5f);
+	e_gen.reset();
+	adj_list_graph<int> small_bipartite_some_edges = graph_factory<int>::random_bipartite_graph(e_gen, 100, 100,0.5f);
+	e_gen.reset();
+	adj_list_graph<int> big_bipartite_complete = graph_factory<int>::random_bipartite_graph(e_gen, 200, 200,1.0f);
+	e_gen.reset();
+	adj_list_graph<int> small_bipartite_complete = graph_factory<int>::random_bipartite_graph(e_gen, 100, 100,1.0f);
+
 	star_solution parameters;
 	graph<pair<int, int>>* start_point;
 
-
+	// neighbourhood proportion calibrate
+	
+	// neighbourhood 1
 
 	// big_tree_vs_small_tree 
 	start_point = solve_greedy(small_tree,big_tree);
@@ -167,8 +203,8 @@ void run_experimentation(){
 	parameters.g2 =  big_tree;
 	parameters.greedy_solve = start_point;
 
-	incremental_experiment_input_float< star_solution >  big_tree_vs_small_tree_input(0.0f, 1.0f, 3, 5,
-		10, parameters, "../exp/ej5/big_tree_vs_small_tree_neighbourhood_1_proportion");
+	incremental_experiment_input_float< star_solution >  big_tree_vs_small_tree_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_tree_vs_small_tree_neighbourhood_1_proportion");
 
     g1_vs_g2_neighbourhood_1_proportion_incremental_experiment  big_tree_vs_small_tree_exp = 
     	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_tree_vs_small_tree_input);
@@ -182,40 +218,40 @@ void run_experimentation(){
 	parameters.g2 =  big_cicle;
 	parameters.greedy_solve = start_point;
 
-	incremental_experiment_input_float< star_solution >  big_cicle_vs_small_cicle_input(0.0f, 1.0f, 3, 5,
-		10, parameters, "../exp/ej5/big_cicle_vs_small_cicle_neighbourhood_1_proportion");
+	incremental_experiment_input_float< star_solution >  big_cicle_vs_small_cicle_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_cicle_vs_small_cicle_neighbourhood_1_proportion");
 
     g1_vs_g2_neighbourhood_1_proportion_incremental_experiment  big_cicle_vs_small_cicle_exp = 
     	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_cicle_vs_small_cicle_input);
 
 
 
-	// tree_vs_complete 
-	start_point = solve_greedy(complete,big_tree);
+	// tree_vs_big_complete
+	start_point = solve_greedy(big_complete,big_tree);
 
-	parameters.g1 =  complete;
+	parameters.g1 =  big_complete;
 	parameters.g2 =  big_tree;
 	parameters.greedy_solve = start_point;
 
-	incremental_experiment_input_float< star_solution >  tree_vs_complete_input(0.0f, 1.0f, 3, 5,
-		10, parameters, "../exp/ej5/tree_vs_complete_neighbourhood_1_proportion");
+	incremental_experiment_input_float< star_solution >  big_tree_vs_big_complete_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_tree_vs_big_complete_neighbourhood_1_proportion");
 
-    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment tree_vs_complete_exp = 
-    	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&tree_vs_complete_input);
+    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_tree_vs_big_complete_exp = 
+    	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_tree_vs_big_complete_input);
 
-    // cicle_vs_complete 
-    start_point = solve_greedy(complete,big_cicle);
+    // big_cicle_vs_big_complete 
+    start_point = solve_greedy(big_complete,big_cicle);
 
 
-	parameters.g1 =  complete;
+	parameters.g1 =  big_complete;
 	parameters.g2 =  big_cicle;
 	parameters.greedy_solve = start_point;
 
-	incremental_experiment_input_float< star_solution >  cicle_vs_complete_input(0.0f, 1.0f, 3, 5,
-		10, parameters, "../exp/ej5/cicle_vs_complete_neighbourhood_1_proportion");
+	incremental_experiment_input_float< star_solution >  big_cicle_vs_big_complete_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_cicle_vs_big_complete_neighbourhood_1_proportion");
 
-    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment cicle_vs_complete_exp = 
-    	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&cicle_vs_complete_input);
+    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_cicle_vs_big_complete_exp = 
+    	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_cicle_vs_big_complete_input);
 
  
 
@@ -227,46 +263,341 @@ void run_experimentation(){
 	parameters.g2 =  big_tree;
 	parameters.greedy_solve = start_point;
 
-	incremental_experiment_input_float< star_solution >  big_tree_vs_small_cicle_input(0.0f, 1.0f, 3, 5,
-		10, parameters, "../exp/ej5/big_tree_vs_small_cicle_neighbourhood_1_proportion");
+	incremental_experiment_input_float< star_solution >  big_tree_vs_small_cicle_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_tree_vs_small_cicle_neighbourhood_1_proportion");
 
     g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_tree_vs_small_cicle_exp = 
     	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_tree_vs_small_cicle_input);
 
     // big_cicle_vs_small_tree_exp
 
-     start_point = solve_greedy(small_tree,big_tree);
+    start_point = solve_greedy(small_tree,big_tree);
 
     parameters.g1 =  small_tree;
 	parameters.g2 =  big_cicle;
 	parameters.greedy_solve = start_point;
 
-	incremental_experiment_input_float< star_solution >  big_cicle_vs_small_tree_input(0.0f, 1.0f, 3, 5,
-		10, parameters, "../exp/ej5/big_cicle_vs_small_tree_1_proportion");
+	incremental_experiment_input_float< star_solution >  big_cicle_vs_small_tree_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_cicle_vs_small_tree_1_proportion");
 
     g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_cicle_vs_small_tree_exp = 
     	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_cicle_vs_small_tree_input);
 
 
-    //neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_tree_exp);
+    // big_bipartite_low_edges_vs_small_bipartite_low_edges
+    start_point = solve_greedy(small_bipartite_low_edges,big_bipartite_low_edges);
 
-   	//neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_cicle_exp);
+    parameters.g1 =  small_bipartite_low_edges;
+	parameters.g2 =  big_bipartite_low_edges;
+	parameters.greedy_solve = start_point;
 
-    //neighbourhood_proportion_calibrate_exp_suite.add(&cicle_vs_complete_exp);
+	incremental_experiment_input_float< star_solution >  big_bipartite_low_edges_vs_small_bipartite_low_edges_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_low_edges_vs_small_bipartite_low_edges_neighbourhood_1_proportion");
+
+    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_bipartite_low_edges_vs_small_bipartite_low_edges_exp = 
+    	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_bipartite_low_edges_vs_small_bipartite_low_edges_input);
+
+
+    // big_bipartite_some_edges_vs_small_bipartite_some_edges
+
+    start_point = solve_greedy(small_bipartite_some_edges,big_bipartite_some_edges);
+
+    parameters.g1 =  small_bipartite_some_edges;
+	parameters.g2 =  big_bipartite_some_edges;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_small_bipartite_some_edges_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_small_bipartite_some_edges_neighbourhood_1_proportion");
+
+    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_bipartite_some_edges_vs_small_bipartite_some_edges_exp = 
+    	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_bipartite_some_edges_vs_small_bipartite_some_edges_input);
+
+    // big_bipartite_complete_vs_small_bipartite_complete
+
+    start_point = solve_greedy(small_bipartite_complete,big_bipartite_complete);
+
+    parameters.g1 =  small_bipartite_complete;
+	parameters.g2 =  big_bipartite_complete;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_complete_vs_small_bipartite_complete_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_complete_vs_small_bipartite_complete_neighbourhood_1_proportion");
+
+    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_bipartite_complete_vs_small_bipartite_complete_exp = 
+    	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_bipartite_complete_vs_small_bipartite_complete_input);
+
+    // big_bipartite_some_edges_vs_big_tree
+
+    start_point = solve_greedy(big_bipartite_some_edges,big_tree);
+
+    parameters.g1 =  big_bipartite_some_edges;
+	parameters.g2 =  big_tree;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_big_tree_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_big_tree_neighbourhood_1_proportion");
+
+    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_bipartite_some_edges_vs_big_tree_exp = 
+    	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_bipartite_some_edges_vs_big_tree_input);
+
+    // big_bipartite_some_edges_vs_big_cicle
+
+    start_point = solve_greedy(big_bipartite_some_edges,big_cicle);
+
+    parameters.g1 =  big_bipartite_some_edges;
+	parameters.g2 =  big_cicle;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_big_cicle_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_big_cicle_neighbourhood_1_proportion");
+
+    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_bipartite_some_edges_vs_big_cicle_exp = 
+    	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_bipartite_some_edges_vs_big_cicle_input);
+
+    // big_bipartite_some_edges_vs_small_complete	
+
+
+    start_point = solve_greedy(big_bipartite_some_edges,small_complete);
+
+    parameters.g1 =  small_complete;
+	parameters.g2 =  big_bipartite_some_edges;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_small_complete_input(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_1_proportion");
+
+    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_bipartite_some_edges_vs_small_complete_exp = 
+    	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_bipartite_some_edges_vs_small_complete_input);
+
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_tree_exp);
+
+   	neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_cicle_exp);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_big_complete_exp);
     
-    //neighbourhood_proportion_calibrate_exp_suite.add(&tree_vs_complete_exp);
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_big_complete_exp);
 
-    //neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp);
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp);
 
-    //neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp);
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_low_edges_vs_small_bipartite_low_edges_exp);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_bipartite_some_edges_exp);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_complete_vs_small_bipartite_complete_exp);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp);
 
     
 
 
+    // neighbourhood 2
 
-    neighbourhood_proportion_calibrate_exp_suite.run();
+    // big_tree_vs_small_tree 
+	start_point = solve_greedy(small_tree,big_tree);
+
+	parameters.g1 =  small_tree;
+	parameters.g2 =  big_tree;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_tree_vs_small_tree_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_tree_vs_small_tree_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment  big_tree_vs_small_tree_exp_2 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_tree_vs_small_tree_input_2);
+
+   
+
+    // big_cicle_vs_small_cicle
+	start_point = solve_greedy(small_cicle,big_cicle);
+
+	parameters.g1 =  small_cicle;
+	parameters.g2 =  big_cicle;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_cicle_vs_small_cicle_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_cicle_vs_small_cicle_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment  big_cicle_vs_small_cicle_exp_2 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_cicle_vs_small_cicle_input_2);
 
 
-	
+
+	// tree_vs_big_complete
+	start_point = solve_greedy(big_complete,big_tree);
+
+	parameters.g1 =  big_complete;
+	parameters.g2 =  big_tree;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_tree_vs_big_complete_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_tree_vs_big_complete_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_tree_vs_big_complete_exp_2 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_tree_vs_big_complete_input_2);
+
+    // big_cicle_vs_big_complete 
+    start_point = solve_greedy(big_complete,big_cicle);
+
+
+	parameters.g1 =  big_complete;
+	parameters.g2 =  big_cicle;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_cicle_vs_big_complete_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_cicle_vs_big_complete_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_cicle_vs_big_complete_exp_2 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_cicle_vs_big_complete_input_2);
+
+ 
+
+    //big_tree_vs_small_cicle_exp
+
+    start_point = solve_greedy(small_cicle,big_tree);
+
+    parameters.g1 =  small_cicle;
+	parameters.g2 =  big_tree;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_tree_vs_small_cicle_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_tree_vs_small_cicle_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_tree_vs_small_cicle_exp_2 = 
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_tree_vs_small_cicle_input_2);
+
+    // big_cicle_vs_small_tree_exp
+
+    start_point = solve_greedy(small_tree,big_tree);
+
+    parameters.g1 =  small_tree;
+	parameters.g2 =  big_cicle;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_cicle_vs_small_tree_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_cicle_vs_small_tree_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_cicle_vs_small_tree_exp_2 = 
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_cicle_vs_small_tree_input_2);
+
+
+    // big_bipartite_low_edges_vs_small_bipartite_low_edges
+    start_point = solve_greedy(small_bipartite_low_edges,big_bipartite_low_edges);
+
+    parameters.g1 =  small_bipartite_low_edges;
+	parameters.g2 =  big_bipartite_low_edges;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_low_edges_vs_small_bipartite_low_edges_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_low_edges_vs_small_bipartite_low_edges_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_low_edges_vs_small_bipartite_low_edges_exp_2 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_low_edges_vs_small_bipartite_low_edges_input_2);
+
+
+    // big_bipartite_some_edges_vs_small_bipartite_some_edges
+
+    start_point = solve_greedy(small_bipartite_some_edges,big_bipartite_some_edges);
+
+    parameters.g1 =  small_bipartite_some_edges;
+	parameters.g2 =  big_bipartite_some_edges;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_small_bipartite_some_edges_input_2(0.0f, 1.0f, 3, 5,
+		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_small_bipartite_some_edges_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_small_bipartite_some_edges_exp_2 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_small_bipartite_some_edges_input_2);
+
+    // big_bipartite_complete_vs_small_bipartite_complete
+
+    start_point = solve_greedy(small_bipartite_complete,big_bipartite_complete);
+
+    parameters.g1 =  small_bipartite_complete;
+	parameters.g2 =  big_bipartite_complete;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_complete_vs_small_bipartite_complete_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_complete_vs_small_bipartite_complete_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_complete_vs_small_bipartite_complete_exp_2 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_complete_vs_small_bipartite_complete_input_2);
+
+    // big_bipartite_some_edges_vs_big_tree
+
+    start_point = solve_greedy(big_bipartite_some_edges,big_tree);
+
+    parameters.g1 =  big_bipartite_some_edges;
+	parameters.g2 =  big_tree;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_big_tree_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_big_tree_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_big_tree_exp_2 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_big_tree_input_2);
+
+    // big_bipartite_some_edges_vs_big_cicle
+
+    start_point = solve_greedy(big_bipartite_some_edges,big_cicle);
+
+    parameters.g1 =  big_bipartite_some_edges;
+	parameters.g2 =  big_cicle;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_big_cicle_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_big_cicle_neighbourhood_1_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_big_cicle_exp_2 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_big_cicle_input_2);
+
+    // big_bipartite_some_edges_vs_small_complete	
+
+
+    start_point = solve_greedy(big_bipartite_some_edges,small_complete);
+
+    parameters.g1 =  big_bipartite_some_edges;
+	parameters.g2 =  small_complete;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_small_complete_input_2(0.0f, 1.0f, 3, repetitions_val,
+		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_small_complete_exp_2 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_small_complete_input_2);
+
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_tree_exp_2);
+
+   	neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_cicle_exp_2);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_big_complete_exp_2);
+    
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_big_complete_exp_2);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_low_edges_vs_small_bipartite_low_edges_exp_2);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_bipartite_some_edges_exp_2);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_complete_vs_small_bipartite_complete_exp_2);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2);
+
+
+	neighbourhood_proportion_calibrate_exp_suite.run();
 
 }

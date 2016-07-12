@@ -62,9 +62,6 @@ class cograph_n_incremental_edges_experiment:public incremental_experiment<float
 };
 
 
-
-void solver_dp(std::vector<std::vector<subsolution>> &dp,std::vector<info_cotree_node> &vec_cotree, uint g2_n);
-
 // probe n1 lineal dependecy
 class cograph_K_1_union_dp_experiment:public incremental_experiment<int, adj_list_graph<int> > {
     public:

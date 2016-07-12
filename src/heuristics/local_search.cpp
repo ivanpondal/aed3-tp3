@@ -13,35 +13,6 @@
 
 using namespace std;
 
-
-// Forward declarations
-// --------------------
-
-bool improve_solution_1(
-    graph<pair<int, int>>* solution,
-    graph<int>& g1,
-    graph<int>& g2,
-    unordered_map<int, int>& g2_to_g1_mapping,
-    unordered_set<int>& mapped_nodes,
-    unordered_set<int>& unmapped_nodes,
-    vector<int>& unmapped_nodes_vector,
-    float neighbourhood_proportion,
-    bool strict_comparisons
-);
-
-bool improve_solution_2(
-    graph<pair<int, int>>* solution,
-    graph<int>& g1,
-    graph<int>& g2,
-    unordered_map<int, int>& g2_to_g1_mapping,
-    unordered_set<int>& mapped_nodes,
-    unordered_set<int>& unmapped_nodes,
-    vector<int>& unmapped_nodes_vector,
-    float neighbourhood_proportion,
-    bool strict_comparisons
-);
-
-
 // Main heuristic structure
 // ------------------------
 
@@ -150,11 +121,23 @@ bool improve_solution_1(
     unordered_set<int>& unmapped_nodes,
     vector<int>& unmapped_nodes_vector,
     float neighbourhood_proportion,
-    bool strict_comparisons
+    bool strict_comparisons,
+    unsigned int tabu_list_size,
+    priority_queue<movement, vector<movement>,
+        movement_compare>& tabu_queue,
+    movement_compare& mc,
+    vector<movement>& tabu_list,
+    bool allow_worse,
+    const float time_delta,
+    int& max_edge_diff,
+    const float aspiration_threshold
 ) {
     vector<pair<int, int>> solution_vertices =
         solution->get_vertices();
 
+    bool use_tabu = tabu_list_size > 0;
+    bool is_tabu_mapping = false;
+    vector<pair<int, int>> tabu_free_mappings;
 
     bool any_improvement = false;
     pair<int, int> best_to_remove;
@@ -194,6 +177,32 @@ bool improve_solution_1(
                 }
 
                 int edge_diff = new_edges.size() - lost_edges;
+
+                // Check if this movement is tabu
+                if (use_tabu && allow_worse) {
+                    for (unsigned int k = 0; k < tabu_list.size(); k++) {
+                        // If this movement is in the tabu list
+                        if (tabu_list[k].mapping.first == node_mapped &&
+                                tabu_list[k].mapping.second == node_to_add
+                            ) {
+                            // If it doesn't gain much edges, we discard it
+                            if (edge_diff < max_edge_diff*aspiration_threshold) {
+                                is_tabu_mapping = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Try with next potential matching
+                    if (is_tabu_mapping) {
+                        is_tabu_mapping = false;
+                        continue;
+                    }
+                    else {
+                        tabu_free_mappings.push_back({i, j});
+                    }
+                }
+
                 bool is_improvement = strict_comparisons
                                         ? edge_diff > best_edge_diff
                                         : edge_diff >= best_edge_diff;
@@ -205,11 +214,42 @@ bool improve_solution_1(
                     best_edge_diff = edge_diff;
                     best_new_edges = new_edges;
                 }
-
             }
         }
     }
 
+    if (use_tabu && allow_worse && !tabu_free_mappings.empty() && !any_improvement) {
+        any_improvement = true;
+        pair<int, int> random_valid_mapping = tabu_free_mappings[rand() % tabu_free_mappings.size()];
+
+        int node_mapped    = solution_vertices[random_valid_mapping.first].first;   // part of g1
+        int node_to_remove = solution_vertices[random_valid_mapping.first].second;  // part of g2
+        int node_to_add    = unmapped_nodes_vector[random_valid_mapping.second];    // part of g2
+
+        int lost_edges = solution->degree({node_mapped, node_to_remove});
+
+        vector<int> new_edges;
+
+        vector<int> node_to_add_neigh = g2.neighbours(node_to_add);
+        for (unsigned int k = 0; k < node_to_add_neigh.size(); k++) {
+            if (node_to_add_neigh[k] != node_to_remove &&
+                unmapped_nodes.find(node_to_add_neigh[k]) ==
+                    unmapped_nodes.end() &&
+                g1.adjacent(node_mapped,
+                    g2_to_g1_mapping[node_to_add_neigh[k]])
+            )
+            {
+                new_edges.push_back(node_to_add_neigh[k]);
+            }
+        }
+
+        int edge_diff = new_edges.size() - lost_edges;
+
+        best_to_add = {node_mapped, node_to_add};
+        best_to_remove = {node_mapped, node_to_remove};
+        best_edge_diff = edge_diff;
+        best_new_edges = new_edges;
+    }
 
     if (any_improvement) {
         solution->remove_node(best_to_remove);
@@ -229,6 +269,40 @@ bool improve_solution_1(
                 best_new_edges[i]
             };
             solution->add_edge(best_to_add, new_edge_dest);
+        }
+
+        if (use_tabu) {
+            // If this is the new best edge diff, we update our max
+            if (best_edge_diff > max_edge_diff) {
+                max_edge_diff = best_edge_diff;
+            }
+
+            // Update time for each movement
+            for (unsigned int i = 0; i < tabu_list.size(); i++) {
+                tabu_list[i].time += time_delta;
+            }
+
+            // Update heap
+            if (!tabu_queue.empty()) {
+                make_heap(const_cast<movement*>(&tabu_queue.top()),
+                    const_cast<movement*>(&tabu_queue.top()) + tabu_queue.size(),
+                    mc);
+            }
+
+            movement mov(best_to_remove, best_edge_diff, 0);
+
+            if (tabu_list.size() < tabu_list_size) {
+                mov.pos = tabu_list.size();
+                tabu_list.push_back(mov);
+            }
+            else {
+                mov.pos = tabu_queue.top().pos;
+                tabu_queue.pop();
+                tabu_list[mov.pos] = mov;
+            }
+
+            // Add movement to tabu heap
+            tabu_queue.push(mov);
         }
 
         return true;
@@ -253,12 +327,26 @@ bool improve_solution_2(
     unordered_set<int>& unmapped_nodes,
     vector<int>& unmapped_nodes_vector,
     float neighbourhood_proportion,
-    bool strict_comparisons
+    bool strict_comparisons,
+    unsigned int tabu_list_size,
+    priority_queue<movement, vector<movement>,
+        movement_compare>& tabu_queue,
+    movement_compare& mc,
+    vector<movement>& tabu_list,
+    bool allow_worse,
+    const float time_delta,
+    int& max_edge_diff,
+    const float aspiration_threshold
 ) {
     enum action_type {none, swap, exchange};
 
     vector<pair<int, int>> solution_vertices = solution->get_vertices();
     vector<int> g2_vertices = g2.get_vertices();
+
+    bool use_tabu = tabu_list_size > 0;
+    bool is_tabu_mapping = false;
+    vector<pair<int, int>> tabu_free_mappings;
+    vector<bool> tabu_free_mapping_type;
 
     bool any_improvement = false;
     int best_edge_diff = 0;
@@ -365,6 +453,35 @@ bool improve_solution_2(
                     // cout << "    edge diff: " << edge_diff << endl;
                 }
 
+                // Check if this movement is tabu
+                if (use_tabu && allow_worse) {
+                    for (unsigned int k = 0; k < tabu_list.size(); k++) {
+                        // If this movement is in the tabu list
+                        if (tabu_list[k].mapping.first == node_1 &&
+                            tabu_list[k].mapping.second == node_2
+                        ) {
+                            // If it doesn't gain much edges, we discard it
+                            if (((tabu_list[k].is_swap && action == swap) ||
+                                (!tabu_list[k].is_swap && action == exchange)) &&
+                                edge_diff < max_edge_diff*aspiration_threshold
+                            ) {
+                                is_tabu_mapping = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Try with next potential matching
+                    if (is_tabu_mapping) {
+                        is_tabu_mapping = false;
+                        continue;
+                    }
+                    else {
+                        tabu_free_mappings.push_back({node_1, node_2});
+                        tabu_free_mapping_type.push_back(action == swap);
+                    }
+                }
+
                 bool is_improvement = strict_comparisons
                                         ? edge_diff > best_edge_diff
                                         : edge_diff >= best_edge_diff;
@@ -380,6 +497,89 @@ bool improve_solution_2(
                 }
             }
         }
+    }
+
+    if (use_tabu && allow_worse && !tabu_free_mappings.empty() && !any_improvement) {
+        int random_number = rand() % tabu_free_mappings.size();
+        int node_1 = tabu_free_mappings[random_number].first;
+        int node_2 = tabu_free_mappings[random_number].second;
+
+        action_type action = tabu_free_mapping_type[random_number] ? swap : exchange;
+        int node_1_mapped;
+        int node_2_mapped;
+        int lost_edges;
+        vector<int> new_edges_1;
+        vector<int> new_edges_2;
+        int edge_diff;
+
+        if (action == swap) {
+            node_1_mapped = g2_to_g1_mapping[node_1];
+            node_2_mapped = g2_to_g1_mapping[node_2];
+
+            lost_edges =
+                solution->degree({node_1_mapped, node_1}) +
+                solution->degree({node_2_mapped, node_2});
+            if (solution->adjacent({node_1_mapped, node_1}, {node_2_mapped, node_2})) {
+                lost_edges -= 2;
+            }
+
+            vector<int> node_1_neigh = g2.neighbours(node_1);
+            for (unsigned int k = 0; k < node_1_neigh.size(); k++) {
+                if (node_1_neigh[k] != node_2 &&
+                    unmapped_nodes.find(node_1_neigh[k]) ==
+                        unmapped_nodes.end() &&
+                    g1.adjacent(node_2_mapped,
+                        g2_to_g1_mapping[node_1_neigh[k]])
+                )
+                {
+                    new_edges_1.push_back(node_1_neigh[k]);
+                }
+            }
+
+            vector<int> node_2_neigh = g2.neighbours(node_2);
+            for (unsigned int k = 0; k < node_2_neigh.size(); k++) {
+                if (node_2_neigh[k] != node_1 &&
+                    unmapped_nodes.find(node_2_neigh[k]) ==
+                        unmapped_nodes.end() &&
+                    g1.adjacent(node_1_mapped,
+                        g2_to_g1_mapping[node_2_neigh[k]])
+                )
+                {
+                    new_edges_2.push_back(node_2_neigh[k]);
+                }
+            }
+
+            edge_diff = new_edges_1.size() + new_edges_2.size() - lost_edges;
+        }
+        else {
+            node_2_mapped = g2_to_g1_mapping[node_2];
+            node_1_mapped = node_2_mapped;
+
+            lost_edges = solution->degree({node_2_mapped, node_2});
+
+            vector<int> node_1_neigh = g2.neighbours(node_1);
+            for (unsigned int k = 0; k < node_1_neigh.size(); k++) {
+                if (node_1_neigh[k] != node_2 &&
+                    unmapped_nodes.find(node_1_neigh[k]) ==
+                        unmapped_nodes.end() &&
+                    g1.adjacent(node_1_mapped,
+                        g2_to_g1_mapping[node_1_neigh[k]])
+                )
+                {
+                    new_edges_1.push_back(node_1_neigh[k]);
+                }
+            }
+
+            edge_diff = new_edges_1.size() - lost_edges;
+        }
+
+        any_improvement = true;
+        best_edge_diff = edge_diff;
+        best_action = action;
+        best_node_1 = {node_1_mapped, node_1};
+        best_node_2 = {node_2_mapped, node_2};
+        best_new_edges_1 = new_edges_1;
+        best_new_edges_2 = new_edges_2;
     }
 
     if (any_improvement) {
@@ -444,9 +644,91 @@ bool improve_solution_2(
             }
         }
 
+        if (use_tabu) {
+            // If this is the new best edge diff, we update our max
+            if (best_edge_diff > max_edge_diff) {
+                max_edge_diff = best_edge_diff;
+            }
+
+            // Update time for each movement
+            for (unsigned int i = 0; i < tabu_list.size(); i++) {
+                tabu_list[i].time += time_delta;
+            }
+
+            // Update heap
+            if (!tabu_queue.empty()) {
+                make_heap(const_cast<movement*>(&tabu_queue.top()),
+                    const_cast<movement*>(&tabu_queue.top()) + tabu_queue.size(),
+                    mc);
+            }
+
+            movement mov({best_node_2.second, best_node_1.second},
+                best_edge_diff, 0, best_action == swap);
+
+            if (tabu_list.size() < tabu_list_size) {
+                mov.pos = tabu_list.size();
+                tabu_list.push_back(mov);
+            }
+            else {
+                mov.pos = tabu_queue.top().pos;
+                tabu_queue.pop();
+                tabu_list[mov.pos] = mov;
+            }
+
+            // Add movement to tabu heap
+            tabu_queue.push(mov);
+        }
         return true;
     } else {
         // cout << "no improvements are possible" << endl;
         return false;
     }
 }
+
+bool improve_solution_1(
+    graph<pair<int, int>>* solution,
+    graph<int>& g1,
+    graph<int>& g2,
+    unordered_map<int, int>& g2_to_g1_mapping,
+    unordered_set<int>& mapped_nodes,
+    unordered_set<int>& unmapped_nodes,
+    vector<int>& unmapped_nodes_vector,
+    float neighbourhood_proportion,
+    bool strict_comparisons
+) {
+    priority_queue<movement, vector<movement>,
+        movement_compare> tabu_queue;
+    vector<movement> tabu_list;
+    movement_compare mc(0.0f, 0, &tabu_list);
+    int max_edge_diff = 0;
+    return improve_solution_1(
+            solution, g1, g2, g2_to_g1_mapping, mapped_nodes,
+            unmapped_nodes, unmapped_nodes_vector,
+            neighbourhood_proportion, strict_comparisons,
+            0, tabu_queue, mc, tabu_list, false, 0, max_edge_diff, 0
+        );
+};
+
+bool improve_solution_2(
+    graph<pair<int, int>>* solution,
+    graph<int>& g1,
+    graph<int>& g2,
+    unordered_map<int, int>& g2_to_g1_mapping,
+    unordered_set<int>& mapped_nodes,
+    unordered_set<int>& unmapped_nodes,
+    vector<int>& unmapped_nodes_vector,
+    float neighbourhood_proportion,
+    bool strict_comparisons
+) {
+    priority_queue<movement, vector<movement>,
+        movement_compare> tabu_queue;
+    vector<movement> tabu_list;
+    movement_compare mc(0.0f, 0, &tabu_list);
+    int max_edge_diff = 0;
+    return improve_solution_2(
+            solution, g1, g2, g2_to_g1_mapping, mapped_nodes,
+            unmapped_nodes, unmapped_nodes_vector,
+            neighbourhood_proportion, strict_comparisons,
+            0, tabu_queue, mc, tabu_list, false, 0, max_edge_diff, 0
+        );
+};
