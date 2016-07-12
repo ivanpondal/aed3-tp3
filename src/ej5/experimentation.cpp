@@ -118,7 +118,8 @@ void run_experimentation(){
 	experiment_suite  neighbourhood_proportion_calibrate_exp_suite;
 	
 	// quality exp
-	int repetitions_val = 1;
+	int repetitions_val = 3;
+	int sample_val = 10;
 
 	// // quality local_search_2_exp
 	// quality_exp_local_search_with_swap local_search_2_exp(
