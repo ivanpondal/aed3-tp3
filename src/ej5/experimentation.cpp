@@ -137,7 +137,7 @@ void run_experimentation(){
 	
 	// quality exp
 	int repetitions_val = 3;
-	int sample_val = 20;
+	int sample_val = 10;
 
 	// // quality local_search_2_exp
 	// quality_exp_local_search_with_swap local_search_2_exp(
