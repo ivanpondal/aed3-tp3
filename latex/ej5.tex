@@ -72,8 +72,7 @@ puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
     \label{fig:ej5:vecindad1}
 \end{figure}
 
-\noindent\textbf{Pseudocódigo de una iteración}
-\bigskip
+\subheading{Pseudocódigo de una iteración}
 
 \begin{algorithm}[H]
     \SetAlgoVlined
@@ -121,9 +120,50 @@ puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
         \Return{\textsf{falso}}
     }
 \end{algorithm}
-\bigskip
 
-% Complejidad temporal
+\subheading{Complejidad temporal}
+
+Cada iteración del algoritmo recorre la vecindad completa de la solución que
+se busca mejorar; para esto se utilizan dos ciclos anidados. El primero de
+ellos recorre todos los nodos de la solución, es decir, realiza $N_1$
+iteraciones. El ciclo interior recorre el conjunto $U \subseteq G_2$ de los
+nodos de $G_2$ que no forman parte del mapeo, que tiene $N_2 - N_1$ elementos.
+Dentro de este ciclo, además de realizarse operaciones con un costo constante,
+se itera a su vez, para cada nodo $u \in U$, sobre el conjunto de sus vecinos,
+cuyo cardinal es $\deg(u)$. Para cada uno de estos vecinos se verifica si
+pertenece al mapeo y, en caso afirmativo, debe decidirse si son adyacentes en
+$G_1$ los nodos mapeados a $u$ y su vecino en cuestión. Esto último tiene
+complejidad $\ord(\deg(u'))$, siendo $u'$ el nodo de $G_1$ mapeado a $u$, que
+puede acotarse por $\ord(N_1)$. De todo lo anterior se concluye que la
+complejidad del primer ciclo es:
+
+\begin{align*}
+\ord\left( N_1 \times \left( \sum_{u \in U} \left(1 + \deg(u) \times N_1
+\right) \right) \right)
+&= \ord \left( N_1 \times \left( (N_2 - N_1) + N_1 \times \sum_{u \in U} \deg
+(u) \right) \right) \\
+&= \ord \left( N_1 \times \left( (N_2 - N_1) + N_1 \times \sum_{v \in V(G_2)}
+\deg(v) \right) \right) \\
+&= \ord \left( N_1 \times \left( (N_2 - N_1) + N_1 \times M_2 \right) \right) \\
+&= \ord \left( N_1 \times (N_2 - N_1) + N_1^2 \times M_2 \right)
+\end{align*}
+
+En la segunda parte del algoritmo, si se encontró alguna mejora a la solución,
+deben modificarse las estructuras que se utilizan para almacenar la misma. En
+primer lugar se elimina un nodo de la solución; el costo de esta operación es
+el grado de dicho nodo. Dado que todas las aristas adyacentes a un nodo de la
+solución deben corresponderse con aristas en $G_1$, el grado máximo de un nodo
+en la solución está acotado por el grado máximo de un nodo de $G_1$, que es
+$N_1 - 1$. Luego se agrega a la solución un nuevo nodo; esto tiene un costo de
+orden $\ord(N_2 - N_1)$, ya que debe eliminarse el vértice de un vector que
+almacena los nodos que no pertenecen al mapeo. Por últmo se incorporan, cada
+una con un costo constante, todas las aristas correspondientes al nuevo nodo,
+cuya cantidad está igualmente acotada por $N_1 - 1$.
+
+De esta forma, la segunda parte de la iteración tiene un costo de $\ord(N_2 -
+N_1) + \ord(N_1) = \ord (N_1 + N_2)$, que resulta absorbido por el costo de
+recorrer la vecindad, obteniendo una complejidad total para cada iteración de
+\[ \ord \left( N_1 \times (N_2 - N_1) + N_1^2 \times M_2 \right) \]
 
 \subsubsection{Vecindad II}
 Dos soluciones $s, s' \in S$ se consideran vecinas en la vecindad II
@@ -165,8 +205,7 @@ posible pasar de una solución dada a cualquier otra en una cantidad de
 iteraciones menor (se puede decir que $N_2$ es una vecindad más
 \emph{densamente conectada} que I).
 
-\noindent\textbf{Pseudocódigo de una iteración}
-\bigskip
+\subheading{Pseudocódigo de una iteración}
 
 \begin{algorithm}[H]
     \SetAlgoVlined
@@ -291,9 +330,8 @@ iteraciones menor (se puede decir que $N_2$ es una vecindad más
     \textit{diferencia\_aristas} $\gets$ $\vert$\textit{aristas\_nuevas}$\vert$
         $-$ \textit{cant\_aristas\_perdidas} \;
 \end{algorithm}
-\bigskip
 
-% Complejidad temporal
+\subheading{Complejidad temporal}
 
 \subsection{Implementación}
 
