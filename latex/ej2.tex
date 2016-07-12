@@ -36,6 +36,7 @@ rama de ejecución.
 \vspace{1em}
 
 \begin{algorithm}[H]
+    \SetAlgoVlined
     \caption{\acr{MCS} exacto, utilizando \emph{backtracking}}
     \label{algo:backtracking}
 
@@ -144,6 +145,7 @@ devolviendo falso. Esta estructura es lo primero que se ejecuta cuando se hace
 el llamado recursivo. A continuación puede verse el pseudocódigo de la poda.
 
 \begin{algorithm}
+    \SetAlgoVlined
     \caption{Poda: suma de grados}
     \If {$mcs$.m() + sumaDeGrados($l_1$) $\leq$ $maximaCantEjes$} {
         \Return{falso}
@@ -208,6 +210,7 @@ después de haber elegido los nodos candidatos a ser mapeados. A continuación
 puede verse el pseudocódigo de la poda.
 
 \begin{algorithm}
+    \SetAlgoVlined
     \caption{Poda: permutaciones}
     \If {$mcs$.n() == 1} {
         $permutacion$ $\gets$ tupla con el primer par mapeado y el par actual \;
