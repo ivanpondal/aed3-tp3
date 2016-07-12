@@ -126,24 +126,24 @@ puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
 Cada iteración del algoritmo recorre la vecindad completa de la solución que
 se busca mejorar; para esto se utilizan dos ciclos anidados. El primero de
 ellos recorre todos los nodos de la solución, es decir, realiza $N_1$
-iteraciones. El ciclo interior recorre el conjunto $U \subseteq G_2$ de los
+iteraciones. El ciclo interior recorre el conjunto $W_U \subseteq G_2$ de los
 nodos de $G_2$ que no forman parte del mapeo, que tiene $N_2 - N_1$ elementos.
 Dentro de este ciclo, además de realizarse operaciones con un costo constante,
-se itera a su vez, para cada nodo $u \in U$, sobre el conjunto de sus vecinos,
-cuyo cardinal es $\deg(u)$. Para cada uno de estos vecinos se verifica si
-pertenece al mapeo y, en caso afirmativo, debe decidirse si son adyacentes en
-$G_1$ los nodos mapeados a $u$ y su vecino en cuestión. Esto último tiene
-complejidad $\ord(\deg(u'))$, siendo $u'$ el nodo de $G_1$ mapeado a $u$, que
-puede acotarse por $\ord(N_1)$. De todo lo anterior se concluye que la
-complejidad del primer ciclo es:
+se itera a su vez, para cada nodo $w \in W_U$, sobre el conjunto de sus
+vecinos, cuyo cardinal es $\deg(w)$. Para cada uno de estos vecinos se
+verifica si pertenece al mapeo y, en caso afirmativo, debe decidirse si son
+adyacentes en $G_1$ los nodos mapeados a $w$ y su vecino en cuestión. Esto
+último tiene complejidad $\ord(\deg(v))$, siendo $v$ el nodo de $G_1$
+mapeado a $w$, que puede acotarse por $\ord(N_1)$. De todo lo anterior se
+concluye que la complejidad del primer ciclo es:
 
 \begin{align*}
-\ord\left( N_1 \times \left( \sum_{u \in U} \left(1 + \deg(u) \times N_1
+\ord\left( N_1 \times \left( \sum_{w \in W_U} \left(1 + \deg(w) \times N_1
 \right) \right) \right)
-&= \ord \left( N_1 \times \left( (N_2 - N_1) + N_1 \times \sum_{u \in U} \deg
-(u) \right) \right) \\
-&= \ord \left( N_1 \times \left( (N_2 - N_1) + N_1 \times \sum_{v \in V(G_2)}
-\deg(v) \right) \right) \\
+&= \ord \left( N_1 \times \left( (N_2 - N_1) + N_1 \times \sum_{W \in W_U}
+\deg(w) \right) \right) \\
+&= \ord \left( N_1 \times \left( (N_2 - N_1) + N_1 \times \sum_{w \in V(G_2)}
+\deg(w) \right) \right) \\
 &= \ord \left( N_1 \times \left( (N_2 - N_1) + N_1 \times M_2 \right) \right) \\
 &= \ord \left( N_1 \times (N_2 - N_1) + N_1^2 \times M_2 \right)
 \end{align*}
@@ -156,7 +156,7 @@ solución deben corresponderse con aristas en $G_1$, el grado máximo de un nodo
 en la solución está acotado por el grado máximo de un nodo de $G_1$, que es
 $N_1 - 1$. Luego se agrega a la solución un nuevo nodo; esto tiene un costo de
 orden $\ord(N_2 - N_1)$, ya que debe eliminarse el vértice de un vector que
-almacena los nodos que no pertenecen al mapeo. Por últmo se incorporan, cada
+almacena los nodos que no pertenecen al mapeo. Por último se incorporan, cada
 una con un costo constante, todas las aristas correspondientes al nuevo nodo,
 cuya cantidad está igualmente acotada por $N_1 - 1$.
 
@@ -332,6 +332,80 @@ iteraciones menor (se puede decir que $N_2$ es una vecindad más
 \end{algorithm}
 
 \subheading{Complejidad temporal}
+
+Dado que el tamaño de esta vecindad es mayor al de la otra alternativa
+planteada, también será más costosa cada iteración que deba explorarla. El
+recorrido se hace mediante dos ciclos anidados, cada uno de los cuales se
+repite $N_2$ veces. De esta forma se recorren todos los pares posibles de
+dos nodos de $G_2$. No obstante, debido a que según el caso el código que se
+ejecuta en cada una de estas repeticiones es diferente, se estudiará la
+complejidad de cada uno de ellos por separado.
+
+\begin{itemize}
+    \item La operación de \emph{permutación} se realiza cuando se
+    selecciona un par de nodos distintos $w_1, w_2$ de $W_M \subseteq G_2$,
+    siendo $W_M$ el conjunto de los nodos que pertenecen al mapeo (cuyo
+    cardinal es $N_1$). Como la cantidad de estos nodos es $N_1$, este tipo de
+    iteración se ejecuta $\ord(N_1^2)$ veces. Además de operaciones con costo
+    constante, dentro de cada repetición de este proceso se ejecutan dos
+    ciclos, uno de los cuales itera sobre los vecinos de $w_1$ ($\deg(w_1)$) y
+    el otro, sobre los vecinos de $w_2$ ($\deg(w_2)$). Para cada uno de ellos
+    se chequea su adyacencia en $G_1$ con los nodos mapeados a $w_1$ y $w_2$,
+    respectivamente, lo cual tiene un costo acotable por $\ord(N_1)$.
+
+    Es importante notar que el primer ciclo se ejecutará exactamente $N_1 - 1$
+    veces para cada posible $w_1$, y análogamente el segundo se ejecutará
+    exactamente $N_1 - 1$ veces para cada posible $w_2$. Así, la complejidad
+    combinada de estas iteraciones, considerando por separado las operaciones
+    constantes y los dos ciclos mencionados, será de
+    \begin{align*}
+    \ord & \left( N_1^2 + N_1 \times \sum_{w_1 \in W_M} ((1 +
+    \deg(w_1)) \times N_1) + N_1 \times \sum_{w_2 \in W_M} ((1 + \deg(w_2))
+    \times N_1) \right) \\
+    &= \ord \left( N_1^2 + 2 \times N_1 \times \sum_{w \in W_M} ((1 +
+    \deg(w)) \times N_1) \right) \\
+    &= \ord \left( N_1^2 + 2 \times N_1 \times \left( N_1 + N_1 \times \sum_{w
+    \in V(G_2)} \deg(w) \right) \right) \\
+    &= \ord \left( N_1^2 + 2 \times N_1 \times \left( N_1 + N_1 \times M_2
+    \right) \right) \\
+    &= \ord \left( N_1^2 + 2 \times N_1^2 \times \left( 1 + \times M_2
+    \right) \right) \\
+    &= \ord (N_1^2 \times (1 + M_2))
+    \end{align*}
+
+    \item La operación de \emph{intercambio} se realiza cuando se selecciona
+    un nodo de $G_2$ perteneciente al mapeo y otro que no está en el mismo.
+    Dado que hay $N_1$ de los primeros y $N_2 - N_1$ de los
+    segundos, este tipo de iteración se realiza $(N_1) \times (N_2 - N_1)$
+    veces. El código que se ejecuta en estos casos es muy similar al de la
+    vecindad I, y la cota teórica que se obtiene para la complejidad de todas
+    ellas en su conjunto es idéntica a la de ese caso, es decir,
+    $\ord \left( N_1 \times (N_2 - N_1) + N_1^2 \times M_2 \right)$.
+
+    \item Cuando se selecciona un par que contiene dos nodos que no están en
+    el mapeo, o que contiene dos veces a un nodo del mapeo, se omite dicho
+    par, con un costo $\ord(1)$. Hay un total de $N_1 + (N_2 - N_1)^2$ de
+    estas iteraciones.
+\end{itemize}
+
+Sumando la complejidad de los tres tipos de iteraciones recién descriptos, se
+obtiene una complejidad total para la primera etapa del algoritmo de
+$\ord \left( N_1^2 \times (1 + M_2) + N_1 \times N_2 + (N_2 - N_1)^2 \right)$.
+
+Por su parte, la segunda etapa del algoritmo, que se ejecuta si la
+iteración produjo alguna mejora, aplicando estos cambios a las estructuras
+que almacenan la solución, dependerá de si la mejora encontrada proviene de
+realizar una \emph{permutación} o un \emph{intercambio}. En el segundo
+caso las operaciones que se realizan son las mismas que en la segunda etapa
+de la vecindad I, mientras que en el primer caso son muy similares, solo que
+deben agregarse dos nodos en lugar de uno. En ambos casos la complejidad es la
+misma, $\ord (N_1 + N_2)$, que al igual que en la otra vecindad resulta
+absorbida por el costo de la primera parte del algoritmo. De esta forma, la
+complejidad total de una iteración de la vecindad II tiene un costo
+\[
+\ord \left( N_1^2 \times (1 + M_2) + N_1 \times N_2 + (N_2 - N_1)^2 \right)
+\]
+
 
 \subsection{Implementación}
 
