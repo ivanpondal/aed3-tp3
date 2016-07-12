@@ -92,58 +92,77 @@ grafo completo de $N_2$ nodos (que tendrá por lo tanto $M_2 = \frac{N_2 \times
     subgrafo que tenga $N_2$ o menos nodos, y en particular $G_1$,
     es isomorfo a algún subgrafo de $G_2$. Como, trivialmente, $G_1$ es
     isomorfo a sí mismo, basta tomar $G_1$ como solución del problema.
-    \item $N_1 > N_2$. En este caso, sea $H$ un grafo isomorfo a algún
-    subgrafo de $G_1$; $H$ resultará isomorfo a algún subgrafo de $G_2$ si
-    y solo si su cantidad de nodos es menor o igual que $N_2$. Si $H$ tiene
-    menos de $N_2$ nodos, puede extenderse a algún grafo $\tilde{H} \supseteq
-    H$ que tenga $N_2$ nodos y también sea isomorfo a un subgrafo de $G_1$.
-    Es directo que $\tilde{H}$ resulta isomorfo a algún subgrafo de $G_2$ y
-    que su cantidad de aristas es mayor o igual que la de $H$. Entonces, si
-    $H$ era solución óptima de \acr{MCS}, claramente $\tilde{H}$ también lo
-    es. De esto se sigue que para resolver este caso del problema, basta con
-    tomar un subgrafo de $G_1$ que tenga exactamente $N_2$ nodos y maximice la
-    cantidad de aristas.
+    \item $N_1 > N_2$. Para resolver este caso del problema, basta con
+    tomar un subgrafo inducido de $G_1$ que tenga exactamente $N_2$ nodos y
+    maximice la cantidad de aristas.
+
+    En efecto, sea $H$ un grafo isomorfo a algún subgrafo de $G_1$. Para ser
+    solución de \acr{MCS}, $H$ debe resultar isomorfo a algún subgrafo de
+    $G_2$, lo cual sucede si y solo si su cantidad de nodos es menor o igual
+    que $N_2$. Si $H$ tiene menos de $N_2$ nodos, puede extenderse a algún
+    grafo $\tilde{H} \supseteq H$ que tenga exactamente $N_2$ nodos y también
+    sea isomorfo a un subgrafo de $G_1$. Es directo que $\tilde{H}$ resulta
+    isomorfo a algún subgrafo de $G_2$ y que su cantidad de aristas es mayor o
+    igual que la de $H$. Entonces, si $H$ era solución óptima de
+    \acr{MCS}, claramente $\tilde{H}$ también lo es.
+
+    Por otra parte, todo subgrafo de $H \subseteq G_1$ que sea solución de
+    \acr{MCS} es necesariamente un subgrafo inducido; en caso contrario,
+    pueden agregarse las aristas faltantes para convertirlo en un subgrafo
+    inducido $\tilde{H}$, que también será isomorfo a subgrafos de $G_1$ y
+    $G_2$ pero tendrá más aristas que $H$, contradiciendo la hipótesis de que
+    este último tenía una cantidad de aristas máxima.
 \end{enumerate}
 
 Dado que la resolución del primer caso es trivial, durante el resto de esta
 sección se asumirá que $N_1 > N_2$. Se llamará $G = G_1$, $N = N_1$, $M = M_1$
 y $K = N_2$, y se explicará la solución planteada al problema de encontrar un
-subgrafo de un cografo $G$ que tenga exactamente $K$ vértices y cantidad de
-aristas máxima. Aprovechando la hipótesis de que $G$ es un cografo,
-es posible solucionar el problema en tiempo polinomial.
+subgrafo inducido de un cografo $G$ que tenga exactamente $K$ vértices y
+cantidad de aristas máxima. Aprovechando la hipótesis de que $G$ es un
+cografo, es posible solucionar el problema en tiempo polinomial.
 
 La solución propuesta tiene dos etapas. En primer lugar, se crea el coárbol
 binario de $G$, y luego, utilizando la técnica de programación dinámica, se
 aprovecha esta representación para obtener el subgrafo buscado.
 
-\subsubsection{Resultados preliminares}
-A continuación, se demostrarán una serie de resultados que serán necesarios
-para asegurar la correctitud de los algoritmos presentados más adelante.
-
-\begin{lema} Sea $G$ un cografo. Si $H \subseteq G$ es un subgrafo inducido de
-$G$, entonces $H$ es un cografo.
-\end{lema}
-\begin{proof}
-Por inducción estructural, utilizando la definición recursiva de cografo.
-\begin{enumerate}
-    \item Caso base: $G = K_1$. En este caso, necesariamente, $H = K_1$, que
-    es un cografo.
-    \item Caso recursivo: $G = G_1 \cup G_2$ o $G = G_1 \times G_2$, con $G_1$
-    y $G_2$ cografos. Se supone, por hipótesis inductiva, que todo subgrafo
-    inducido de los mismos es, a su vez, un cografo. Existen dos
-    posibilidades:
-    \begin{enumerate}
-        \item $H \subseteq G_1$ o $H \subseteq G_2$, en cuyo caso la hipótesis
-    inductiva asegura que $H$ es un cografo.
-        \item Hay nodos de $H$ tanto en $G_1$ como en $G_2$. En tal caso, sean
-    $H_1$ y $H_2$ los subgrafos inducidos en $G_1$ y $G_2$, respectivamente,
-    por los nodos correspondientes de $H$. Por hipótesis inductiva, $H_1$ y
-    $H_2$ son cografos. Notar que si $G = G_1 \cup G_2$, entonces $H = H_1
-    \cup H_2$, mientras que si $G = G_1 \times G_2$, entonces $H = H_1 \times
-    H_2$. En ambos casos, $H$ resulta ser un cografo. \qedhere
-    \end{enumerate}
-\end{enumerate}
-\end{proof}
+% \begin{lema} Sea $G$ un cografo. Si $H \subseteq G$ es un subgrafo inducido
+% no vacío de $G$, entonces $H$ es un cografo. Además:
+% \begin{enumerate}
+%     \item Si $G = K_1$, entonces $H = K_1$.
+%     \item Si $G = G_1 \cup G_2$, entonces $H = H_1$, $H = H_2$ o $H = H_1
+%     \cup H_2$, siendo $H_1$ y $H_2$ subgrafos inducidos de $G_1$ y $G_2$,
+%     respectivamente.
+%     \item Si $G = G_1 \times G_2$, entonces $H = H_1$, $H = H_2$ o $H = H_1
+%     \times H_2$, siendo $H_1$ y $H_2$ subgrafos inducidos de $G_1$ y $G_2$,
+%     respectivamente.
+% \end{enumerate}
+% \end{lema}
+% \begin{proof}
+% Por inducción estructural, utilizando la definición recursiva de cografo.
+% \begin{enumerate}
+%     \item Caso base: $G = K_1$. En este caso, necesariamente, $H = K_1$, que
+%     es un cografo.
+%     \item Caso recursivo: $G = G_1 \cup G_2$ con $G_1$ y $G_2$ cografos. Se
+%     supone, por hipótesis inductiva, que todo subgrafo inducido de los mismos
+%     es, a su vez, un cografo. Existen dos posibilidades:
+%     \begin{enumerate}
+%         \item $H$ es subgrafo inducido de $G_1$ o de $G_2$, en cuyo caso la
+%         hipótesis inductiva asegura que $H$ es un cografo.
+%         \item Hay nodos de $H$ tanto en $G_1$ como en $G_2$. En tal caso, sean
+%     $H_1$ y $H_2$ los subgrafos inducidos en $G_1$ y $G_2$, respectivamente,
+%     por los nodos correspondientes de $H$. Por hipótesis inductiva, $H_1$ y
+%     $H_2$ son cografos. Se demostrará que $H = H_1 \cup H_2$. Claramente los
+%     conjuntos de vértices coinciden. En cuanto a los conjuntos de aristas, se
+%     probará que dados $v_1, v_2 \in V(H) = V(H_1, H_2)$, $(v_1, v_2) \in E(H)
+%     \Leftrightarrow (v_1, v_2) \in E(H_1 \cup H_2)$.
+%         \begin{itemize}
+%             \item[($\Rightarrow$)] $(v_1, v_2) \in E(H)$. HORROR.
+%         \end{itemize}
+%     \end{enumerate}
+%     \item Caso recursivo: $G = G_1 \times G_2$ con $G_1$ y $G_2$ cografos. Es
+%     análogo al caso anterior.
+% \end{enumerate}
+% \end{proof}
 
 \subsubsection{Construcción del coárbol}
 Para construir el coárbol correspondiente a un cografo dado, se descompone el
@@ -155,19 +174,33 @@ representando este vértice. En caso contrario, el cografo será la unión o el
 nodo etiquetado con esa operación, del cual colgarán los coárboles
 correspondientes a los dos cografos sobre los cuales esta se aplica.
 
+La implementación propuesta adapta esta formulación para que resulte
+iterativa. El proceso que se lleva a cabo se puede interpretar de la siguiente
+forma: se parte de un árbol con un único nodo, que representa al cografo
+completo. En cada paso, se toma una hoja de este árbol y, si el cografo que
+representa es la unión o el \emph{join} de dos cografos, se la reemplaza por
+un nodo indicando dicha operación, con dos hijos representando a estos dos
+cografos. A continuación, estas dos nuevas hojas se encolan para ser
+procesadas más adelante. El proceso se repite hasta que todas las hojas del
+árbol hayan sido reducidas a un grafo trivial.
+
+El pseudocódigo del algoritmo planteado se presenta como Algoritmo
+\ref{alg:ex3:coarbol}.
+
 \bigskip
 \begin{algorithm}[H]
     \SetAlgoVlined
     \caption{Construcción del coárbol correspondiente a un cografo}
+    \label{alg:ex3:coarbol}
     \Input{Un cografo $G = (V, E)$ con $N$ nodos y $M$ aristas, representado
     como listas de adyacencia.}
     \Output{El coárbol binario correspondiente a $G$.}
 
     $G\comp$ $\gets$ complemento de $G$ \;
     \textit{nodo\_inicial} $\gets$
-    $\langle$subgrafo: $G$, padre: \textit{ninguno}, lado: \textit{ninguno}$\rangle$ \;
+    $\langle$subgrafo: $G$, padre: \textsf{ninguno}, lado: \textsf{ninguno}$\rangle$ \;
     \textit{a\_expandir} $\gets$ cola de nodos vacía \;
-    \textit{a\_expandir}.encolar(\textit{nodo\_inicial}) \;
+    \textit{a\_expandir}.(\textit{nodo\_inicial}) \;
 
     \While{\textit{a\_expandir} no esté vacía} {
         \textit{subgrafo\_actual} $\gets$ \textit{a\_expandir}.desencolar().subgrafo \;
@@ -182,22 +215,22 @@ correspondientes a los dos cografos sobre los cuales esta se aplica.
         }
         $cc_2$ $\gets$ \textit{subgrafo\_actual} $-$ $cc_1$ \;
         \textit{nuevo\_nodo} $\gets$ nodo representando a \textit{operación} \;
-        \eIf{\textit{padre\_actual} $==$ \textit{ninguno}} {
+        \eIf{\textit{padre\_actual} $=$ \textsf{ninguno}} {
             \textit{raíz\_cotree} $\gets$ \textit{nuevo\_nodo} \;
         } {
-            \eIf{\textit{lado\_actual} $==$ \textit{izquierda}} {
-                \textit{padre\_actual}.setear\_hijo\_izquierdo(\textit{nuevo\_nodo}) \;
+            \eIf{\textit{lado\_actual} $=$ \textit{izquierda}} {
+                definir \textit{nuevo\_nodo} como hijo izquierdo de \textit{padre\_actual} \;
             } {
-                \textit{padre\_actual}.setear\_hijo\_derecho(\textit{nuevo\_nodo}) \;
+                definir \textit{nuevo\_nodo} como hijo derecho de \textit{padre\_actual} \;
             }
         }
         \eIf{$cc_1$ tiene exactamente 1 nodo} {
-            \textit{nuevo\_nodo}.setear\_hijo\_izquierdo($cc_1$.obtener\_nodo()) \;
+            definir $cc_1$.obtener\_nodo() como hijo izquierdo de \textit{nuevo\_nodo} \;
         } {
             \textit{a\_expandir}.encolar($\langle cc_1$, \textit{nuevo\_nodo}, \textit{izquierda}$\rangle$) \;
         }
         \eIf{$cc_2$ tiene exactamente 1 nodo} {
-            \textit{nuevo\_nodo}.setear\_hijo\_derecho($cc_2$.obtener\_nodo()) \;
+            definir $cc_2$.obtener\_nodo() como hijo derecho de \textit{nuevo\_nodo} \;
         } {
             \textit{a\_expandir}.encolar($\langle cc_2$, \textit{nuevo\_nodo}, \textit{derecha}$\rangle$) \;
         }
@@ -211,8 +244,9 @@ correspondientes a los dos cografos sobre los cuales esta se aplica.
 \bigskip
 
 \subsubsection{Búsqueda del subgrafo máximo}
-Para encontrar el subgrafo de $G$ con $K < N$ nodos y máxima cantidad de
-aristas, se diseñó un algoritmo utilizando la técnica de programación
+Se llamará $\operatorname{MIS}(G, K)$ al subgrafo de $G$ con $K < N$ nodos que
+maximice la cantidad de aristas. Para resolver el problema de encontrar este
+subgrafo, se diseñó un algoritmo utilizando la técnica de programación
 dinámica. El esquema detrás de la formulación recursiva de este algoritmo es
 el siguiente:
 
@@ -222,16 +256,59 @@ el siguiente:
     \item Si $K > 0$ y $G = K_1$, es decir, un nodo aislado, la solución es
     $K_1$.
     \item Si $G \neq K_1$, entonces existen dos cografos $G_1$ y $G_2$ tales
-    que $G = G_1 \times G_2$ o $G = G_1 \cup G_2$. En tal caso, la solución
-    $H$ del problema tendrá algunos de sus nodos en $G_1$ y el resto en $G_2$.
-    Entonces, según la operación con la que se obtenga $G$ a partir de $G_1$ y
-    $G_2$, tenemos que $H = H_1 \times H_2$ o $H = H_1 \cup H_2$, donde
-    $H_1$ y $H_2$ son los subgrafos inducidos en $G$ por los nodos de $H$ que
-    pertenecen a $G_1$ y a $G_2$, respectivamente.
+    que $G = G_1 \cup G_2$ o $G = G_1 \times G_2$. Se busca encontrar un
+    subgrafo inducido $H \subseteq G$ que maximice la cantidad de aristas.
+
+    Sea $H^*$ una tal solución. Es importante notar que $H^*$ tendrá
+    algunos de sus nodos en $G_1$ y los restantes en $G_2$. Más aún,
+    podemos afirmar que $H^* = H^*_1 \cup H^*_2$ o $H^* = H^*_1 \times
+    H^*_2$, según cuál sea la operación por la que se obtiene $G$ a partir de
+    $G_1$ y $G_2$, donde $H^*_1$ y $H^*_2$ son los subgrafos inducidos por los
+    nodos de $H^*$ en $G_1$ y $G_2$, respectivamente.
+
+    Sea entonces $k$, con $0 \leq k \leq \#V(G_1)$, la cantidad de nodos de
+    $H^*$ que son también nodos de $G_1$, y $K - k$ la cantidad de nodos de
+    $H^*$ que son también nodos de $G_2$. Así, se puede utilizar
+    recursivamente el algoritmo y tomar $H_1 = \operatorname{MIS}(G_1, k)$ y
+    $H_2 = \operatorname{MIS}(G_2, K - k)$, que son subgrafos inducidos de
+    $G_1$ y $G_2$, respectivamente. De esta forma, $H = H_1 \cup H_2$ o $H =
+    H_1 \times H_2$, según el caso, resulta una solución válida del problema.
+
+    Esto último se debe a que, si existiera una solución $\tilde{H}$ con un
+    mayor número de aristas que $H$, también podría expresarse como $\tilde{H}
+    = \tilde{H}_1 \cup \tilde{H}_2$ o $\tilde{H} = \tilde{H}_1 \times \tilde
+    {H}_2$, para $\tilde{H}_1$ y $\tilde{H}_2$ subgrafos inducidos de $G_1$ y
+    $G_2$, respectivamente. Pero, en tal caso, o bien $\tilde{H}_1$ tiene más
+    aristas que $H_1$, o bien $\tilde{H}_2$ tiene más aristas que $H_2$;
+    cualquiera de estos dos casos es absurdo, porque tanto $H_1$ como $H_2$
+    eran soluciones a los problemas correspondientes de \acr{MCS}. Esto
+    demuestra que el problema tiene \emph{subestructura óptima}, es decir, que
+    puede resolverse combinando las soluciones de subproblemas.
+
+    La clave para poder llevar a cabo lo anterior es poder determinar el valor
+    de $k$, es decir cuántos de los nodos de $H$ deben ser parte de $G_1$ y
+    cuántos de $G_2$. Dado que la cantidad de combinaciones de valores
+    posibles está acotada ($k \in \lbrace 0, 1, \dots, \#V(G_1) \rbrace$), se
+    prueban todas ellas, comparando la cantidad de aristas de los subgrafos
+    obtenidos y seleccionando el valor de $k$ que arroje el mejor resultado.
+
+    Este enfoque, sin embargo, genera \emph{solapamiento de subproblemas}: al
+    probar resolver el problema para un mismo cografo para cada posible valor
+    de $k$, se realizan llamadas recursivas sobre los mismos dos cografos que
+    lo originan, reptiendo además los tamaños de los subgrafos buscados. Este
+    solapamiento continúa dándose, además, en los niveles subsiguientes de la
+    recursión.
+
+    Las dos características mencionadas (subsestructura óptima y solapamiento
+    de subproblemas) hacen que resulte pertinente aplicar la técnica de
+    programación dinámica para resolver el problema.
 \end{enumerate}
 
+\bigskip
+
+Formalmente,
 \[
-    \operatorname{MCS}(G, K) = \begin{cases}
+    \operatorname{MIS}(G, K) = \begin{cases}
         (\varnothing, \varnothing) & \text{si } K = 0 \\
         K_1 & \text{si } G \text{ es un nodo aislado} \\
         \displaystyle \argmax_{H \in S(G, K)}(\#E(H)) & \text{si } G = (G_1
@@ -243,33 +320,85 @@ donde
 
 \[
     S(G, K) = \begin{cases}
-        \lbrace \operatorname{MCS}(G_1, k) \cup \operatorname{MCS}(G_2, K -
+        \lbrace \operatorname{MIS}(G_1, k) \cup \operatorname{MIS}(G_2, K -
         k) \ \vert\ 0 \leq k \leq \#V(G_1) \rbrace & \text{si } G = (G_1 \cup G_2) \\
-        \lbrace \operatorname{MCS}(G_1, k) \times \operatorname{MCS}(G_2, K -
+        \lbrace \operatorname{MIS}(G_1, k) \times \operatorname{MIS}(G_2, K -
         k) \ \vert\ 0 \leq k \leq \#V(G_1) \rbrace & \text{si } G = (G_1 \times G_2)
     \end{cases}
 \]
 
 \bigskip
-\begin{algorithm}[H]
-    \caption{Subgrafo máximo de un cografo}
-    \Input{Un cografo $G = (V, E)$ con $N$ nodos y $M$ aristas, y un natural
-        $K < N$.}
-    \Output{Un subgrafo $H \subseteq G$ con $K$ nodos que maximice la cantidad
-        de aristas.}
 
-    $cotree$ $\gets$ coárbol correspondiente a $G$ \;
-    $DP$ $\gets$ grilla de dimensiones $(2 \times N - 1) \times K$, donde \;
-    cada fila representa a uno de los vértices del coárbol de $G$, y cada \;
-    columna,
-    \Return{($DP_{N,M}$, $camino$)}
+A la hora de implementar esta resolución, se adoptó un enfoque \emph{bottom-up},
+resolviendo primero los casos correspondientes a las hojas del coárbol y
+ascendiendo luego por el mismo, reutilizando en el proceso los resultados
+previamente calculados. Para almacenar los mismos, se utiliza una grilla donde
+se guardan tuplas: el primer elemento de las mismas es la cantidad de aristas
+de la solución hallada, y el segundo, el conjunto de nodos de $G$ que inducen
+dicha solución. El pseudocódigo del algoritmo resultante se incluye como
+Algoritmo \ref{alg:ex3:dp}.
+
+\bigskip
+\begin{algorithm}[H]
+    \SetAlgoVlined
+    \caption{Subgrafo máximo de un cografo}
+    \label{alg:ex3:dp}
+    \Input{Un cografo $G = (V, E)$ con $N$ nodos y $M$ aristas, y un natural
+        $K$ ($0 < K < N$).}
+    \Output{Un subconjunto de $K$ nodos de $G$ tales que el subgrafo inducido
+        en $G$ por los mismos tiene una cantidad de aristas máxima.}
+
+    \textit{cotree} $\gets$ coárbol correspondiente a $G$; los nodos de este árbol
+    están indexados ($v_0, \dots, v_{(2N-2)}$) de forma tal que a cada nodo le
+    corresponde un índice mayor que los índices de todos sus hijos \;
+    \textit{DP} $\gets$ grilla de dimensiones $(2N - 1) \times K$,
+    donde cada fila representa a uno de los vértices del coárbol de $G$, y
+    cada columna, un entero entre $0$ y $K$ \;
+
+    \ForEach{$i$ entre $0$ y $(2N - 2)$} {
+        $v$ $\gets$ nodo $v_i$ de \textit{cotree} \;
+        \ForEach{$j$ entre $0$ y $K$} {
+            \eIf{$j = 0$} {
+                \textit{DP}[$i$][$j$] $\gets$ $\langle 0, \varnothing \rangle$ \;
+            } {
+                \eIf {$v$ es una hoja} {
+                    \eIf {$j = 1$} {
+                        \textit{DP}[$i$][$j$] $\gets$ $\langle 0,
+                        \lbrace$nodo de $G$ correspondiente a $v \rbrace \rangle$ \;
+                    } {
+                        \textit{DP}[$i$][$j$] $\gets$ $\langle -1, \varnothing \rangle$ \;
+                    }
+                } {
+                    $G_v$ $\gets$ cografo (subgrafo de $G$) asociado al nodo $v$ \;
+                    \eIf{$j > \#V(G_v)$} {
+                        \textit{DP}[$i$][$j$] $\gets$ $\langle -1, \varnothing \rangle$ \;
+                    } {
+                        \textit{DP}[$i$][$j$] $\gets$ $\gets$ $\langle 0, \varnothing \rangle$ \;
+                        \ForEach {$k$ entre $0$ y $j$} {
+                            $H_1$ $\gets$ \textit{DP}[índice del hijo izquierdo de $v$][$k$] \;
+                            $H_2$ $\gets$ \textit{DP}[índice del hijo derecho de $v$][$K-k$] \;
+                            \If{$H_1$.primero $\neq$ $-1$ y $H_2$.primero $\neq$ $-1$} {
+                                \eIf{la operación asociada a $v$ es \textsf{join}} {
+                                    \textit{cant\_aristas} $\gets$ $H_1$.primero $+$
+                                        $H_2$.primero $+$ $(k \times (K - k))$ \;
+                                } {
+                                    \textit{cant\_aristas} $\gets$ $H_1$.primero $+$
+                                        $H_2$.primero \;
+                                }
+                            }
+                            \If{\textit{cant\_aristas} $>$ \textit{DP}[$i$][$j$].primero} {
+                                \textit{DP}[$i$][$j$] $\gets$ $\langle$\textit{cant\_aristas},
+                                    $H_1$.segundo $\cup$ $H_2$.segundo$\rangle$ \;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    \Return{{DP}[$2N - 2$][$K$].segundo}
 \end{algorithm}
 \bigskip
-
-El algoritmo planteado para la búsqueda del máximo subgrafo
-
-
-\subsection{Detalles implementativos}
 
 \subsection{Complejidad}
 Defino $N_1$ la cantiadad de nodos de $g_1$ (cografo) y $M_1$ la cantiadad de aristas,
@@ -779,23 +908,3 @@ algoritmo. En su conjunto, estas dos cotas permiten verificar que la
 complejidad total del algoritmo es, como se había demostrado previamente, de
 $\ord(N_1(N_1 + M_1)) + \ord(N_1 \times (N_2)^2 )$ = $\ord(N_1((N_1 + M_1)
 + (N_2)^2))$.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
