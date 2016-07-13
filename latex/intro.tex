@@ -35,7 +35,8 @@ conclusiones acerca de la calidad y la eficiencia de las mismas.
 \subsection*{Consideraciones generales}
 \addcontentsline{toc}{subsection}{Consideraciones generales}
 
-Es importante notar que el problema de \acr{MCS} admite una formulación
+\begin{enumerate}[label=(\roman*)]
+\item Es importante notar que el problema de \acr{MCS} admite una formulación
 equivalente, donde el subgrafo común buscado, $H$, es visto como un mapeo
 biyectivo entre un subconjunto de los nodos de $G_1$ y un subconjunto de los
 nodos de $G_2$. Más aún, suponiendo sin pérdida de generalidad que $\#V(G_1)
@@ -44,16 +45,36 @@ que la de $G_2$, el mapeo puede tomarse considerando la totalidad de los nodos
 de $G_1$. Esto se debe a que, si ya se cuenta con una solución cuya cantidad
 de aristas es máxima y que no utiliza todos los nodos de $G_1$, esta puede
 extenderse para incluir los nodos faltantes sin perjudicar su optimalidad,
-siendo los mismos mapeados a nodos arbitarios de $G_2$. Dado que esta
-interpretación del problema simplifica la formulación e implementación de
-muchos de los procedimientos expuestos en este trabajo, será utilizada
-asiduamente a lo largo del mismo.
+siendo los mismos mapeados a nodos arbitarios de $G_2$.
 
-Todos los algoritmos presentados en el trabajo fueron implementados en el
-lenguaje C++, utilizando en varios casos funciones y estructuras de datos
+Para formalizar un poco más esta perspectiva, sean $G_1$ y $G_2$ tales que
+$\#V(G_1) \leq \#V(G_2)$, y $H$ una solución de \acr{MCS} con $\#V(H) =
+\#V(G_1)$. Entonces, existen un mapeo biyectivo entre los nodos de $H$ y los
+de $G_1$, y un mapeo inyectivo entre los nodos de $H$ y los de $G_2$. Esto nos
+permite definir $s : V(G_1) \to V (G_2)$, de forma tal que a todo $v \in
+V(G_1)$ le corresponda el mismo nodo de $H$ que a $s(v) \in V(G_2)$; visto de
+otro modo, cada nodo de $H$ se corresponde con un par de la forma $(v, s(v))$.
+
+Más aún, conociendo $s$, las aristas de $H$ quedan unívocamente determinadas:
+si dos nodos de $H$ correspondientes a los pares $(v, s(v))$ y $(w, s(w))$,
+respectivamente, están unidos por una arista, entonces para que $H$ sea una
+solución válida de \acr{MCS}, $(v, w)$ deberá ser una arista de $G_1$ y
+$(s(v), s(w))$ deberá ser una arista de $G_2$. Recíprocamente, si tanto $v$ y
+$w$ como $s(v)$ y $s(w)$ son adyacentes en sus respectivos grafos, los nodos
+correspondientes en $H$ a cada par deberán ser adyacentes, o el número de
+aristas de $H$ no sería máximo. De todo lo anterior, se sigue que para dar una
+solución a \acr{MCS} basta con exhibir un mapeo $s : V(G_1) \to V (G_2)$
+apropiado.
+
+Dado que esta interpretación del problema simplifica la formulación
+e implementación de muchos de los procedimientos expuestos en este trabajo,
+será utilizada asiduamente a lo largo del mismo.
+
+\item Todos los algoritmos presentados en el trabajo fueron implementados en
+el lenguaje C++, utilizando en varios casos funciones y estructuras de datos
 provistas por la biblioteca estándar del lenguaje. Estas implementaciones
-fueron sometidas a diversas pruebas experimentales, durante las
-cuales se tuvieron en cuenta las siguientes consideraciones generales:
+fueron sometidas a diversas pruebas experimentales, durante las cuales se
+tuvieron en cuenta las siguientes consideraciones generales:
 
 \begin{itemize}
 \item Solo se midió el costo temporal de generar las soluciones,
@@ -65,3 +86,5 @@ biblioteca estándar de C++. Los tiempos fueron medidos en nanosegundos.
 % del Departamento de Computación (\acr{FCEN} - \acr{UBA}).
 % \item Todos los experimentos aleatorios se realizaron con semilla de valor 7.
 \end{itemize}
+
+\end{enumerate}

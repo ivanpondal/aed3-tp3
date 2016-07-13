@@ -61,6 +61,9 @@
 \newcommand{\comp}{\ensuremath{^{\operatorname{C}}}}
 \newcommand{\argmax}{\operatornamewithlimits{arg\,m\acute{a}x}}
 
+\newcommand{\subheading}[1]{\vspace{1em} \noindent\textbf{#1} \nopagebreak
+\smallskip \nopagebreak}
+
 % Lemas, definiciones, etc.
 \theoremstyle{plain}
   \newtheorem{prop}{Proposición}
@@ -73,20 +76,12 @@
 % Pseudocódigo
 \usepackage[onelanguage, spanish]{algorithm2e}
     % \NoCaptionOfAlgo
-    \LinesNumbered\RestyleAlgo{ruled}\IncMargin{1em}\DontPrintSemicolon\SetArgSty{}\SetCommentSty{textsf}\SetFuncSty{textsf}
+    \LinesNumbered\RestyleAlgo{ruled}\IncMargin{1em}\DontPrintSemicolon
+    \SetArgSty{}\SetCommentSty{textsf}\SetFuncSty{textsf}
     \SetKwInput{Input}{Entrada}
     \SetKwInput{Output}{Salida}
     \SetKwProg{For}{para}{ hacer}{fin}
     \SetKwProg{Fn}{función}{:}{fin}
-
-%\lstset{
-%    language=C++,
-%    basicstyle=\ttfamily,
-%    keywordstyle=\color{blue}\ttfamily,
-%    stringstyle=\color{red}\ttfamily,
-%    commentstyle=\color{ForestGreen}\ttfamily,
-%    morecomment=[l][\color{magenta}]{\#}
-%}
 
 \begin{document}
 \materia{Algoritmos y Estructuras de Datos III}

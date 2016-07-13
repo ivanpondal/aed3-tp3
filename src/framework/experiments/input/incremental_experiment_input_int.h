@@ -21,5 +21,5 @@ class incremental_experiment_input_int: public incremental_experiment_input<int,
 			return (this->get_max() - this->get_min()) / (this->get_samples() - 1);
 		}
 };
- 
+
 #endif // INCREMENTAL_EXPERIMENT_INPUT_INT_H_INCLUDED

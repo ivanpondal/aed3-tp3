@@ -1,4 +1,4 @@
-\section{Ejercicio 2: Algoritmo exacto para el caso general}
+\section{Algoritmo exacto para el caso general}
 
 % Para convencer a Marty, el Doc necesita mostrarle un algoritmo que
 % efectivamente resuelva el problema. Dado que sus habilidades de programador
@@ -313,6 +313,8 @@ Puede acotarse esta cantidad de llamados superiormente de modo que sea
 $\ord \left(N_1  \frac{N_1!  N_2!}{(N_2 - N_1)!} \right)$ siendo $N_1$ la
 cantidad de niveles y $\frac{N_1!  N_2!}{(N_2 - N_1)!}$ la de hojas.
 
+\vspace{1em}
+
 Entonces, la complejidad total del algoritmo es
 
 \begin{multline*}
@@ -345,6 +347,13 @@ Sea $j = N_1 - i$ y por consecuente $i = N_1 - j$; se verifica que
 =& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}(2N_1^3 + 3N_1^2 + N_1 + 3N_1^2N_2 - 3N_1^3 + 3N_1N_2 - 3N_1^2)\right) \\
 =& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}(-N_1^3 + N_1 + 3N_1^2N_2 + 3N_1N_2)\right) \\
 =& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}N_1(-N_1^2 + 1 + 3N_1N_2 + 3N_2)\right) \\
+\end{align*}
+
+Al verificarse que $N_1 \geq N_2$, vale que $3N_1N_2 - N_1^2 \geq 2N_1^2$.
+Entonces
+\begin{align*}
+\ord((N_1 + N_2))  \ord\left(\frac{1}{6}N_1(-N_1^2 + 1 + 3N_1N_2 + 3N_2)\right)
+=& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}N_1(2N_1N_2 + 3N_2)\right) \\
 =& \ord((N_1 + N_2))  \ord(N_1^2N_2) \\
 =& \ord((N_1 + N_2)  N_2  N_1^2)
 \end{align*}

@@ -20,7 +20,7 @@ class incremental_experiment: public experiment{
 		virtual void load_instance(incremental_experiment_input<T, S> *input) = 0;
 		virtual void solve_instance(incremental_experiment_input<T, S> *input) = 0;
 		void print_results();
-		std::vector< std::pair<T, std::vector<T>>> times_vec;
+		std::vector< std::pair<T, std::vector<double>>> times_vec;
 		incremental_experiment_input<T, S> *input = NULL;
 		bool print;
 };
@@ -44,8 +44,8 @@ void incremental_experiment<T, S>::init(const incremental_experiment_input<T, S>
 
 template <typename T, typename S>
 void incremental_experiment<T, S>::run(){
-	times_vec = std::vector< std::pair<T, std::vector<T>>>(input->get_samples(),
-	            std::make_pair(T(), std::vector<T>(input->get_repetitions(), T())));
+	times_vec = std::vector< std::pair<T, std::vector<double>>>(input->get_samples(),
+	            std::make_pair(T(), std::vector<double>(input->get_repetitions(), 0)));
 	input->init();
 
 	double elapsed_time = 0;
@@ -80,7 +80,7 @@ void incremental_experiment<T, S>::print_results(){
 
 	for(unsigned i = 0; i < times_vec.size(); i++){
 		T x = times_vec[i].first;
-		std::vector<T> ys = times_vec[i].second;
+		std::vector<double> ys = times_vec[i].second;
 
 		double average = 0;
 		double std_deviation = 0;
