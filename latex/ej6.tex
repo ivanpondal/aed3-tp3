@@ -38,6 +38,31 @@ definir la implementación de la metaheurística, fue necesario tomar decisiones
 sobre varios puntos, que serán expuestos a continuación.
 
 \subsubsection{Estructura del algoritmo}
+La metaheurística se implementó utilizando como base la heurística de búsqueda
+local presentada en la sección anterior, manteniendo la posibilidad de
+elegir cuál de las dos vecindades considerar. El esquema de ejecución es muy
+sencillo:
+\begin{enumerate}
+    \item Se ejecuta la heurística golosa, para utilizar la solución obtenida
+    como punto de partida.
+    \item Se ejecuta una iteración de la heurística de búsqueda local, con la
+    vecindad elegida. De esta forma se determina un \emph{movimiento} hacia
+    una solución vecina, que para ambas vecindades puede representarse
+    mediante un par de vértices de $G_2$ involucrados en la transformación: en
+    el caso de la vecindad I o de la operación \emph{exchange} de la vecindad
+    II, uno de los vértices pertenece al mapeo de la solución actual y el otro
+    no, mientras que en la operación \emph{swap} de la vecindad II ambos nodos
+    pertenecen al mapeo.
+    \item Se agrega a la lista tabú el movimiento inverso al realizado, para
+    indicar que no se desea revertirlo en el futuro.
+    \item Si no se cumple el criterio de parada elegido, se repite el paso 2,
+    pero prohibiendo realizar movimientos que se encuentren en la lista tabú.
+\end{enumerate}
+
+La diferencia entre este esquema metaheurístico y los algoritmos de búsqueda
+local es que, si al explorar la vecindad, todas las soluciones vecinas
+evaluadas resultan ser peores que la actual, se permite realizar un movimiento
+hacia una de ellas, que es elegida de forma aleatoria.
 
 \subsubsection{Lista tabú}
 
