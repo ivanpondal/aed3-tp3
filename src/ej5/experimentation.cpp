@@ -35,7 +35,7 @@ unsigned int quality_exp_local_search_with_swap::solve_instance(graph<int> &g1, 
     }
 
     graph<pair<int, int>>* start_point = solve_greedy(*small_graph, *large_graph);
-    h = solve_local_search(*small_graph, *large_graph, *start_point, 2,50,0.005f,true);
+    h = solve_local_search(*small_graph, *large_graph, *start_point, 2,50,0.002f,true);
 
     delete start_point;
     
@@ -71,7 +71,7 @@ unsigned int quality_exp_local_search_without_swap::solve_instance(graph<int> &g
 	        large_graph = &g1;
 	    }
 	    graph<pair<int, int>>* start_point = solve_greedy(*small_graph, *large_graph);
-    	h = solve_local_search(*small_graph, *large_graph, *start_point, 1,50,0.001f,true);
+    	h = solve_local_search(*small_graph, *large_graph, *start_point, 1,100,0.002f,true);
     	delete start_point;
     }
    
@@ -182,19 +182,19 @@ void run_experimentation(){
 	int repetitions_val = 2;
 	int sample_val = 5;
 
-	// quality local_search_2_exp
+	/*// quality local_search_2_exp
 	quality_exp_local_search_with_swap local_search_2_exp(
 			known_solution_instances, "../exp/ej5/known_solution_instances_search_2_exp", 0, repetitions_val);
+	*/
 
-
-	// quality_exp_suite.add(&local_search_2_exp);
 
 	// quality local_search_1_exp
-	quality_exp_local_search_with_swap local_search_1_exp(
-			known_solution_instances, "../exp/ej5/known_solution_instances_search_1_exp", 0, repetitions_val);
-
+	quality_exp_local_search_without_swap local_search_1_exp(
+			known_solution_instances, "../exp/ej5/known_solution_instances_search_1_exp_100", 0, repetitions_val);
+	
 
 	quality_exp_suite.add(&local_search_1_exp);
+	/*quality_exp_suite.add(&local_search_2_exp);*/
 
 	quality_exp_suite.run();
 
@@ -692,7 +692,7 @@ void run_experimentation(){
 
 
 
-    iteration_calibrate_exp_suite.add(&big_tree_vs_small_cicle_iteration_exp);
+    /*iteration_calibrate_exp_suite.add(&big_tree_vs_small_cicle_iteration_exp);
 
     iteration_calibrate_exp_suite.add(&big_cicle_vs_small_tree_iteration_exp);
 
@@ -700,7 +700,7 @@ void run_experimentation(){
 
     iteration_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_iteration_exp);
 
-    iteration_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_iteration_exp);
+    iteration_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_iteration_exp);*/
 
 	// neighbourhood 1
 
