@@ -94,6 +94,34 @@ A continuación, el pseudocódigo de la heurística implementada:
 	\Return{\textit{subgrafo\_común}}
 \end{algorithm}
 
+\subsection{Complejidad}
+
+La complejidad temporal queda en función de la entrada: $G_1 = (V_1, E_1)$ y $G_2 = (V_2,
+E_2)$.
+
+Inicializar las dos colas de prioridad tiene un costo $\ord(N_1 \times \log N_1 + N_2
+\times \log N_2)$. Esto se debe a que las mismas están implementadas sobre un heap cuyo costo
+de inserción es logarítmico sobre la cantidad de elementos en el mismo.
+
+El ciclo princpial corre hasta que alguna de las dos colas se vacíe. En el peor caso
+ambas colas tienen el mismo tamaño, con lo cual se desencolarían los $N_1 = N_2$
+nodos. En cada iteración del ciclo se recorren todos los vecinos de los nodos
+desapilados donde para cada uno se realiza una operación de costo constante.
+Como estamos asumiendo que se recorren todos los vértices de cada grafo esto
+corresponde a la siguiente sumatoria:
+
+\begin{equation*}
+	\ord(\sum_{v \in V_1}^{} \deg(v) + \sum_{v \in V_2}^{} \deg(v)) =
+	\ord(2 \times M_1 + 2 \times M_2) = \ord(M_1 + M_2)
+\end{equation*}
+
+Una vez finalizado el ciclo, se retorna el subgrafo común encontrado, por lo
+tanto el costo final del algoritmo es:
+
+\begin{equation*}
+	\ord(N_1 \times \log N_1 + N_2 \times \log N_2 + M_1 + M_2)
+\end{equation*}
+
 \subsection{Experimentación}
 
 \pgfplotstableread[header=false]{../exp/ej4/known_sol_greedy_exp}\knowngreedy
