@@ -33,6 +33,67 @@ decisión fue la idea de que tomando los vértices de mayor grado en cada grafo,
 uno aumenta la posibilidad de que tengan vecinos en común, permitiendo así mapear
 sus respectivas aristas en el subgrafo común.
 
+\subsection{Resolución algorítmica}
+
+Se desarrollaron dos algoritmos golosos. El primero trabaja únicamente con la idea de mapear
+los nodos de grado mayor de ambos grafos. El segundo toma el algoritmo anterior con
+la diferencia de que además de mapear los nodos, agrega el mayor número posible de
+vecinos de los mismos. Esta pequeña variación se utilizó como para tener una
+alternativa contra la cual comparar. Luego de pruebas que serán discutidas en la
+sección de experimentación, se llegó a la conclusión de que esta variación
+brindaba soluciones peores que el primer algoritmo, con lo cual todo futuro
+análisis será dedicado a este.
+
+El mecanismo del algoritmo es el siguiente:
+\begin{enumerate}
+	\item Se utilizan dos colas de prioridad para tener los nodos de cada grafo
+	ordenados por mayor grado.
+	\item Desencolando el primer nodo de cada cola se forma un par que es agregado al subgrafo común.
+	\item Si hay vecinos de los nodos del nuevo par mapeados al mismo elemento del
+	subgrafo común, se agrega una arista entre ellos.
+\end{enumerate}
+
+A continuación, el pseudocódigo de la heurística implementada:
+
+\begin{algorithm}[H]
+	\SetAlgoVlined
+	\caption{Heurística golosa}
+	\Input{Dos grafos $G_1$ y $G_2$}
+	\Output{Un subgrafo común entre $G_1$ y $G_2$}
+	\textit{subgrafo\_común} $\gets$ Crear grafo de pares vacío \;
+	\textit{nodos\_sin\_visitar\_g1} $\gets$ Crear cola de prioridad con nodos de $G_1$ utilizando
+	su grado como peso \;
+	\textit{nodos\_sin\_visitar\_g2} $\gets$ Crear cola de prioridad con nodos de $G_2$ utilizando
+	su grado como peso \;
+
+	\textit{vecinos\_mapeados} $\gets$ Crear conjunto de pares vacío \;
+	\While{\textit{nodos\_sin\_visitar\_g1} y \textit{nodos\_sin\_visitar\_g2}
+	no estén vacíos}{
+		\textit{nodo\_g1} $\gets$ Desencolar primero de
+		\textit{nodos\_sin\_visitar\_g1} \;
+		\textit{nodo\_g2} $\gets$ Desencolar primero de
+		\textit{nodos\_sin\_visitar\_g2} \;
+		Agregar nodo (\textit{nodo\_g1}, \textit{nodo\_g2}) a
+		\textit{subgrafo\_común} \;
+
+		\ForEach{\textit{vecino} de \textit{nodo\_g1}}{
+			\If{\textit{vecino} está mapeado en \textit{subgrafo\_común}}{
+				Agregar mapeo de \textit{vecino} a \textit{vecinos\_mapeados} \;
+			}
+		}
+
+		\ForEach{\textit{vecino} de \textit{nodo\_g2}}{
+			\If{\textit{vecino} está mapeado en \textit{subgrafo\_común} y el
+			mapeo está en \textit{vecinos\_mapeados}}{
+				Agregar arista entre (\textit{nodo\_g1}, \textit{nodo\_g1}) y
+				mapeo de \textit{vecino} en \textit{subgrafo\_común} \;
+			}
+		}
+		Vaciar \textit{vecinos\_mapeados} \;
+	}
+	\Return{\textit{subgrafo\_común}}
+\end{algorithm}
+
 \subsection{Experimentación}
 
 \pgfplotstableread[header=false]{../exp/ej4/known_sol_greedy_exp}\knowngreedy
