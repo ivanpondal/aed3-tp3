@@ -17,3 +17,34 @@
 %    lista taboo, criterios de parada, etc.) y las vecindades utilizadas en la
 %    búsqueda local. Elegir, si es posible, la configuración que mejores
 %    resultados provea para el grupo de instancias utilizado.
+
+\subsection{Introducción}
+Para mejorar los resultados obtenidos mediante la heurística de búsqueda
+local, se implementó una metaheurística \emph{tabu search}. Esta
+metaheurística tiene como objetivo realizar una ejecución guiada de la
+heurística de búsqueda local, evitando el estancamiento en óptimos locales;
+para esto, se continúan explorando soluciones incluso aunque resulten menos
+óptimas, con la esperanza de encontrar mejores resultados a largo plazo. Para
+evitar la generación de ciclos por un retorno constante a los óptimos locales
+ya encontrados, se utiliza una \emph{lista tabú}, donde se almacenan
+soluciones o características de soluciones que no deberían volver a visitarse.
+También se puede almacenar información adicional, por ejemplo, una valoración
+de las soluciones consideradas \emph{tabú} que permita decidir entre ellas en
+caso de no existir alternativa.
+
+\subsection{Características}
+Dado que la metaheurística no es más que un esquema algorítmico general, para
+definir la implementación de la metaheurística, fue necesario tomar decisiones
+sobre varios puntos, que serán expuestos a continuación.
+
+\subsubsection{Estructura del algoritmo}
+
+\subsubsection{Lista tabú}
+
+\subsubsection{Criterio de eliminación}
+
+\subsubsection{Criterio de parada}
+
+\subsubsection{Función de aspiración}
+
+\subsection{Experimentación}
