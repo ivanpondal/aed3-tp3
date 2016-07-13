@@ -57,14 +57,14 @@ sencillo:
     indicar que no se desea revertirlo en el futuro.
     \item Si no se cumple el criterio de parada elegido, se repite el paso 2,
     pero prohibiendo realizar movimientos que se encuentren en la lista tabú.
+    Si se cumple el criterio de parada, se devuelve la mejor solución
+    encontrada hasta el momento.
 \end{enumerate}
 
 La diferencia entre este esquema metaheurístico y los algoritmos de búsqueda
 local es que, si al explorar la vecindad, todas las soluciones vecinas
 evaluadas resultan ser peores que la actual, se permite realizar un movimiento
 hacia una de ellas, que es elegida de forma aleatoria.
-
-\subsubsection{Lista tabú}
 
 \subsubsection{Criterio de eliminación}
 Dado que la capacidad de la lista tabú es limitada, se hace necesario contar
@@ -112,7 +112,33 @@ próximo elemento a ser eliminado, y actualizar el peso de todos los demás en
 un tiempo lineal en el tamaño de la lista.
 
 \subsubsection{Criterio de parada}
+Otro de los elementos a definir fue qué criterio utilizar para decidir cuándo
+dejar de iterar. Se plantearon dos alternativas posibles, pudiendo utilizarse
+solo una de ellas o ambas en simultáneo, en cuyo caso el algoritmo se detendrá
+cuando cualquiera de los dos criterios se cumpla.
+
+\begin{enumerate}
+    \item \textbf{Cantidad de iteraciones}: el algoritmo se detiene luego de
+    ejecutar una cantidad determinada de iteraciones de la búsqueda local.
+    \item \textbf{Cantidad de iteraciones sin mejora}: el algoritmo se detiene
+    tras ejecutar una determinada cantidad de iteraciones de la búsqueda local
+    sin encontrar una solución mejor que la mejor solución encontrada hasta el
+    momento.
+\end{enumerate}
+
+En ambos casos, se entiende por iteración a explorar la vecindad de una
+solución; en otras palabras, cada movimiento hacia una solución vecina
+corresponde a una iteración.
 
 \subsubsection{Función de aspiración}
+En ocasiones, el resultado de realizar un determinado movimiento puede ser tan
+bueno que resulte deseable realizarlo incluso aunque aparezca en la lista
+tabú. A esto se lo conoce como \emph{función de aspiración}, y tiene como
+parámetro un umbral configurable $\alpha \in [0, 1]$. De esta forma, si la
+cantidad de aristas $a$ que tendría la solución resultante de realizar un
+determinado movimiento es mayor que el producto entre el umbral y la cantidad
+$a^*$ de aristas de la mejor solución hallada hasta el momento, es decir, si
+$a > \alpha a^*$, entonces el movimiento se realiza independientemente de que
+se encuentre o no en la lista tabú.
 
 \subsection{Experimentación}
