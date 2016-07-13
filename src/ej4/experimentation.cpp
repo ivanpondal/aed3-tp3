@@ -4,6 +4,8 @@ using namespace std;
 
 // Experiment definitions
 
+// Quality
+
 unsigned int quality_exp_greedy::solve_instance(graph<int> &g1, graph<int> &g2) {
 	solution_graph_ptr = solve_greedy(g1, g2);
 	return solution_graph_ptr->m();

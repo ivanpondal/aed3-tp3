@@ -195,39 +195,149 @@ que es no encontrar ni una arista en común.
 
 \subsection{Experimentación}
 
-\pgfplotstableread[header=false]{../exp/ej4/known_sol_greedy_exp}\knowngreedy
-\pgfplotstableread[header=false]{../exp/optimal_solutions}\optimalsolutions
+La experimentación de este ejercicio estará dividida en dos secciones: una
+dedicada a la calidad de soluciones, y otra a la complejidad teórica.
+
+\subsubsection{Calidad de soluciones}
+
+Como se planteó en la introducción, además del algoritmos descrito se desarrolló
+una pequeña variación del mismo para tener un parámetro de comparación adicional
+y ver qué tanto podían cambiar las soluciones obtenidas.
+
+La única diferencia que presenta esta alternativa con respecto a la heurística
+desarrollada en profundidad, es a la hora de mapear un nodo:
+
+\begin{enumerate}
+	\item Toma un nodo de mayor grado de cada grafo.
+	\item Agrega este par al subgrafo común junto a todas las aristas que le sea
+		posible.
+	\item Agrega el mayor número posible de vecinos del par.
+	\item Agrega las aristas hacia los vecinos mapeados en el subgrafo común.
+\end{enumerate}
+
+La motivación detrás de esta modificación era evitar problemas como el presentado en
+la Sección \ref{sec:ej4:suboptimal}, donde por agregar únicamente los vértices de
+grado máximo podía suceder que sus vecinos quedaran fuera del mapeo.
+
+Para determinar la calidad de las soluciones se utilizaron los dos conjuntos de
+instancias presentados en la introducción del trabajor. De esta forma es posible estudiar
+el comportamiento para distintas familias de grafos y para el grupo con
+soluciones conocidas incluso analizar qué tan lejos del óptimo estaban los
+resultados obtenidos.
+
+Luego de ejecutar las heurísticas golosas sobre las instancias mencionadas, se
+generaró una tabla para cada grupo con la siguiente información:
+
+\begin{itemize}
+	\item Nombre de la instancia.
+	\item En caso de conocer la solución, $\#E(MCS)$ el número de aristas de la
+		misma.
+	\item $\#E(H)$ el número de aristas obtenidos por la heurística base.
+	\item $\#E(H_{alt})$ el número de aristas obtenidos por la variación de la heurística base.
+	\item $\% \Delta$ la diferencia porcentual entre el número de aristas de $H$
+		con respecto a $H_{alt}$.
+\end{itemize}
+
+\pgfplotstableread[header=false]{../exp/ej4/known_sol_greedy_exp}{\knowngreedy}
+\pgfplotstableread[header=false]{../exp/ej4/unknown_sol_greedy_exp}{\unknowngreedy}
+
+\pgfplotstableread[header=false]{../exp/ej4/known_sol_greedy_add_neighbours_exp}{\knowngreedyaddneighbours}
+\pgfplotstableread[header=false]{../exp/ej4/unknown_sol_greedy_add_neighbours_exp}{\unknowngreedyaddneighbours}
+
+\pgfplotstableread[header=false]{../exp/optimal_solutions}{\optimalsolutions}
+
+\pgfplotstablecreatecol
+    [copy column from table={\optimalsolutions}{[index] 1}]{sol}{\knowngreedy}
+\pgfplotstablecreatecol
+    [copy column from table={\knowngreedyaddneighbours}{[index] 1}]{alternative}{\knowngreedy}
+\pgfplotstablecreatecol
+    [copy column from table={\unknowngreedyaddneighbours}{[index] 1}]{alternative}{\unknowngreedy}
 
 \pgfplotstableset{
-	create on use/sol/.style={copy column from table={\optimalsolutions}{[index] 1}}
-}
-
-\pgfplotstabletypeset[
-	every head row/.style={
+    every head row/.style={
 		after row=\hline
 	},
-	columns={0, sol, 1, 3, 4},
-	columns/0/.style={
-		column name=\textsc{Instancia},
-		column type={l},
-		string replace*={_}{\_},
-		string type,
-		assign cell content/.code={
-			\pgfkeyssetvalue{/pgfplots/table/@cell content}{\texttt{##1}}
-		}
-	},
-	columns/sol/.style={
-		column name=$\#E(MCS)$,
-		int detect
-	},
+    columns/0/.style={
+        column name=\textsc{Instancia},
+        column type={l},
+        string replace*={_}{\_},
+        string type,
+        assign cell content/.code={
+            \pgfkeyssetvalue{/pgfplots/table/@cell content}{\texttt{##1}}
+        }
+    },
+    columns/sol/.style={
+        column name=$\#E(MCS)$,
+        int detect
+    },
 	columns/1/.style={
-		column name=$\#E(H)$,
-		int detect
-	},
-	columns/3/.style={
-		column name=$T_{\mu}$,
-	},
-	columns/4/.style={
-		column name=$T_{\sigma}$,
-	}
-]\knowngreedy
+        column name=$\#E(H)$,
+        int detect
+    },
+    columns/alternative/.style={
+        column name=$\#E(H_{alt})$,
+        int detect
+    },
+	create on use/ratio/.style=
+		{create col/expr={(\thisrow{1} * 100)/ \thisrow{alternative} - 100}},
+	columns/ratio/.style={
+        column name=$\% \Delta$,
+        column type={r},
+        fixed, precision=2,
+        postproc cell content/.append style={
+            /pgfplots/table/@cell content/.add={}{\%}
+        },
+        fonts by sign={}{\color{red}}
+    }
+}
+
+\begin{figure}[H]
+	\centering
+	\caption{Grupo de instancias con solución óptima conocida}
+	\pgfplotstabletypeset[
+		columns={0, sol, 1, alternative, ratio}
+	]{\knowngreedy}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\caption{Grupo de instancias con solución desconocida}
+	\pgfplotstabletypeset[
+		columns={0, 1, alternative, ratio}
+	]{\unknowngreedy}
+\end{figure}
+
+Lo primero que llama la atención de los valores generados, es el pobre desempeño
+de la heurística original para instancias de árboles. Tanto en árboles como para
+bosques es superado siempre por la variación del algoritmo. Esto puede verse
+como una consecuencia de asignar pares de vértices únicamente en base al grado
+de los mismos, ya que en árboles se podría presentar un escenario similar al
+planteado con las estrellas. Como los árboles tienen el número justo de aristas
+para ser conexos, es menos probable que dos nodos cualesquiera estén conectados
+entre si, pudiendo explicar así este tipo de comportamiento donde se agregan
+nodos pero los mismos no tienen vecinos que pertenezcan al subgrafo común.
+
+Por otra parte, en el resto de las instancias llegan a haber diferencias
+porcentuales positivas órdenes de magnitud mayores que las que funcionaba mejor
+la variación. En particular, para grafos donde la densidad de aristas es mayor,
+los resultados de la heurística golosa principal presentan soluciones
+ampliamente mejores. Nuevamente esto puede explicarse justamente por el hecho de
+que al haber más aristas, es mayor la posibilidad de que los nodos a ser
+mapeados sean vecinos entre sí. Al comparar grafos completos resulta claro
+entonces cómo el algoritmo devuelve la solución óptima, siendo que cada vértice
+es vecino al resto.
+
+Dado que la primer heurística golosa planteada resultó mejor en un número mayor
+de casos que la variación, y puesto que el único tipo de instancias donde la
+alternativa es sustancialmente mejor es la de árboles, se terminó decidiendo
+elegir el algoritmo original como generador de soluciones golosas para el resto
+de las heurísticas implementadas. El motivo por el cual no se le dio mayor peso
+al mal desempeño  sobre las familias de árboles se debe a que teniendo en
+consideración que estas soluciones luego son tomadas por un algoritmo de
+búsqueda local e incluso posiblemente mejoradas por una metaheurística, un árbol
+al tener densidad baja de aristas permite un mejor tiempo de ejecución para
+estos algoritmos. En contraposición, familias donde se tiene una densidad alta
+de aristas resultan más costosos de mejorar con lo cual es preferible que la
+heurística golosa presente mejores soluciones en estos casos.
+
+\subsubsection{Complejidad teórica}
