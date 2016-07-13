@@ -8,7 +8,7 @@
 %    vecindades distintas para la búsqueda.
 % b) Calcular el orden de complejidad temporal de peor caso de una iteración
 %    del algoritmo de búsqueda local (para las vecindades planteadas). Si es
-%    posible, dar una cota superior para la cantidad de iteraciónes de la
+%    posible, dar una cota superior para la cantidad de iteraciones de la
 %    heurística.
 % c) Realizar una experimentación que permita observar la performance del
 %    algoritmo comparando los tiempos de ejecución y la calidad de las
@@ -130,7 +130,7 @@ puede aplicarse, si $\#V(G_1) = \#V (G_2)$.
 Cada iteración del algoritmo recorre la vecindad completa de la solución que
 se busca mejorar; para esto se utilizan dos ciclos anidados. El primero de
 ellos recorre todos los nodos de la solución, es decir, realiza $N_1$
-iteraciónes. El ciclo interior recorre el conjunto $W_U \subseteq G_2$ de los
+iteraciones. El ciclo interior recorre el conjunto $W_U \subseteq G_2$ de los
 nodos de $G_2$ que no forman parte del mapeo, que tiene $N_2 - N_1$ elementos.
 Dentro de este ciclo, además de realizarse operaciones con un costo constante,
 se itera a su vez, para cada nodo $w \in W_U$, sobre el conjunto de sus
@@ -206,7 +206,7 @@ siendo esta última considerablemente más grande. Desde un punto de vista
 computacional, esto tiene como desventaja inmediata un mayor costo a la hora
 de recorrer y explorar la vecindad, pero corre con la ventaja de que resulta
 posible pasar de una solución dada a cualquier otra en una cantidad de
-iteraciónes menor (se puede decir que $N_2$ es una vecindad más
+iteraciones menor (se puede decir que $N_2$ es una vecindad más
 \emph{densamente conectada} que I).
 
 \subheading{Pseudocódigo de una iteración}
@@ -360,7 +360,7 @@ complejidad de cada uno de ellos por separado.
     Es importante notar que el primer ciclo se ejecutará exactamente $N_1 - 1$
     veces para cada posible $w_1$, y análogamente el segundo se ejecutará
     exactamente $N_1 - 1$ veces para cada posible $w_2$. Así, la complejidad
-    combinada de estas iteraciónes, considerando por separado las operaciones
+    combinada de estas iteraciones, considerando por separado las operaciones
     constantes y los dos ciclos mencionados, será de
     \begin{align*}
     \ord & \left( N_1^2 + N_1 \times \sum_{w_1 \in W_M} ((1 +
@@ -389,10 +389,10 @@ complejidad de cada uno de ellos por separado.
     \item Cuando se selecciona un par que contiene dos nodos que no están en
     el mapeo, o que contiene dos veces a un nodo del mapeo, se omite dicho
     par, con un costo $\ord(1)$. Hay un total de $N_1 + (N_2 - N_1)^2$ de
-    estas iteraciónes.
+    estas iteraciones.
 \end{itemize}
 
-Sumando la complejidad de los tres tipos de iteraciónes recién descriptos, se
+Sumando la complejidad de los tres tipos de iteraciones recién descriptos, se
 obtiene una complejidad total para la primera etapa del algoritmo de
 $\ord \left( N_1^2 \times (1 + M_2) + N_1 \times N_2 + (N_2 - N_1)^2 \right)$.
 
@@ -413,7 +413,7 @@ complejidad total de una iteración de la vecindad II tiene un costo
 
 \subsection{Experimentación}
 
-	Dadas ciertas familias de grafos (arboles, ciclos, completos y bipartos) y distintos tamaños de grafos ($#(g_1)$ $n$ veces mas que $#(g_2)$, variando el $n$ entre 1 y $#(g_2)$), se querra comparar, cuanto mejor que la solución greedy es el local search, cual de las dos vecindades es mejor, que porcentaje de vencindad a mirar da un mejor resultado y a partir de cuantas iteraciónes empieza a agragar pocas ó deja de agregar arristas.  
+	Dadas ciertas familias de grafos (arboles, ciclos, completos y bipartos) y distintos tamaños de grafos ($#(g_1)$ $n$ veces mas que $#(g_2)$, variando el $n$ entre 1 y $#(g_2)$), se querra comparar, cuanto mejor que la solución greedy es el local search, cual de las dos vecindades es mejor, que porcentaje de vencindad a mirar da un mejor resultado y a partir de cuantas iteraciones empieza a agragar pocas ó deja de agregar arristas.
 
 
 	\subsubsection{Porcentaje de vencindad optimo}
@@ -422,7 +422,7 @@ complejidad total de una iteración de la vecindad II tiene un costo
 
 
     \subheading{Primera vecindad}
-	
+
 
 
     \begin{figure}[H]
@@ -701,9 +701,9 @@ complejidad total de una iteración de la vecindad II tiene un costo
     Se puede concluir que con mirar un pequeño porcentaje de la vecindad, se logra una buena solución.
 
 
-	\subsubsection{Cantidad de iteraciónes optima}
+	\subsubsection{Cantidad de iteraciones optima}
 
-    Dadas familias con orden $n$(tree, ciclo) de arristas y orden $n^2$,(bipartito, completo) se varia la cantidad de iteraciónes maximas de la busqueda local.
+    Dadas familias con orden $n$(tree, ciclo) de arristas y orden $n^2$,(bipartito, completo) se varia la cantidad de iteraciones maximas de la busqueda local.
 
     \subheading{Primera vecindad}
 
@@ -1038,7 +1038,7 @@ complejidad total de una iteración de la vecindad II tiene un costo
     Segunda vecindad:
 
 
-    
+
 
     \pgfplotstableset{
         create on use/sol/.style={copy column from table={\greedysolutions}{[index] 1}}
