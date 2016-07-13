@@ -14,6 +14,25 @@
 %    algoritmo en términos de tiempo de ejecución en función del tamaño de
 %    entrada.
 
+\subsection{Introducción}
+
+Dado que la complejidad del algoritmo exacto resulta prohibitiva en la práctica,
+se pedía desarrollar una heurística golosa que resolviera el problema en tiempo
+polinomial. Para esto fue necesario plantear algoritmos que a cuestas de la
+calidad final de la solución permitieran mejorar sustancialmente la complejidad.
+
+Pensar heurísticas tiene el desafío de que las mismas suelen tener un factor
+importante de intuición sobre por qué podrían llegar a funcionar mejor o peor y
+no una justificación formal. Esto tiene como consecuencia que resulta
+difícil decidir qué criterio utilizar puesto que siempre es posible
+encontrar instancias para las cuales el mismo sea tan malo como uno
+quiera.
+
+El criterio seleccionado fue el grado de los nodos. La motivación detrás de esta
+decisión fue la idea de que tomando los vértices de mayor grado en cada grafo,
+uno aumenta la posibilidad de que tengan vecinos en común, permitiendo así mapear
+sus respectivas aristas en el subgrafo común.
+
 \subsection{Experimentación}
 
 \pgfplotstableread[header=false]{../exp/ej4/known_sol_greedy_exp}\knowngreedy
