@@ -422,9 +422,250 @@ complejidad total de una iteración de la vecindad II tiene un costo
 
 	\end{enumerate}
 	
-	\subsubsection{Greedy vs Local Search}
+	
 
-	Se corrieron con viendo el $5$ porciento de la vecindad y cortando a la 5 iteracion.
+
+
+
+
+	\subsubsection{Porcentaje de vencindad optimo}
+
+	Dadas familias con orden $n$(tree, ciclo) de arristas y orden $n^2$,(bipartito, completo) se varia el porcentaje de vecindad a mirar en cada iteración.
+
+
+    \subheading{Primera vecindad}
+	
+
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={$g1$ es un ciclo de 300 nodos y $g2$ es un random tree de 600 },
+                    ylabel={Cantidad de arristas promedio},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_tree_vs_small_cicle_neighbourhood_1_proportion};
+
+                \legend{$T_{M}$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
+        ($T_{co_n}$) .}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={$g1$ es un random tree de 300 nodos y $g2$ es un ciclo de 600 },
+                    ylabel={Cantidad de arristas promedio},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_cicle_vs_small_tree_1_proportion};
+
+                \legend{$T_{M}$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
+        ($T_{co_n}$) .}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={$g1$ es un bipartito  300 nodos y $g2$ es un random tree de 600 },
+                    ylabel={Cantidad de arristas promedio},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_bipartite_some_edges_vs_big_tree_neighbourhood_1_proportion};
+
+                \legend{$T_{M}$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
+        ($T_{m}$) .}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={$g1$ es un bipartito  300 nodos y $g2$ es un random tree de 600 },
+                    ylabel={Cantidad de arristas promedio},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_2_proportion};
+
+                \legend{$T_{M}$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
+        ($T_{m}$) .}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+
+    Segunda Vecindad :
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={$g1$ es un ciclo de 300 nodos y $g2$ es un random tree de 600 },
+                    ylabel={Cantidad de arristas promedio},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_tree_vs_small_cicle_neighbourhood_2_proportion};
+
+                \legend{$T_{M}$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
+        ($T_{co_n}$) .}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={$g1$ es un random tree de 300 nodos y $g2$ es un ciclo de 600 },
+                    ylabel={Cantidad de arristas promedio},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_cicle_vs_small_tree_2_proportion};
+
+                \legend{$T_{M}$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
+        ($T_{co_n}$) .}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={$g1$ es un bipartito  300 nodos y $g2$ es un random tree de 600 },
+                    ylabel={Cantidad de arristas promedio},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_bipartite_some_edges_vs_big_tree_neighbourhood_2_proportion};
+
+                \legend{$T_{M}$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
+        ($T_{m}$) .}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    title={},
+                    xlabel={$g1$ es un bipartito  300 nodos y $g2$ es un random tree de 600 },
+                    ylabel={Cantidad de arristas promedio},
+                    scaled x ticks=false,
+                    scaled y ticks=false,
+                    enlargelimits=0.05,
+                    width=0.5\textwidth,
+                    height=0.5\textwidth,
+                    legend pos=north west,
+                    legend cell align=left,
+                    xmin=0
+                ]
+
+                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_1_proportion};
+
+                \legend{$T_{M}$}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
+        ($T_{m}$) .}
+        \label{fig:exp3:var-nym-base}
+    \end{figure}
+
+    Se puede concluir que con mirar una vecindad menor al $20\%$, se logra una buena solución.
+
+
+	\subsubsection{Cantidad de iteraciones optima}
+
+
+
+    \subsubsection{Greedy vs Local Search}
+
+    Se corrieron con viendo el $5$ porciento de la vecindad y cortando a la 5 iteracion.
 
     \pgfplotstableread[header=false]{../exp/ej5/known_solution_instances_search_2_exp}\knownlocalsearchdos
     \pgfplotstableread[header=false]{../exp/ej5/known_solution_instances_search_1_exp}\knownlocalsearchuno
@@ -505,183 +746,3 @@ complejidad total de una iteración de la vecindad II tiene un costo
             column name=$T_{\sigma}$,
         }
     ]\knownlocalsearchdos
-
-
-
-
-
-	\subsubsection{Porcentaje de vencindad optimo}
-
-	Familia de grafos para los cuales se experimenta contra el greedy. Para este experimento no hay limite de iteraciones y se mira toda vecindades.
-
-    Primera vecindad
-	
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={$g1$ es un ramdom tree de 400 nodos y $g2$ es un ramdom tree de 800 },
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_tree_vs_small_tree_neighbourhood_1_proportion};
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
-        ($T_{co_n}$) .}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={$g1$ es un completo de 400 nodos y $g2$ es un ramdom tree de 800 },
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/tree_vs_complete_neighbourhood_1_proportion};
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
-        ($T_{co_n}$) .}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={$g1$ es un ciclo de 400 nodos y $g2$ es un ciclo de 800 },
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_cicle_vs_small_cicle_neighbourhood_1_proportion};
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
-        ($T_{co_n}$) .}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={$g1$ es un completo de 400 nodos y $g2$ es un ciclo de 800 },
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/cicle_vs_complete_neighbourhood_1_proportion};
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
-        ($T_{co_n}$) .}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={$g1$ es un ciclo de 400 nodos y $g2$ es un random tree de 800 },
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_tree_vs_small_cicle_neighbourhood_1_proportion};
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
-        ($T_{co_n}$) .}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={$g1$ es un random tree de 400 nodos y $g2$ es un ciclo de 800 },
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_cicle_vs_small_tree_1_proportion};
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Tiempos de ejecución observados al variar los valores de $n_1$
-        ($T_{co_n}$) .}
-        \label{fig:exp3:var-nym-base}
-    \end{figure}
-
-
-
-
-
-	\subsubsection{Cantidad de iteraciones optima}
