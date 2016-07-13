@@ -719,3 +719,21 @@ Al observar que el algoritmo permanece por debajo de la constante para todas
 las familias de grafos con las que se experimentó, se puede apreciar que
 cumple con la cota de complejidad calculada para el caso en que se fija
 $N_1 = C$.
+
+\subsection{Conclusión}
+
+Una vez finalizadas las experimentaciones para los casos expuestos se llegó a
+la conclusión de que el algoritmo cumple con la complejidad calculada, en
+vista de que las combinaciones de casos y familias de grafos planteadas cubren
+una buena cantidad de instancias, en cada caso se desempeña en un tiempo menor
+a la cota de complejidad calculada, y que se lo considera representativo para
+instancias mayores a las expuestas dentro del rango de la muestra.
+
+Una observación adicional surgida de la experimentación es que para grafos
+completos los tiempos de ejecución del algoritmo se alejan (son bastante
+mayores) del resto de las familias de grafos empleadas en los experimentos.
+Esto tiene sentido ya que al haber una mucho mayor densidad de aristas que en
+el resto de los casos, generalmente el grado de los nodos en es mucho mayor,
+lo cual implica una mayor cantidad de operaciones al momento de verificar
+las vecindades de los distintos nodos que se tienen en cuenta a lo largo de la
+ejecución del algoritmo.
