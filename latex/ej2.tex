@@ -20,7 +20,7 @@ extremadamente costoso tanto temporal como espacialmente, por lo que no solo
 es recomendable sino necesario realizar podas y estrategias que
 permitan mejorar los tiempos de resolución.
 
-\subsection{Resolución}
+\subsection{Resolución algorítmica}
 El algoritmo consiste en probar todos los mapeos posibles entre los nodos de
 ambos grafos, y así tomar un grafo común con la mayor cantidad de aristas de
 entre todas las combinaciones de mapeos.
@@ -36,6 +36,7 @@ rama de ejecución.
 \vspace{1em}
 
 \begin{algorithm}[H]
+    \SetAlgoVlined
     \caption{\acr{MCS} exacto, utilizando \emph{backtracking}}
     \label{algo:backtracking}
 
@@ -144,6 +145,7 @@ devolviendo falso. Esta estructura es lo primero que se ejecuta cuando se hace
 el llamado recursivo. A continuación puede verse el pseudocódigo de la poda.
 
 \begin{algorithm}
+    \SetAlgoVlined
     \caption{Poda: suma de grados}
     \If {$mcs$.m() + sumaDeGrados($l_1$) $\leq$ $maximaCantEjes$} {
         \Return{falso}
@@ -208,6 +210,7 @@ después de haber elegido los nodos candidatos a ser mapeados. A continuación
 puede verse el pseudocódigo de la poda.
 
 \begin{algorithm}
+    \SetAlgoVlined
     \caption{Poda: permutaciones}
     \If {$mcs$.n() == 1} {
         $permutacion$ $\gets$ tupla con el primer par mapeado y el par actual \;
@@ -238,7 +241,7 @@ desmejora en relación a la ganancia. No obstante, ambas podas no solo
 acabaron siendo muy buenas, sino incluso fundamentales a medida que el tamaño de los
 grafos crecía.
 
-\subsection{Complejidad}
+\subsection{Complejidad teórica}
 
 Para medir la complejidad del algoritmo, en principio, se analizará el
 árbol de ejecución dado por el mismo. Se definen $N_1$ y $N_2$, las cantidades
@@ -349,6 +352,7 @@ Sea $j = N_1 - i$ y por consecuente $i = N_1 - j$; se verifica que
 =& \ord((N_1 + N_2))  \ord\left(\frac{1}{6}N_1(-N_1^2 + 1 + 3N_1N_2 + 3N_2)\right) \\
 \end{align*}
 
+\newpage
 Al verificarse que $N_1 \geq N_2$, vale que $3N_1N_2 - N_1^2 \geq 2N_1^2$.
 Entonces
 \begin{align*}
@@ -364,6 +368,372 @@ Finalmente, la complejidad del algoritmo es
 \ord\left(\frac{N_1!  N_2!}{(N_2 - N_1)!} (N_1 + N_2)  N_2  N_1^3\right)
 \]
 
-% \subsection{Experimentación}
+\subsection{Experimentación}
 
-% Cubrir un amplio espectro.
+Una vez completada la implementación del algoritmo, se realizaron pruebas
+experimentales con el fin de corroborar la cota teórica calculada para la
+complejidad temporal del mismo. Como fue visto anteriormente, la complejidad
+del algoritmo es
+$\ord\left(\frac{N_1!  N_2!}{(N_2 - N_1)!} (N_1 + N_2)  N_2  N_1^3\right)$
+siempre que valga $N_1 \leq N_2$.
+
+Entonces sólo tiene sentido experimentar para medir la complejidad siempre
+que se cumpla que $N_1 \leq N_2$. Con el fin de cubrir un amplio espectro de
+la región acotada por esta condición se formularon experimentos que emplean
+distintos valores para las cantidades de nodos de los grafos en cuestión.
+
+\begin{enumerate}[label=\alph*)]
+\item $N_1 = N_2$
+\item $2N_1 = N_2$
+\item $N_1 = C$
+\end{enumerate}
+
+A continuación se analiza la complejidad del algoritmo considerando las
+cantidades de nodos descriptas previamente:
+
+\begin{enumerate}[label=\alph*.]
+\item
+$\ord\left(\frac{N_1!  N_2!}{(N_2 - N_1)!} (N_1 + N_2)  N_2  N_1^3\right)$
+$=\ord((N_1!)^2 N_1^5)$
+
+\item
+$\ord\left(\frac{N_1!  N_2!}{(N_2 - N_1)!} (N_1 + N_2)  N_2  N_1^3\right)$
+$=\ord\left(\frac{N_1! (2N_1)!}{(2N_1 - N_1)!} (N_1 + 2N_1)  2N_1  N_1^3\right)$
+
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 
+$=\ord\left(\frac{N_1! (2N_1)!}{(N_1)!} 3N_1 2N_1  N_1^3\right)$
+
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 
+$=\ord\left((2N_1)! N_1^5\right)$
+
+\item
+$\ord\left(\frac{N_1!  N_2!}{(N_2 - N_1)!} (N_1 + N_2)  N_2  N_1^3\right)$
+$=\ord\left(\frac{C! N_2!}{(N_2 - C)!} (C + N_2)  N_2  C^3\right)$
+
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 
+$=\ord\left(\frac{N_2!}{(N_2 - C)!}N_2^2\right)$
+\end{enumerate}
+
+Para evitar la interferencia en las mediciones de la morfología del grafo, se
+fijó cada experimento para una familia de grafos determinada. Así, se tiene un
+mayor control de las variables involucradas. Sin embargo, para verificar que
+la cota teórica de complejidad no se cumple de forma accidental, sino que vale
+para grafos de cualquier tipo, se probó con varias familias distintas.
+
+Se experimento con las siguientes familias de grafos:
+
+\begin{itemize}
+\item \textit{Completos}: Grafo completo vs. grafo completo
+\item \textit{Árboles}: Árbol vs. árbol
+\item \textit{Ciclos}: Ciclos simple vs. ciclo simple
+\item \textit{Bipartitos}: Grafo bipartito completo vs. grafo bipartito
+completo
+\end{itemize}
+
+Se exponen ahora los gráficos de los resultados de las experimentaciones. Se
+exhibe uno por cada relación en la cantidad de nodos de los grafos utilizados
+distinta. Para cada uno de ellos se grafican los datos obtenidos de cada una
+de las familias de grafos ya mencionadas junto a la cota de complejidad
+calculada para cada caso, para así compararlas y poder observar que para cada
+una de ellas el algoritmo cumple con la cota de complejidad calculada.
+
+Las cotas de complejidad son multiplicadas por una constante que ajusta su
+valor al de las experimentaciones como mas conveninete sea para poder apreciar
+con mayor facilidad si el algoritmo cumple o no con ellas.
+
+\newcommand\constante{1}
+En la Figura \ref{fig:exp2:n_1_eq_n_2} pueden observarse los datos obtenidos
+de la experimentación en el caso en que $N_1 = N_2$.
+
+\begin{figure}[H]
+    \caption{Tiempos de ejecución observados para $N_1 = N_2$.}
+    \label{fig:exp2:n_1_eq_n_2}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                title={},
+                xlabel={Cantidad de nodos ($N_1$)},
+                ylabel={Tiempo de ejecución (nanosegundos)},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=outer north east,
+                legend cell align=left,
+                ymode=log
+            ]
+            \addplot[color=black] table[x index=0,y expr={\constante * x! * x! * x^5}]{../exp/ej2/equal_complete_vs_complete};
+            \addplot[color=orange] table[x index=0,y index=1]{../exp/ej2/equal_complete_vs_complete};
+            \addplot[color=blue] table[x index=0,y index=1]{../exp/ej2/equal_tree_vs_tree};
+            \addplot[color=red] table[x index=0,y index=1]{../exp/ej2/equal_cycle_vs_cycle};
+            \addplot[color=green] table[x index=0,y index=1]{../exp/ej2/equal_complete_bipartite_vs_complete_bipartite};
+
+            \legend{
+                $(N_1!)^2 N_1^5$,
+                \textit{Completos},
+                \textit{Árboles},
+                \textit{Ciclos},
+                \textit{Bipartitos}
+            }
+        \end{axis}
+    \end{tikzpicture}
+\end{figure}
+
+Con la intención de lograr una mejor comparativa de los tiempos de ejecución
+de cada familia de grafos con la cota de complejidad se analiza un cociente
+entre cada familia y dicha cota. En la Figura
+\ref{fig:exp2:n_1_eq_n_2:cociente} puede observarse este cociente, en donde se
+grafica también la constante utilizada para ajustar la cota de complejidad,
+que en este caso es 1.
+
+\begin{figure}[H]
+    \caption{Cociente entre los tiempos de ejecución observados para $N_1 = N_2$ y su cota de complejidad.}
+    \label{fig:exp2:n_1_eq_n_2:cociente}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                title={},
+                xlabel={Cantidad de nodos ($N_1$)},
+                ylabel={Tiempo de ejecución (nanosegundos) / $\left((N_1!)^2 N_1^5\right)$},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=outer north east,
+                legend cell align=left,
+                ymode=log
+            ]
+            \addplot[color=black] table[x index=0,y expr={\constante}]{../exp/ej2/equal_complete_vs_complete};
+            \addplot[color=orange] table[x index=0,y expr={\thisrowno{1} / (x! * x! * x^5)}]{../exp/ej2/equal_complete_vs_complete};
+            \addplot[color=blue] table[x index=0,y expr={\thisrowno{1} / (x! * x! * x^5)}]{../exp/ej2/equal_tree_vs_tree};
+            \addplot[color=red] table[x index=0,y expr={\thisrowno{1} / (x! * x! * x^5)}]{../exp/ej2/equal_cycle_vs_cycle};
+            \addplot[color=green] table[x index=0,y expr={\thisrowno{1} / (x! * x! * x^5)}]{../exp/ej2/equal_complete_bipartite_vs_complete_bipartite};
+
+            \legend{
+                $\constante$,
+                $\frac{\textit{Completos}}{(N_1!)^2 N_1^5}$,
+                $\frac{\textit{Árboles}}{(N_1!)^2 N_1^5}$,
+                $\frac{\textit{Ciclos}}{(N_1!)^2 N_1^5}$,
+                $\frac{\textit{Bipartitos}}{(N_1!)^2 N_1^5}$
+            }
+        \end{axis}
+    \end{tikzpicture}
+\end{figure}
+
+Es notorio como cada una de las familias de grafos utilizadas para esta
+experimentación permanecen por debajo de la constante, lo cual indica entonces
+que para el caso en que $N_1 = N_2$ el algoritmo cumple con la cota de
+complejidad calculada, que es de orden $(N_1!)^2 N_1^5$, para cada una de
+estas familias.
+
+\renewcommand\constante{1}
+Se expone ahora, en la Figura \ref{fig:exp2:2n_1_eq_n_2}, un gráfico con los
+datos obtenidos de la experimentación en el caso en que $2N_1 = N_2$, junto a
+la cota de complejidad para este caso que es $\ord((2N_1)! N_1^5)$.
+
+\begin{figure}[H]
+    \caption{Tiempos de ejecución observados para $2N_1 = N_2$.}
+    \label{fig:exp2:2n_1_eq_n_2}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                title={},
+                xlabel={Cantidad de nodos ($N_2$)},
+                ylabel={Tiempo de ejecución (nanosegundos)},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=outer north east,
+                legend cell align=left,
+                ymode=log
+            ]
+            \addplot[color=black] table[x index=0,y expr={\constante * ((2 * x)! * x^5}]{../exp/ej2/lineal_complete_vs_complete};
+            \addplot[color=orange] table[x index=0,y index=1]{../exp/ej2/lineal_complete_vs_complete};
+            \addplot[color=blue] table[x index=0,y index=1]{../exp/ej2/lineal_tree_vs_tree};
+            \addplot[color=red] table[x index=0,y index=1]{../exp/ej2/lineal_cycle_vs_cycle};
+            \addplot[color=green] table[x index=0,y index=1]{../exp/ej2/lineal_complete_bipartite_vs_complete_bipartite};
+
+            \legend{
+                $(2N_1)! N_1^5$,
+                \textit{Completos},
+                \textit{Árboles},
+                \textit{Ciclos},
+                \textit{Bipartitos}
+            }
+        \end{axis}
+    \end{tikzpicture}
+\end{figure}
+
+Al igual que en el experimento anterior, se grafica en la Figura
+\ref{fig:exp2:2n_1_eq_n_2:cociente} el cociente entre los datos obtenidos y la
+cota de complejidad de la experimentación para el caso en que $2N_1 = N_2$,
+junto con la constante que multiplica la función descripta por la cota de
+complejidad que en este caso es \constante.
+
+\begin{figure}[H]
+    \caption{Cociente entre los tiempos de ejecución observados para $2N_1 = N_2$ y su cota de complejidad.}
+    \label{fig:exp2:2n_1_eq_n_2:cociente}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                title={},
+                xlabel={Cantidad de nodos ($N_2$)},
+                ylabel={Tiempo de ejecución (nanosegundos) / $((2N_1)! N_1^5)$},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=outer north east,
+                legend cell align=left,
+                ymode=log
+            ]
+            \addplot[color=black] table[x index=0,y expr={\constante}]{../exp/ej2/lineal_complete_vs_complete};
+            \addplot[color=orange] table[x index=0,y expr={\thisrowno{1} / ((2 * x)! * x^5)}]{../exp/ej2/lineal_complete_vs_complete};
+            \addplot[color=blue] table[x index=0,y expr={\thisrowno{1} / ((2 * x)! * x^5)}]{../exp/ej2/lineal_tree_vs_tree};
+            \addplot[color=red] table[x index=0,y expr={\thisrowno{1} / ((2 * x)! * x^5)}]{../exp/ej2/lineal_cycle_vs_cycle};
+            \addplot[color=green] table[x index=0,y expr={\thisrowno{1} / ((2 * x)! * x^5)}]{../exp/ej2/lineal_complete_bipartite_vs_complete_bipartite};
+
+            \legend{
+                $\constante$,
+                $\frac{\textit{Completos}}{(2N_1)! N_1^5}$,
+                $\frac{\textit{Árboles}}{(2N_1)! N_1^5}$,
+                $\frac{\textit{Ciclos}}{(2N_1)! N_1^5}$,
+                $\frac{\textit{Bipartitos}}{(2N_1)! N_1^5}$
+            }
+        \end{axis}
+    \end{tikzpicture}
+\end{figure}
+
+Al igual que en el caso anterior, puede observarse como cada una de las
+familias de grafos empleadas en esta experimentación permanecen por debajo de
+la constante, lo cual indica entonces que para el caso en que $2N_1 = N_2$ el
+algoritmo cumple con la cota de complejidad calculada de orden $(2N_1)! N_1^5$,
+para cada una de estas familias.
+
+\renewcommand\constante{5000}
+\newcommand\valorFijo{4}
+Finalmente, en la Figura \ref{fig:exp2:n_1_eq_fijo} pueden verse los datos
+obtenidos de la experimentación en el caso en que $N_1 = C$. El valor elegido
+es $C = \valorFijo$.
+
+La razón por la cual el valor en que $C$ fue fijado sea \valorFijo es que para
+valores muy chicos el algoritmo no ejecutaba demasiadas operaciones, lo cual
+no hubiese sido fructuosa a raíz de la experimentación, y para valores grandes
+el tiempo de ejecución es muy alto, lo suficiente como para correr durante
+días. Como existe la condición de que $N_1 \leq N_2$, si se fija para $C$ un
+valor muy alto, el algoritmo debera efectuar la búsqueda para un grafo con una
+cantidad alta de nodos y otro con una cantidad mayor aún. Para un numero de 8
+nodos por grafo el algoritmo comienza a enlentecerse mucho, entonces
+se estableció $C = 4$ ya que permite una experimentación de tiempo aceptable,
+y además un rango de nodos suficiente como para considerar la experimentación
+representativa para valores mayores.
+
+\begin{figure}[H]
+    \caption{Tiempos de ejecución observados para $N_1 = \valorFijo$.}
+    \label{fig:exp2:n_1_eq_fijo}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                title={},
+                xlabel={Cantidad de nodos ($N_2$)},
+                ylabel={Tiempo de ejecución (nanosegundos)},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=outer north east,
+                legend cell align=left,
+                ymode=log
+            ]
+            \addplot[color=black] table[x index=0,y expr={\constante * x! / (x - \valorFijo)! * x^2}]{../exp/ej2/fixed_complete_vs_complete};
+            \addplot[color=orange] table[x index=0,y index=1]{../exp/ej2/fixed_complete_vs_complete};
+            \addplot[color=blue] table[x index=0,y index=1]{../exp/ej2/fixed_tree_vs_tree};
+            \addplot[color=red] table[x index=0,y index=1]{../exp/ej2/fixed_cycle_vs_cycle};
+            \addplot[color=green] table[x index=0,y index=1]{../exp/ej2/fixed_complete_bipartite_vs_complete_bipartite};
+
+            \legend{
+                $\constante \frac{N_2!}{(N_2 - \valorFijo)!}N_2^2$,
+                \textit{Completos},
+                \textit{Árboles},
+                \textit{Ciclos},
+                \textit{Bipartitos}
+            }
+        \end{axis}
+    \end{tikzpicture}
+\end{figure}
+
+Al igual que en el experimento anterior, se grafica en la Figura
+\ref{fig:exp2:2n_1_eq_n_2:cociente} el cociente entre los datos obtenidos y la
+cota de complejidad de la experimentación para el caso en que $2N_1 = N_2$,
+junto con la constante que multiplica la función descripta por la cota de
+complejidad que en este caso es \constante.
+En la Figura \ref{fig:exp2:n_1_eq_fijo:cociente} puede verse el cociente entre
+los datos obtenidos y la cota de complejidad de la experimentación en el caso
+en que $N_1 = C$, siendo $C = \valorFijo$. También se grafica la constante que
+multiplica la función descripta por la cota de complejidad que en este caso es
+\constante.
+
+\begin{figure}[H]
+    \caption{Cociente entre los tiempos de ejecución observados para $N_1 = \valorFijo$ y su cota de complejidad.}
+    \label{fig:exp2:n_1_eq_fijo:cociente}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                title={},
+                xlabel={Cantidad de nodos ($N_2$)},
+                ylabel={Tiempo de ejecución (nanosegundos) / $\left(\frac{N_2!}{(N_2 - \valorFijo)!}N_2^2\right)$},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=outer north east,
+                legend cell align=left,
+                ymode=log,
+                xmin=4
+            ]
+            \addplot[color=black] table[x index=0,y expr={\constante}]{../exp/ej2/fixed_complete_vs_complete};
+            \addplot[color=orange] table[x index=0,y expr={\thisrowno{1} / (x! / (x - \valorFijo)! * x^2)}]{../exp/ej2/fixed_complete_vs_complete};
+            \addplot[color=blue] table[x index=0,y expr={\thisrowno{1} / (x! / (x - \valorFijo)! * x^2)}]{../exp/ej2/fixed_tree_vs_tree};
+            \addplot[color=red] table[x index=0,y expr={\thisrowno{1} / (x! / (x - \valorFijo)! * x^2)}]{../exp/ej2/fixed_cycle_vs_cycle};
+            \addplot[color=green] table[x index=0,y expr={\thisrowno{1} / (x! / (x - \valorFijo)! * x^2)}]{../exp/ej2/fixed_complete_bipartite_vs_complete_bipartite};
+
+            \legend{
+                $\constante$,
+                \textit{Completos}$\frac{(N_2 - \valorFijo)!}{N_2! N_2^2}$,
+                \textit{Árboles}$\frac{(N_2 - \valorFijo)!}{N_2! N_2^2}$,
+                \textit{Ciclos}$\frac{(N_2 - \valorFijo)!}{N_2! N_2^2}$,
+                \textit{Bipartitos}$\frac{(N_2 - \valorFijo)!}{N_2! N_2^2}$
+            }
+        \end{axis}
+    \end{tikzpicture}
+\end{figure}
+
+Al observar que el algoritmo permanece por debajo de la constante para todas
+las familias de grafos con las que se experimentó, se puede apreciar que
+cumple con la cota de complejidad calculada para el caso en que se fija
+$N_1 = C$.
+
+\subsubsection{Conclusiones}
+
+Una vez finalizadas las experimentaciones para los casos expuestos se llegó a
+la conclusión de que el algoritmo cumple con la complejidad calculada, en
+vista de que las combinaciones de casos y familias de grafos planteadas cubren
+una buena cantidad de instancias, en cada caso se desempeña en un tiempo menor
+a la cota de complejidad calculada, y que se lo considera representativo para
+instancias mayores a las expuestas dentro del rango de la muestra.
+
+Una observación adicional surgida de la experimentación es que para grafos
+completos los tiempos de ejecución del algoritmo se alejan (son bastante
+mayores) del resto de las familias de grafos empleadas en los experimentos.
+Esto tiene sentido ya que al haber una mucho mayor densidad de aristas que en
+el resto de los casos, generalmente el grado de los nodos en es mucho mayor,
+lo cual implica una mayor cantidad de operaciones al momento de verificar
+las vecindades de los distintos nodos que se tienen en cuenta a lo largo de la
+ejecución del algoritmo.
