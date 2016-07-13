@@ -122,6 +122,77 @@ tanto el costo final del algoritmo es:
 	\ord(N_1 \times \log N_1 + N_2 \times \log N_2 + M_1 + M_2)
 \end{equation*}
 
+\subsection{Instancias subóptimas}\label{sec:ej4:suboptimal}
+
+Como se dijo anteriormente, una heurística puede funcionar relativamente bien
+para algunas instancias y sin embargo ser desastrosa para otras. Para este
+problema en particular, las instancias son los pares de grafo ($G_1$, $G_2$) que
+son recibidos como entrada.
+
+La heurística golosa desarrollada utiliza fuertemente la intuición de que los
+nodos de mayor grado al poseer más vecinos tienen una mayor posibilidad de
+agregar aristas contra el subgrafo común generado hasta el momento. Como es de
+esperarse, esto puede llevar por mal camino.
+
+Se procede a describir la construcción para una familia de instancias donde el
+algoritmo no es capaz de encontrar ninguna arista independientemente del tamaño
+de los grafos:
+
+\begin{enumerate}
+	\item Crear un ciclo $C_k$ en $G_1$ y $G_2$ con $k \geq 3$.
+	\item Crear $k$ estrellas $K_{1,3}$ en $G_1$.
+\end{enumerate}
+
+Esto resulta en un grafo $G_1$ con $N_1 = 5 \times k$ y $M_1 = 4 \times k$,
+y otro grafo $G_2$ con $N_2 = k$ y $M_2 = k$. Por lo tanto, las instancias
+pueden ser tan grandes como uno desee.
+
+El máximo subgrafo común de esta familia siempre será el ciclo $C_k$. Esto se
+debe a que $G_2 = C_k$, por lo tanto es subgrafo de $G_1$ que contiene a $C_k$.
+
+El grado máximo de $G_1$ será 3, correspondiente al de los nodos
+centrales en cada estrella $K_{1,3}$. En $G_2$ el grado máximo será 2, ya que al
+ser un ciclo simple todo vértice tendrá ese número de aristas incidentes.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics{imagenes/ex4.pdf}
+	\caption{Ejemplo de instancia de la familia para $k = 3$.}
+	\label{fig:heuristica-golosa:ejemplo-g1-suboptimo}
+\end{figure}
+
+Habiendo presentado las características de esta instancia es posible demostrar
+que el algoritmo no es capaz de realizar ni un solo mapeo de arista válido.
+
+Previamente se explicó que la heurística golosa encola todos los nodos de cada
+grafo utilizando su grado como prioridad. Esto produce que para $G_1$ estén
+primeros todos los nodos centrales de las estrellas $K_{1,3}$ mientras que para
+$G_2$ los vértices que componen el ciclo. Al entrar al ciclo principal, se mapea
+cada nodo central de alguna estrella de $G_1$ con un vértice perteneciente al
+ciclo de $G_2$. Como hay $k$ estrellas y $G_2 = C_k$ cada nodo del ciclo
+termina siendo mapeado al vértice central de un $K_{1,3}$.
+
+Este mapeo tiene la particularidad de que no permite agregar ninguna arista, y
+esto se debe a que para poder mapear una arista, es necesario que para el par de
+nodos a agregar, exista en el subgrafo común un par mapeado con vecinos de ambos
+vértices. Cada estrella pertenece a una componente conexa distinta, con lo cual
+no hay ninguna arista entre dos estrellas distintas. Como consecuencia, ningún
+nodo central de una estrella es vecino a otro. De esta forma, ningún par de
+vértices mapeados de $G_1$ es vecino entre sí, produciendo que no sea posible
+agregar una arista en el subgrafo común generado.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics{imagenes/ex4_solution.pdf}
+	\caption{$H$ solución generada por la heurística y $MCS$ el máximo subgrafo
+	común para la instancia en Figura \ref{fig:heuristica-golosa:ejemplo-g1-suboptimo}.}
+	\label{fig:heuristica-golosa:ejemplo-g1-suboptimo-solucion}
+\end{figure}
+
+Esto vale para cualquier instancia de esta familia con $k \geq 3$, donde el
+algoritmo siempre va a actuar de la misma manera con el peor resultado posible
+que es no encontrar ni una arista en común.
+
 \subsection{Experimentación}
 
 \pgfplotstableread[header=false]{../exp/ej4/known_sol_greedy_exp}\knowngreedy
