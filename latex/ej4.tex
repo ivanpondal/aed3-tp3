@@ -41,8 +41,8 @@ la diferencia de que además de mapear los nodos, agrega el mayor número posibl
 vecinos de los mismos. Esta pequeña variación se utilizó como para tener una
 alternativa contra la cual comparar. Luego de pruebas que serán discutidas en la
 sección de experimentación, se llegó a la conclusión de que esta variación
-brindaba soluciones peores que el primer algoritmo, con lo cual todo futuro
-análisis será dedicado a este.
+brindaba peores soluciones que el primer algoritmo, con lo cual todo futuro
+análisis será dedicado al primero.
 
 El mecanismo del algoritmo es el siguiente:
 \begin{enumerate}
@@ -50,7 +50,7 @@ El mecanismo del algoritmo es el siguiente:
 	ordenados por mayor grado.
 	\item Desencolando el primer nodo de cada cola se forma un par que es agregado al subgrafo común.
 	\item Si hay vecinos de los nodos del nuevo par mapeados al mismo elemento del
-	subgrafo común, se agrega una arista entre ellos.
+	subgrafo común, se agrega una arista entre estas asignaciones.
 \end{enumerate}
 
 A continuación, el pseudocódigo de la heurística implementada:
@@ -103,7 +103,7 @@ Inicializar las dos colas de prioridad tiene un costo $\ord(N_1 \times \log N_1 
 \times \log N_2)$. Esto se debe a que las mismas están implementadas sobre un heap cuyo costo
 de inserción es logarítmico sobre la cantidad de elementos en el mismo.
 
-El ciclo princpial corre hasta que alguna de las dos colas se vacíe. En el peor caso
+El ciclo principal corre hasta que alguna de las dos colas se vacíe. En el peor caso
 ambas colas tienen el mismo tamaño, con lo cual se desencolarían los $N_1 = N_2$
 nodos. En cada iteración del ciclo se recorren todos los vecinos de los nodos
 desapilados donde para cada uno se realiza una operación de costo constante.
@@ -126,7 +126,7 @@ tanto el costo final del algoritmo es:
 
 Como se dijo anteriormente, una heurística puede funcionar relativamente bien
 para algunas instancias y sin embargo ser desastrosa para otras. Para este
-problema en particular, las instancias son los pares de grafo ($G_1$, $G_2$) que
+problema en particular, las instancias son los pares de grafos ($G_1$, $G_2$) que
 son recibidos como entrada.
 
 La heurística golosa desarrollada utiliza fuertemente la intuición de que los
@@ -135,7 +135,7 @@ agregar aristas contra el subgrafo común generado hasta el momento. Como es de
 esperarse, esto puede llevar por mal camino.
 
 Se procede a describir la construcción para una familia de instancias donde el
-algoritmo no es capaz de encontrar ninguna arista independientemente del tamaño
+algoritmo no es capaz de encontrar una arista independientemente del tamaño
 de los grafos:
 
 \begin{enumerate}
@@ -162,7 +162,7 @@ ser un ciclo simple todo vértice tendrá ese número de aristas incidentes.
 \end{figure}
 
 Habiendo presentado las características de esta instancia es posible demostrar
-que el algoritmo no es capaz de realizar ni un solo mapeo de arista válido.
+que el algoritmo no es capaz de realizar ni un solo mapeo de aristas válido.
 
 Previamente se explicó que la heurística golosa encola todos los nodos de cada
 grafo utilizando su grado como prioridad. Esto produce que para $G_1$ estén
@@ -200,7 +200,7 @@ dedicada a la calidad de soluciones, y otra a la complejidad teórica.
 
 \subsubsection{Calidad de soluciones}
 
-Como se planteó en la introducción, además del algoritmo descrito se desarrolló
+Como se planteó en la introducción, además del algoritmo descrito, se desarrolló
 una pequeña variación del mismo para tener un parámetro de comparación adicional
 y ver qué tanto podían cambiar las soluciones obtenidas.
 
@@ -220,13 +220,13 @@ la Sección \ref{sec:ej4:suboptimal}, donde por agregar únicamente los vértice
 grado máximo podía suceder que sus vecinos quedaran fuera del mapeo.
 
 Para determinar la calidad de las soluciones se utilizaron los dos conjuntos de
-instancias presentados en la introducción del trabajor. De esta forma es posible estudiar
+instancias presentados en la introducción del trabajo. De esta forma es posible estudiar
 el comportamiento para distintas familias de grafos y para el grupo con
 soluciones conocidas incluso analizar qué tan lejos del óptimo estaban los
 resultados obtenidos.
 
 Luego de ejecutar las heurísticas golosas sobre las instancias mencionadas, se
-generaró una tabla para cada grupo con la siguiente información:
+generó una tabla para cada grupo con la siguiente información:
 
 \begin{itemize}
 	\item Nombre de la instancia.
@@ -247,48 +247,48 @@ generaró una tabla para cada grupo con la siguiente información:
 \pgfplotstableread[header=false]{../exp/optimal_solutions}{\optimalsolutions}
 
 \pgfplotstablecreatecol
-    [copy column from table={\optimalsolutions}{[index] 1}]{sol}{\knowngreedy}
+	[copy column from table={\optimalsolutions}{[index] 1}]{sol}{\knowngreedy}
 \pgfplotstablecreatecol
-    [copy column from table={\knowngreedyaddneighbours}{[index] 1}]{alternative}{\knowngreedy}
+	[copy column from table={\knowngreedyaddneighbours}{[index] 1}]{alternative}{\knowngreedy}
 \pgfplotstablecreatecol
-    [copy column from table={\unknowngreedyaddneighbours}{[index] 1}]{alternative}{\unknowngreedy}
+	[copy column from table={\unknowngreedyaddneighbours}{[index] 1}]{alternative}{\unknowngreedy}
 
 \pgfplotstableset{
-    every head row/.style={
+	every head row/.style={
 		after row=\hline
 	},
-    columns/0/.style={
-        column name=\textsc{Instancia},
-        column type={l},
-        string replace*={_}{\_},
-        string type,
-        assign cell content/.code={
-            \pgfkeyssetvalue{/pgfplots/table/@cell content}{\texttt{##1}}
-        }
-    },
-    columns/sol/.style={
-        column name=$\#E(MCS)$,
-        int detect
-    },
+	columns/0/.style={
+		column name=\textsc{Instancia},
+		column type={l},
+		string replace*={_}{\_},
+		string type,
+		assign cell content/.code={
+			\pgfkeyssetvalue{/pgfplots/table/@cell content}{\texttt{##1}}
+		}
+	},
+	columns/sol/.style={
+		column name=$\#E(MCS)$,
+		int detect
+	},
 	columns/1/.style={
-        column name=$\#E(H)$,
-        int detect
-    },
-    columns/alternative/.style={
-        column name=$\#E(H_{alt})$,
-        int detect
-    },
+		column name=$\#E(H)$,
+		int detect
+	},
+	columns/alternative/.style={
+		column name=$\#E(H_{alt})$,
+		int detect
+	},
 	create on use/ratio/.style=
 		{create col/expr={(\thisrow{1} * 100)/ \thisrow{alternative} - 100}},
 	columns/ratio/.style={
-        column name=$\% \Delta$,
-        column type={r},
-        fixed, precision=2,
-        postproc cell content/.append style={
-            /pgfplots/table/@cell content/.add={}{\%}
-        },
-        fonts by sign={}{\color{red}}
-    }
+		column name=$\% \Delta$,
+		column type={r},
+		fixed, precision=2,
+		postproc cell content/.append style={
+			/pgfplots/table/@cell content/.add={}{\%}
+		},
+		fonts by sign={}{\color{red}}
+	}
 }
 
 \begin{figure}[H]
