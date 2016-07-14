@@ -1,9 +1,9 @@
-#include "./ejX.h"
+#include "./ej7.h"
 #include "../mini_test.h"
 #include "../framework/structures/adj_list_graph.h"
 
 /*
-**  Exercise X
+**  Exercise 7
 **  Unit tests
 */
 

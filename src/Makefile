@@ -12,7 +12,7 @@ INSTANCE_GENERATOR_EXECUTABLE=instance_generator
 INSTANCE_GENERATOR_OBJECT=$(addsuffix .o, $(INSTANCE_GENERATOR_EXECUTABLE))
 
 # excercise variables
-EXECUTABLES_BASE=ej2 ej3 ej4 ej5 ej6 #exercise1 excercise2 ... exerciseN
+EXECUTABLES_BASE=ej2 ej3 ej4 ej5 ej6 ej7
 
 EXECUTABLES=$(addsuffix _solver, $(EXECUTABLES_BASE))
 MAIN_OBJECT=main.o
