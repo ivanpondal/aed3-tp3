@@ -25,15 +25,14 @@ unsigned int quality_exp::solve_instance(graph<int> &g1, graph<int> &g2) {
                                     *large_graph,       // graph<int>& g2,
                                     *start_point,       // graph<pair<int, int>>& start_point,
                                     1,                  // int neighbourhood_type,
-                                    1,                  // unsigned int tabu_list_size,
-                                    1,                  // int iteration_limit,
-                                    1,                  // float neighbourhood_proportion,
+                                    20,                  // unsigned int tabu_list_size,
+                                    1000,                  // int iteration_limit,
+                                    0.01,                // float neighbourhood_proportion,
                                     true,               // bool strict_comparisons,
-                                    1,                  // int no_gain_iteration_limit,
-                                    1.0,                // float edges_vs_time,
-                                    1,                  // float time_delta,
-                                    1.0                 // float aspiration_threshold
-                                    );
+                                    20,                  // int no_gain_iteration_limit,
+                                    0.5,                // float edges_vs_time,
+                                    0.1,                  // float time_delta,
+                                    1.0);                 // float aspiration_threshold
     return solution_graph_ptr->m();
 }
 
@@ -43,10 +42,10 @@ void quality_exp::clean_solution() {
 
 void run_experimentation() {
     experiment_suite quality_exp_suite;
-    int repetitions_val = 2;
+    int repetitions_val = 10;
 
     quality_exp known_sol_exp(
-            known_solution_instances, "../exp/ej6/known_sol_exp", 0, repetitions_val);
+            small_known_solution_instances, "../exp/ej6/small_known_sol_exp", 0, repetitions_val);
 
     quality_exp_suite.add(&known_sol_exp);
 
