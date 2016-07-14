@@ -193,7 +193,7 @@ void run_experimentation(){
 			known_solution_instances, "../exp/ej5/known_solution_instances_search_1_exp_100", 0, repetitions_val);
 	
 
-	quality_exp_suite.add(&local_search_1_exp);
+	//quality_exp_suite.add(&local_search_1_exp);
 	/*quality_exp_suite.add(&local_search_2_exp);*/
 
 	quality_exp_suite.run();
@@ -432,7 +432,7 @@ void run_experimentation(){
 
 
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp);
+    /*neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp);
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp);
 
@@ -440,7 +440,7 @@ void run_experimentation(){
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp);
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp);*/
 
 
 
@@ -572,7 +572,7 @@ void run_experimentation(){
 	parameters.greedy_solve = start_point;
 
 	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_big_cicle_input_2(0.0f, 1.0f, 3, repetitions_val,
-		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_big_cicle_neighbourhood_1_proportion");
+		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_big_cicle_neighbourhood_2_proportion");
 
     g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_big_cicle_exp_2 = 
     	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_big_cicle_input_2);
@@ -594,19 +594,19 @@ void run_experimentation(){
 
 
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2);
+  /*  neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2);
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2);
 
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2);
-
+*/
     neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2);
+    //neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2);
 
 
-	// neighbourhood_proportion_calibrate_exp_suite.run();
+	 neighbourhood_proportion_calibrate_exp_suite.run();
 
 	// neighbourhood 1
 
