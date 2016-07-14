@@ -142,3 +142,93 @@ $a > \alpha a^*$, entonces el movimiento se realiza independientemente de que
 se encuentre o no en la lista tabú.
 
 \subsection{Experimentación}
+
+Para la experimentación sobre la implementación de esta metaheurística se
+llevo a cabo una comparación entre los resultados obtenidos de variar los
+distintos parámetros de la misma (tamaño de la lista taboo, criterios de
+parada ). La comparación consta de contrastar la cantidad de aristas
+encontrada y los tiempos de ejecución del algoritmo.
+
+En cuanto a los parametros que son intrínsecos a la búsqueda local, se los
+experimentó para diferentes valores, y para cada uno de ellos se varió los de
+la metaheurística, manteniéndolos fijos.
+
+
+Los criterios de parada son 2:
+\begin{itemize}
+	\item asd
+\end{itemize}
+
+
+
+El grupo de instancias utilizado corresponde a un conjunto de grafos de varias familias distintas. Cografo vs cografo, grafo aleatorio vs subgrafo del mismo (variando las densidades de aristas), árbol vs subgrafo, completo vs subgrafo, ciclo vs subgrafo, aleatorio bipartito vs completo (variando cantidad de nodos), alatorio vs completo (variando cantidad de nodos).
+
+
+Se experimentó variando los tamaños de la lista taboo. Los resultados en
+cuanto a cantidad de aristas encontradas no variaron para los distintos
+tamaños. Permaneció fija la cantidad de iteraciones = 1000,
+
+A continuacion promedios de las aristas...
+
+\pgfplotstableread[header=false]{../exp/small_optimal_solutions}{\optimalsolutions}
+\pgfplotstableread[header=false]{../exp/ej6/known_sol_greedy_exp}{\knowngreedy}
+
+\pgfplotstableread[header=false]{../exp/ej6/1-0001-1000-0.01-0100-0.5-0.1-1.0}{\smalltabulist}
+\pgfplotstableread[header=false]{../exp/ej6/1-0060-1000-0.01-0100-0.5-0.1-1.0}{\bigtabulist}
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-1000-0.01-0100-0.5-0.1-1.0}{\biggertabulist}
+
+\pgfplotstablecreatecol[copy column from table={\optimalsolutions}{[index] 1}]{solutions}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\knowngreedy}{[index] 1}]{greedy}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\smalltabulist}{[index] 1}]{small}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\bigtabulist}{[index] 1}]{big}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\biggertabulist}{[index] 1}]{bigger}{\optimalsolutions}
+
+\pgfplotstableset{
+    every head row/.style={
+		after row=\hline
+	},
+    columns/0/.style={
+        column name=\textsc{Instancia},
+        column type={l},
+        string replace*={_}{\_},
+        string type,
+        assign cell content/.code={
+            \pgfkeyssetvalue{/pgfplots/table/@cell content}{\texttt{##1}}
+        }
+    },
+    columns/solutions/.style={
+        column name=$\#E(MCS)$,
+        int detect
+    },
+    columns/greedy/.style={
+    	column name=$\#E(goloso)$
+    },
+	columns/small/.style={
+        column name=$\#E(chica)$
+    },
+    columns/big/.style={
+        column name=$\#E(grande)$
+    },
+    columns/bigger/.style={
+        column name=$\#E(mas grande)$
+    }
+	% create on use/ratio/.style=
+	% 	{create col/expr={(\thisrow{1} * 100)/ \thisrow{alternative} - 100}},
+	% columns/ratio/.style={
+ %        column name=$\% \Delta$,
+ %        column type={r},
+ %        fixed, precision=2,
+ %        postproc cell content/.append style={
+ %            /pgfplots/table/@cell content/.add={}{\%}
+ %        },
+ %        fonts by sign={}{\color{red}}
+ %    }
+}
+
+\begin{figure}[H]
+	\centering
+	\caption{Grupo de instancias con solución óptima conocida}
+	\pgfplotstabletypeset[
+		columns={0, solutions, greedy, small, big, bigger}
+	]{\optimalsolutions}
+\end{figure}

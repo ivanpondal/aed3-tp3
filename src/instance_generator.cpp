@@ -447,13 +447,49 @@ void run_small_known_solution_instance_generation() {
 	// subgraph instances (incremental graphs)
 	// these instances are all scenarios were g1 is a subgraph of g2
 
-	// random
+	// co-graph vs complete
 
 	srand(MAGIC_SEED);
 
 	int n = 100;
+	int k = 50;
+	char instance_name[80] = "cografo_n100_k50";
+
+	g2.clear();
+
+	g1 = graph_factory<int>::random_co_graph(e_gen, n);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, k);
+	e_gen.reset();
+
+	solution cograph_vs_complete_solution = solve_cograph_vs_complete(g1, g2);
+	save_solution_entry(optimal_solutions_file, instance_name, cograph_vs_complete_solution.h->m());
+	save_instance(g1, g2, instance_name);
+
+
+	n = 50;
+	k = 100;
+	strncpy(instance_name, "cografo_n50_k100", 80);
+
+	g2.clear();
+
+	g1 = graph_factory<int>::random_co_graph(e_gen, n);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, k);
+	e_gen.reset();
+
+	cograph_vs_complete_solution = solve_cograph_vs_complete(g1, g2);
+	save_solution_entry(optimal_solutions_file, instance_name, cograph_vs_complete_solution.h->m());
+	save_instance(g1, g2, instance_name);
+
+
+	// random
+
+	srand(MAGIC_SEED);
+
+	n = 150;
 	float c = 0.25;
-	char instance_name[80] = "aleatorio_subgrafo_n100_c025";
+	strncpy(instance_name, "aleatorio_subgrafo_n150_c025", 80);
 
 	g1.clear();
 	g2.clear();
@@ -467,7 +503,7 @@ void run_small_known_solution_instance_generation() {
 	save_instance(g1, g2, instance_name);
 
 	c = 0.5;
-	strncpy(instance_name, "aleatorio_subgrafo_n100_c050", 80);
+	strncpy(instance_name, "aleatorio_subgrafo_n150_c050", 80);
 
 	g1.clear();
 	g2.clear();
@@ -481,7 +517,7 @@ void run_small_known_solution_instance_generation() {
 	save_instance(g1, g2, instance_name);
 
 	c = 0.75;
-	strncpy(instance_name, "aleatorio_subgrafo_n100_c075", 80);
+	strncpy(instance_name, "aleatorio_subgrafo_n150_c075", 80);
 
 	g1.clear();
 	g2.clear();
@@ -498,8 +534,8 @@ void run_small_known_solution_instance_generation() {
 
 	srand(MAGIC_SEED);
 
-	n = 100;
-	strncpy(instance_name, "arbol_subgrafo_n100", 80);
+	n = 150;
+	strncpy(instance_name, "arbol_subgrafo_n150", 80);
 
 	g1.clear();
 	g2.clear();
@@ -512,29 +548,12 @@ void run_small_known_solution_instance_generation() {
 	save_solution_entry(optimal_solutions_file, instance_name, g1.m());
 	save_instance(g1, g2, instance_name);
 
-	// complete
-
-	srand(MAGIC_SEED);
-
-	n = 100;
-	strncpy(instance_name, "completo_subgrafo_n100", 80);
-	g1.clear();
-	g2.clear();
-
-	graph_factory<int>::add_n_vertices_and_all_edges(g1, e_gen, n);
-	g2 = g1;
-	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n);
-	e_gen.reset();
-
-	save_solution_entry(optimal_solutions_file, instance_name, g1.m());
-	save_instance(g1, g2, instance_name);
-
 	// cycle
 
 	srand(MAGIC_SEED);
 
-	n = 100;
-	strncpy(instance_name, "ciclo_subgrafo_n100", 80);
+	n = 150;
+	strncpy(instance_name, "ciclo_subgrafo_n150", 80);
 
 	g1 = graph_factory<int>::cycle_graph(e_gen, n);
 	e_gen.reset();
@@ -553,9 +572,9 @@ void run_small_known_solution_instance_generation() {
 	srand(MAGIC_SEED);
 
 	c = 0.5;
-	n = 100;
-	int k = 100;
-	strncpy(instance_name, "aleatorio_bipartito_vs_completo_n100_k100_c050", 80);
+	n = 150;
+	k = 150;
+	strncpy(instance_name, "aleatorio_bipartito_vs_completo_n150_k150_c050", 80);
 
 	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, c);
 	e_gen.reset();
@@ -566,9 +585,9 @@ void run_small_known_solution_instance_generation() {
 	save_instance(g1, g2, instance_name);
 
 	c = 0.5;
-	n = 200;
-	k = 400;
-	strncpy(instance_name, "aleatorio_bipartito_vs_completo_n200_k400_c050", 80);
+	n = 500;
+	k = 500;
+	strncpy(instance_name, "aleatorio_bipartito_vs_completo_n500_k500_c050", 80);
 
 	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, c);
 	e_gen.reset();
@@ -605,6 +624,19 @@ void run_small_known_solution_instance_generation() {
 	n = 500;
 	c = 0.5;
 	strncpy(instance_name, "aleatorio_vs_completo_n500_d10_c050", 80);
+
+	g1 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, c);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, 1.0);
+	e_gen.reset();
+
+	save_solution_entry(optimal_solutions_file, instance_name, g1.m());
+	save_instance(g1, g2, instance_name);
+
+	d = 10;
+	n = 1000;
+	c = 0.5;
+	strncpy(instance_name, "aleatorio_vs_completo_n1000_d10_c050", 80);
 
 	g1 = graph_factory<int>::random_disconnected_graph(e_gen, n, d, c);
 	e_gen.reset();

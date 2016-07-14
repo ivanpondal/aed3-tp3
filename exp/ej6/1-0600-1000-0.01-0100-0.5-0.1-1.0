@@ -1,0 +1,11 @@
+cografo_n100_k50 693.6 4.34051 3.95669e+07 1.08646e+07
+aleatorio_subgrafo_n150_c025 1323.3 18.4231 3.1476e+09 7.93567e+08
+aleatorio_subgrafo_n150_c050 3657.4 14.6574 1.25262e+10 2.43282e+09
+aleatorio_subgrafo_n150_c075 7103.2 20.1435 2.57221e+10 7.02244e+09
+arbol_subgrafo_n150 68.7 5.98415 9.15454e+07 1.89622e+07
+ciclo_subgrafo_n150 122.3 1.26886 2.83075e+07 721092
+aleatorio_bipartito_vs_completo_n150_k150_c050 5647 0 6.07121e+06 246233
+aleatorio_bipartito_vs_completo_n500_k500_c050 62664 0 6.86809e+07 932872
+bosque_vs_completo_n500_d10 57 0 1.67686e+06 88602.7
+aleatorio_vs_completo_n500_d10_c050 666 0 3.36565e+06 183284
+aleatorio_vs_completo_n1000_d10_c050 2548 0 1.26226e+07 678425
