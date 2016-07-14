@@ -1126,4 +1126,47 @@ complejidad total de una iteración de la vecindad II tiene un costo
 
     ~
 
-    Los tiempos son parecidos a exsepción de los casos
+    Los tiempos son parecidos a exsepción de los casos en los cuales parecio haber encontrado un maximó local, ya que agregandole más iteraciones no mejora la solución y tarda casi lo mismo.
+
+
+    \pgfplotstableset{
+        create on use/tls2/.style={copy column from table={\knownlocalsearchdos}{[index] 3}}
+    }
+
+
+    \pgfplotstabletypeset[
+        every head row/.style={
+            after row=\hline
+        },
+        columns={0,  1, solls2,3,tls1},
+        columns/0/.style={
+            column name=\textsc{Instancia},
+            column type={l},
+            string replace*={_}{\_},
+            string type,
+            assign cell content/.code={
+                \pgfkeyssetvalue{/pgfplots/table/@cell content}{\texttt{##1}}
+            }
+        },
+        columns/1/.style={
+            column name=$\#E(LS_1)$,
+            int detect, 
+            fixed
+        },
+        columns/solls2/.style={
+            column name=$\#E(LS_2)$,
+            fixed
+        },
+        columns/3/.style={
+            column name=$T(LS_1)$,
+            int detect,
+            sci,precision=3
+        },
+        columns/tls1/.style={
+            column name=$T(LS_2)$,
+            sci,precision=3
+        }
+    ]\knownlocalsearchunocien
+
+
+   ~
