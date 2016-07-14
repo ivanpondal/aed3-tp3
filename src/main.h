@@ -111,4 +111,20 @@ const std::vector<std::string> unknown_solution_instances = {
     "aleatorio_n1000_d10_c050_v025"
 };
 
+const std::vector<std::string> small_known_solution_instances = {
+    "cografo_n100_k50",
+    "cografo_n50_k100",
+    "aleatorio_subgrafo_n100_c025",
+    "aleatorio_subgrafo_n100_c050",
+    "aleatorio_subgrafo_n100_c075",
+    "arbol_subgrafo_n100",
+    "completo_subgrafo_n100",
+    "ciclo_subgrafo_n100",
+    "aleatorio_bipartito_vs_completo_n100_k100_c050",
+    "aleatorio_bipartito_vs_completo_n200_k400_c050",
+    "aleatorio_bipartito_vs_completo_n500_k500_c050",
+    "bosque_vs_completo_n500_d10",
+    "aleatorio_vs_completo_n500_d10_c050",
+    "aleatorio_vs_completo_n1000_d10_c050"
+};
 #endif  // AED3_TP3_MAIN_H

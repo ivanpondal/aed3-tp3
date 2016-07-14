@@ -1,0 +1,10 @@
+aleatorio_subgrafo_n100_c025 1256
+aleatorio_subgrafo_n100_c050 2478
+aleatorio_subgrafo_n100_c075 3708
+arbol_subgrafo_n100 99
+completo_subgrafo_n100 4950
+ciclo_subgrafo_n100 100
+aleatorio_bipartito_vs_completo_n100_k100_c050 5064
+aleatorio_bipartito_vs_completo_n200_k400_c050 40084
+bosque_vs_completo_n500_d10 490
+aleatorio_vs_completo_n500_d10_c050 6423
