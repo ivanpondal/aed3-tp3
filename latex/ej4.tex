@@ -341,3 +341,277 @@ de aristas resultan más costosos de mejorar con lo cual es preferible que la
 heurística golosa presente mejores soluciones en estos casos.
 
 \subsubsection{Complejidad teórica}
+
+Para ratificar que la complejidad teórica calculada corresponde al
+comportamiento del algoritmo en la práctica, se midieron los tiempos de
+ejecución con $G_1 = G_2$ para las siguientes familias de grafos:
+
+\begin{itemize}
+	\item $T_N$: $N$ nodos sin aristas.
+	\item $A_N$: Árboles con $N$ nodos.
+	\item $K_N$: Completos con $N$ nodos.
+\end{itemize}
+
+El objetivo de esto fue tener un experimento donde se midiera únicamente cuánto
+afectaba el número de vértices y otros donde poder observar el efecto de
+aumentar la densidad de aristas.
+
+Cada experimento se ejecutó con los siguientes parámetros para cada familia:
+
+\begin{itemize}
+	\item $T_N$: $1 \leq N \leq  30000$ tomando 250 muestras con 20 repeticiones cada una.
+	\item $A_N$: $1 \leq N \leq  55000$ tomando 100 muestras con 30 repeticiones cada una.
+	\item $K_N$: $1 \leq N \leq  1000$ tomando 100 muestras con 30 repeticiones cada una.
+\end{itemize}
+
+Dado que la complejidad calculada era:
+
+\begin{equation*}
+	\ord(N_1 \times \log N_1 + N_2 \times \log N_2 + M_1 + M_2)
+\end{equation*}
+
+Tomando $G_1 = G_2$ (puesto que interesa estudiar el peor escenario que es
+cuando se recorren ambos grafos por completo) la complejidad se medirá en función
+de $N = N_1 = N_2$, $M = M_1 = M_2$ quedando por lo tanto:
+
+\begin{equation*}
+	\ord(N \times \log N + M)
+\end{equation*}
+
+~
+
+Para la prueba con grafos sin aristas se debería obtener algo del orden $\ord(N
+\times \log N)$. Parte del interés en este tipo de instancias es afirmar que al
+eliminar las aristas únicamente influyen los costos asociados al número de
+vértices en la entrada.
+
+\renewcommand\constante{65}
+
+\begin{figure}[H]
+	\centering
+	\caption{Tiempo de ejecución con $N = N_1 = N_2$ $(c = \constante)$}
+	\begin{tikzpicture}
+		\begin{axis}[
+				title={},
+				xlabel={Tamaño de entrada $N$},
+				ylabel={Tiempo de ejecución (nanosegundos)},
+				scaled x ticks=false,
+				scaled y ticks=false,
+				max space between ticks=37,
+				enlargelimits=0.05,
+				width=0.5\textwidth,
+				height=0.5\textwidth,
+				legend pos=north west,
+				legend cell align=left
+			]
+			\addplot[color=black]
+				table[x index=0, y expr={\constante*x*ln(x)}]{../exp/ej4/add_nodes_exp};
+			\addplot[color=red]
+				table[x index=0, y index=1]{../exp/ej4/add_nodes_exp};
+			\legend{$c \times N \times \log (N)$, $T_N$}
+		\end{axis}
+	\end{tikzpicture}
+	\label{fig:heuristica-golosa:grafos-sin-aristas}
+\end{figure}
+
+En la Figura \ref{fig:heuristica-golosa:grafos-sin-aristas} es posible ver cómo
+efectivamente el tiempo de ejecución para esta familia de grafos resulta
+acotable por una función que corresponde a la complejidad esperada.
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering, width=.7\linewidth}
+	\caption{Cociente entre tiempo de ejecución y complejidad teórica para
+	entrada $N = N_1 = N_2$ $(c = \constante)$}
+	\begin{tikzpicture}
+		\begin{axis}[
+				title={},
+				xlabel={Tamaño de entrada $N$},
+				ylabel={Tiempo de ejecución (nanosegundos) / $(N \times \log (N))$},
+				scaled x ticks=false,
+				scaled y ticks=false,
+				max space between ticks=37,
+				enlargelimits=0.05,
+				width=0.5\textwidth,
+				height=0.5\textwidth,
+				legend pos=north west,
+				legend cell align=left,
+				restrict x to domain=200:30000,
+				ymax=200
+			]
+			\addplot[color=black]
+				table[x index=0, y expr={\constante}]{../exp/ej4/add_nodes_exp};
+			\addplot[color=red]
+				table[x index=0, y expr={\thisrowno{1}/(x*ln(x))}]{../exp/ej4/add_nodes_exp};
+			\legend{$c$, $T_N / (N \times \log (N))$}
+		\end{axis}
+	\end{tikzpicture}
+	\label{fig:heuristica-golosa:grafos-sin-aristas-cociente}
+\end{figure}
+
+En la Figura \ref{fig:heuristica-golosa:grafos-sin-aristas-cociente} se confirma
+lo comentado al poder mostrar que al dividir los tiempos de ejecución se obtiene
+una gráfico que converge hacia una constante.
+
+~
+
+Para la familia $A_N$ se deseaba estudiar cómo afecta la densidad de aristas. En
+particular dado que estas instancias corresponden a árboles se tiene $M = N -
+1$, por lo tanto la complejidad resultante quedaría en el orden de
+$\ord(N \times \log N + N)$.
+
+\renewcommand\constante{150}
+
+\begin{figure}[H]
+	\centering
+	\caption{Tiempo de ejecución con árboles de tamaño $N = N_1 = N_2$ $(c = \constante)$}
+	\begin{tikzpicture}
+		\begin{axis}[
+				title={},
+				xlabel={Tamaño de entrada $N$},
+				ylabel={Tiempo de ejecución (nanosegundos)},
+				scaled x ticks=false,
+				scaled y ticks=false,
+				enlargelimits=0.05,
+				width=0.5\textwidth,
+				height=0.5\textwidth,
+				legend pos=north west,
+				legend cell align=left
+			]
+			\addplot[color=black]
+				table[x index=0, y expr={\constante*(x*ln(x) + x)}]{../exp/ej4/add_tree_nodes_exp};
+			\addplot[color=red]
+				table[x index=0, y index=1]{../exp/ej4/add_tree_nodes_exp};
+			\legend{$c \times (N \times \log (N) + N)$, $A_N$}
+		\end{axis}
+	\end{tikzpicture}
+	\label{fig:heuristica-golosa:arboles}
+\end{figure}
+
+Es posible ver en Figura \ref{fig:heuristica-golosa:arboles} como el
+tiempo de ejecución puede ser acotado por lo estimado anteriormente. Cabe destacar que
+para este caso en particular, el costo que agregan las aristas es absorbido por
+lo que toma encolar todos los nodos en las colas de prioridad, que tiene un
+orden $\ord(N \times \log N)$.
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering, width=.7\linewidth}
+	\caption{Cociente entre tiempo de ejecución y complejidad teórica para
+	árboles de tamaño $N = N_1 = N_2$ $(c = \constante)$}
+	\begin{tikzpicture}
+		\begin{axis}[
+				title={},
+				xlabel={Tamaño de entrada $N$},
+				ylabel={Tiempo de ejecución (nanosegundos) / $(N \times \log (N) + N)$},
+				scaled x ticks=false,
+				scaled y ticks=false,
+				enlargelimits=0.05,
+				width=0.5\textwidth,
+				height=0.5\textwidth,
+				legend pos=north west,
+				legend cell align=left,
+				restrict x to domain=200:55000,
+				ymax=400
+			]
+			\addplot[color=black]
+				table[x index=0, y expr={\constante}]{../exp/ej4/add_tree_nodes_exp};
+			\addplot[color=red]
+				table[x index=0, y expr={\thisrowno{1}/(x*ln(x) + x)}]{../exp/ej4/add_tree_nodes_exp};
+			\legend{$c$, $A_N / (N \times \log (N) + N)$}
+		\end{axis}
+	\end{tikzpicture}
+	\label{fig:heuristica-golosa:arboles-cociente}
+\end{figure}
+
+Al realizar el cociente, en Figura \ref{fig:heuristica-golosa:arboles-cociente}
+se obtiene de nuevo la convergencia hacia un valor constante asegurando así que
+el crecimiento de la función fue el proyectado.
+
+~
+
+Finalmente, se presentan los tiempos obtenidos para la familia de completos
+$K_N$. En este caso la cantidad de aristas corresponde a $M = \frac{N \times (N -
+1)}{2}$. Contrario al caso de los árboles, el número de aristas está en el
+máximo posible permitiendo analizar así cómo funciona la heurística golosa
+cuando este parámetro es llevado al límite.
+
+Con esta cantidad de aristas, la complejidad resulta en el orden de:
+
+\begin{equation*}
+	\ord(N \times \log (N) + \frac{N \times (N - 1)}{2}) =
+	\ord(N \times \log (N) + N^2) = \ord(N^2)
+\end{equation*}
+
+\begin{figure}[H]
+	\centering
+	\caption{Tiempo de ejecución con completos de tamaño $N = N_1 = N_2$ $(c = \constante)$}
+	\begin{tikzpicture}
+		\begin{axis}[
+				title={},
+				xlabel={Tamaño de entrada $N$},
+				ylabel={Tiempo de ejecución (nanosegundos)},
+				scaled x ticks=false,
+				scaled y ticks=false,
+				enlargelimits=0.05,
+				width=0.5\textwidth,
+				height=0.5\textwidth,
+				legend pos=north west,
+				legend cell align=left
+			]
+			\addplot[color=black]
+				table[x index=0, y expr={\constante*(x*ln(x) + x*x)}]{../exp/ej4/add_complete_nodes_exp};
+			\addplot[color=red]
+				table[x index=0, y index=1]{../exp/ej4/add_complete_nodes_exp};
+			\legend{$c \times (N \times \log (N) + N^2)$, $K_N$}
+		\end{axis}
+	\end{tikzpicture}
+	\label{fig:heuristica-golosa:completos}
+\end{figure}
+
+Ahora sí, en la Figura \ref{fig:heuristica-golosa:completos} no solo se puede
+apreciar que los resultados están acotados por el orden de complejidad estimado
+si no que para estas instancias ahora es el costo de creación de las colas de
+prioridad el que queda absorbido por el procesamiento de las aristas que resulta
+cuadrático.
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{justification=centering, width=.7\linewidth}
+	\caption{Cociente entre tiempo de ejecución y complejidad teórica para
+	completos de tamaño $N = N_1 = N_2$ $(c = \constante)$}
+	\begin{tikzpicture}
+		\begin{axis}[
+				title={},
+				xlabel={Tamaño de entrada $N$},
+				ylabel={Tiempo de ejecución (nanosegundos) / $(N \times \log (N) + N^2)$},
+				scaled x ticks=false,
+				scaled y ticks=false,
+				enlargelimits=0.05,
+				width=0.5\textwidth,
+				height=0.5\textwidth,
+				legend pos=north west,
+				legend cell align=left,
+				restrict x to domain=100:1000,
+				ymax=300
+			]
+			\addplot[color=black]
+				table[x index=0, y expr={\constante}]{../exp/ej4/add_complete_nodes_exp};
+			\addplot[color=red]
+				table[x index=0, y expr={\thisrowno{1}/(x*ln(x) + x*x)}]{../exp/ej4/add_complete_nodes_exp};
+			\legend{$c$, $K_N / (N \times \log (N) + N^2)$}
+		\end{axis}
+	\end{tikzpicture}
+	\label{fig:heuristica-golosa:completos-cociente}
+\end{figure}
+
+Por última vez, en Figura \ref{fig:heuristica-golosa:completos-cociente} se corroboran
+las cotas determinadas al verificar que el cociente lleva a que el resultado
+final converja a una constante.
+
+\subsubsection{Conclusiones}
+
+De esta experimentación se puede concluir que el algoritmo respeta la
+complejidad teórica calculada previamente. Además, queda en evidencia el peso que tiene la
+proporción de aristas, donde se pudo estudiar cómo la complejidad en función de
+$N$ varía entre $\ord(N \times \log N)$ y $\ord(N^2)$.
