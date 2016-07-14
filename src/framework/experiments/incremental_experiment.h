@@ -19,6 +19,7 @@ class incremental_experiment: public experiment{
 	private:
 		virtual void load_instance(incremental_experiment_input<T, S> *input) = 0;
 		virtual void solve_instance(incremental_experiment_input<T, S> *input) = 0;
+		virtual void clean_solution();
 		void print_results();
 		std::vector< std::pair<T, std::vector<double>>> times_vec;
 		incremental_experiment_input<T, S> *input = NULL;
@@ -59,6 +60,7 @@ void incremental_experiment<T, S>::run(){
 			chronometer::start();
 			solve_instance(input);
 			elapsed_time = chronometer::stop();
+			clean_solution();
 
 			if (j >= 0) {
 				times_vec[i].second[j] = elapsed_time;
@@ -99,6 +101,11 @@ void incremental_experiment<T, S>::print_results(){
 	}
 
 	output_file.close();
+}
+
+template <typename T, typename S>
+void incremental_experiment<T, S>::clean_solution() {
+	// Default behaviour, do nothing
 }
 
 #endif // INCREMENTAL_EXPERIMENT_H_INCLUDED
