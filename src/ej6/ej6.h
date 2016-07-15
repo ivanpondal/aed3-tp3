@@ -25,6 +25,18 @@ class quality_exp_greedy: public quality_experiment {
 		graph<std::pair<int, int>>* solution_graph_ptr;
 };
 
+class quality_exp_local_search: public quality_experiment {
+	public:
+		quality_exp_local_search(std::vector<std::string> instances, const std::string &output_file_name,
+		                   const int discard_val, const int repetitions_val):
+		quality_experiment(instances, generated_instances_directory,
+		                   output_file_name, discard_val, repetitions_val){};
+	private:
+		unsigned int solve_instance(graph<int> &g1, graph<int> &g2);
+		void clean_solution();
+		graph<std::pair<int, int>>* h;
+};
+
 class quality_exp: public quality_experiment {
 	public:
 		quality_exp(std::vector<std::string> instances, const std::string &output_file_name,

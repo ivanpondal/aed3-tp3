@@ -88,3 +88,150 @@ biblioteca estándar de C++. Los tiempos fueron medidos en nanosegundos.
 \end{itemize}
 
 \end{enumerate}
+
+\subsection*{Instancias de prueba}
+\addcontentsline{toc}{subsection}{Instancias de prueba}
+
+Con el fin de tener un método de comparación entre los diversos algoritmos
+implementados, se generon una serie de instancias con características distintas
+para el problema a resolver. Estas constan de pares de grafos $(G_1,
+G_2)$ y están divididas en dos grupos que son: instancias con solución óptima
+conocida e instancias con solución desconocida. La idea fue tener un conjunto
+que cubriera un número razonable de escenarios con los cuales poder
+experimentar y tener un aproximación de cómo se comporta cada heurísitca en los
+mismos.
+
+\subsubsection*{Instancias con solución conocida}
+
+Dada la naturaleza del problema de buscar el máximo subgrafo común, a la hora de
+crear instancias con las cuales poder medir rendimiento y calidad de soluciones
+resulta de mucho interés poder conocer cuál es el resultado de la solución
+óptima. Es así como para este conjunto de elementos de prueba se pensaron las
+siguientes familias que por el modo en el cual están creadas permiten conocer
+cuál sería el número de aristas que aporta el máximo subgrafo común.
+
+\begin{itemize}
+	\item Familias para algoritmos exactos
+
+	En este trabajo se desarrollaron dos algoritmos exactos: uno resuelve
+	mediante \emph{backtracking} mientras que el otro resuelve en
+	tiempo polinomial el problema entre un cografo y un grafo completo. Teniendo
+	estas implementaciones se definió y resolvió el siguiente conjunto de
+	instancias.
+
+	Solución obtenida mediante \emph{backtracking}:
+	\begin{itemize}
+		\item \texttt{aleatorio\_n5\_c025}:
+
+			$N_1 = N_2 = 5$ con $25\%$ de probabilidad de que exista una arista
+			entre dos nodos.
+		\item \texttt{aleatorio\_n5\_c050}:
+
+			$N_1 = N_2 = 5$ con $50\%$ de probabilidad de que exista una arista
+			entre dos nodos. La solución es obtenida mediante \emph{backtracking}.
+		\item \texttt{aleatorio\_n5\_c075}:
+
+			$N_1 = N_2 = 5$ con $75\%$ de probabilidad de que exista una arista
+			entre dos nodos. La solución es obtenida mediante \emph{backtracking}.
+	\end{itemize}
+
+	Solución obtenida mediante implementación para cografos contra completos:
+	\begin{itemize}
+		\item \texttt{cografo\_n100\_k50}:
+
+			$G_1$ un cografo de 100 nodos y $G_2$ un completo $K_{50}$.
+		\item \texttt{cografo\_n50\_k100}:
+
+			$G_1$ un cografo de 50 nodos y $G_2$ un completo $K_{100}$.
+	\end{itemize}
+
+	\item Familias donde $G_1$ es subgrafo de $G_2$
+
+	Uno de los métodos más sencillos de conocer el máximo subgrafo común es
+	construyendo $G_1$ y tomando $G_2 = G_1$ para luego agregarle vértices y
+	aristas de forma tal que $G_1 \neq G_2$ pero $G_1$ subgrafo de $G_2$.
+
+	\begin{itemize}
+		\item \texttt{aleatorio\_subgrafo\_n500\_c025}
+
+			$N_1 = 500$ y $N_2 = 1000$ con $25\%$ de probabilidad de que exista
+			una arista entre dos nodos.
+		\item \texttt{aleatorio\_subgrafo\_n500\_c050}
+
+			$N_1 = 500$ y $N_2 = 1000$ con $50\%$ de probabilidad de que exista
+			una arista entre dos nodos.
+		\item \texttt{aleatorio\_subgrafo\_n500\_c075}
+
+			$N_1 = 500$ y $N_2 = 1000$ con $75\%$ de probabilidad de que exista
+			una arista entre dos nodos.
+		\item \texttt{arbol\_subgrafo\_n500}
+
+			$N_1 = 500$ y $N_2 = 1000$ con $G_1$ árbol generados de forma
+			aleatoria y $G_2$ árbol incremental sobre el anterior.
+		\item \texttt{completo\_subgrafo\_n500}
+
+			Completo $K_{500}$ contra $K_{1000}$.
+		\item \texttt{ciclo\_subgrafo\_n500}
+
+			Ciclo $C_{500}$ contra $C_{1000}$.
+		\item \texttt{aleatorio\_bipartito\_vs\_completo\_n500\_k500\_c050}
+
+			Bipartito con dos particiones de tamaño 500 teniendo $50\%$ de probabilidad de que exista una
+			arista entre ellas, contra bipartito completo $K_{500,500}$.
+		\item \texttt{aleatorio\_bipartito\_vs\_completo\_n250\_k500\_c050}
+
+			Bipartito con una partición de 250 y otra de 500 teniendo $50\%$ de probabilidad de que exista una
+			arista entre ellas, contra bipartito completo $K_{250,500}$.
+		\item \texttt{bosque\_vs\_completo\_n1000\_d10}
+
+			Bosque con $N_1 = 1000$ y 10 componentes conexas contra $G_2$ con 10
+			$K_{100}$.
+		\item \texttt{aleatorio\_vs\_completo\_n1000\_d10\_c050}
+
+			$N_1 = 1000$ donde ademas de asegurar la existencia de 10
+			componentes conexas, dos nodos de una misma componente tienen una
+			arista con $50\%$ de probabilidad, contra $G_2$ con 10 $K_{100}$.
+	\end{itemize}
+\end{itemize}
+
+\subsubsection*{Instancias con solución desconocida}
+
+A pesar del valor que suma conocer la solución al problema para los casos
+generados, uno podría estar sesgando mucho la experimentación al probar
+únicamente los casos construidos a medida. Es por esto que se decidió también
+poseer un conjunto de pruebas donde no se conoce la solución óptima, pero que
+son útiles para comparar los algoritmos desarrollados entre sí.
+
+\begin{itemize}
+	\item \texttt{aleatorio\_n1000\_c025}
+
+		$N_1 = N_2 = 1000$ con $25\%$ de probabilidad de que exista una arista
+		entre dos nodos.
+	\item \texttt{aleatorio\_n1000\_c050}
+
+		$N_1 = N_2 = 1000$ con $50\%$ de probabilidad de que exista una arista
+		entre dos nodos.
+	\item \texttt{aleatorio\_n1000\_c075}
+
+		$N_1 = N_2 = 1000$ con $75\%$ de probabilidad de que exista una arista
+		entre dos nodos.
+	\item \texttt{arbol\_n1000}
+
+		$N_1 = N_2 = 1000$ dos árboles generados de forma aleatoria.
+	\item \texttt{aleatorio\_bipartito\_n500\_k500\_c050}
+
+		Dos grafos bipartitos con particiones de tamaño 500 teniendo $50\%$ de
+		probabilidad de que exista una arista entre sus particiones.
+	\item \texttt{aleatorio\_bipartito\_n250\_k500\_c050}
+
+		Dos grafos bipartitos con particiones de tamaño 250 y 500 teniendo $50\%$ de
+		probabilidad de que exista una arista entre sus particiones.
+	\item \texttt{bosque\_n1000\_d10\_v025}
+
+		Dos bosques con $N_1 = N_2 = 1000$ y 10 componentes conexas.
+	\item \texttt{aleatorio\_n1000\_d10\_c050\_v025}
+
+		$N_1 = N_2 = 1000$ asegurando 10 componentes conexas en cada grafo con
+		una probabilidad de $50\%$ de aristas entre dos nodos de una misma
+		componente conexa.
+\end{itemize}
