@@ -81,6 +81,7 @@ class g1_vs_g2_neighbourhood_2_proportion_incremental_experiment:public quality_
     private:
         void load_instance(incremental_experiment_input< float, star_solution > *input);
         int solve_instance(incremental_experiment_input< float, star_solution >*input);
+        int last_h_m;
 };
 
 class g1_vs_g2_neighbourhood_2_iterations_incremental_experiment:public quality_incremental_experiment< int,

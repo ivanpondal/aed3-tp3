@@ -133,8 +133,21 @@ void g1_vs_g2_neighbourhood_2_proportion_incremental_experiment::load_instance(i
 int g1_vs_g2_neighbourhood_2_proportion_incremental_experiment::solve_instance(incremental_experiment_input<float,
 	star_solution > *input){
 	// solve_local_search(graph<int>&, graph<int>&, graph<std::pair<int, int> >&, int, int, float, bool)
-		graph<pair<int, int>>* h = solve_local_search(input->get_subject().g1, input->get_subject().g2,
-		*input->get_subject().greedy_solve,2,-1,input->get_inc_val(),true);
+	graph<pair<int, int>>* h;
+	if(input->get_inc_val() <0.2f){
+		h = solve_local_search(input->get_subject().g1, input->get_subject().g2,
+		*input->get_subject().greedy_solve,1,-1,input->get_inc_val(),true);
+		last_h_m = h->m();
+	}else{
+		int porcentage = (int) ( input->get_inc_val() * 100.0f);
+		if (porcentage % 20 == 0){
+			h = solve_local_search(input->get_subject().g1, input->get_subject().g2,
+				*input->get_subject().greedy_solve,2,-1,input->get_inc_val(),true);
+			last_h_m = h->m();
+		}else{
+			return last_h_m;
+		}
+	}
 	cout << "h->m() :  " << h->m() << endl;
 	return h->m();
 
@@ -205,9 +218,9 @@ void run_experimentation(){
 
 	// quality similar_nodes_count_instance_generation
 
-	quality_exp_local_search_with_swap local_search_2_exp_similar_nodes_count(
-			similar_nodes_count_instances, "../exp/ej5/similar_nodes_count_instance_generation",
-			0, repetitions_val);
+	// quality_exp_local_search_with_swap local_search_2_exp_similar_nodes_count(
+	// 		similar_nodes_count_instances, "../exp/ej5/similar_nodes_count_instance_generation",
+	// 		0, repetitions_val);
 
 
 	//quality_exp_suite.add(&local_search_1_exp);
@@ -448,15 +461,15 @@ void run_experimentation(){
 
 
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp);
 
 
 
@@ -613,7 +626,6 @@ void run_experimentation(){
     neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2);
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2);
-
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2);
 
