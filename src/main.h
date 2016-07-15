@@ -164,4 +164,9 @@ const std::vector<std::string> small_known_solution_instances = {
     "aleatorio_vs_completo_n1000_d10_c050"
 };
 
+const std::vector<std::string> new_known_solution_instances = {
+	"camino_vs_bipartito_n100_k500",
+	"camino_vs_bipartito_n250_k500"
+//	"camino_vs_bipartito_n400_k500"
+};
 #endif  // AED3_TP3_MAIN_H
