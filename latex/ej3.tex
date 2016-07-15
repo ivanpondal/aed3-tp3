@@ -255,12 +255,16 @@ el siguiente:
     que $G = G_1 \cup G_2$ o $G = G_1 \times G_2$. Se busca encontrar un
     subgrafo inducido $H \subseteq G$ que maximice la cantidad de aristas.
 
-    Sea $H^*$ una tal solución. Es importante notar que $H^*$ tendrá
-    algunos de sus nodos en $G_1$ y los restantes en $G_2$. Más aún,
-    podemos afirmar que $H^* = H^*_1 \cup H^*_2$ o $H^* = H^*_1 \times
-    H^*_2$, según cuál sea la operación por la que se obtiene $G$ a partir de
-    $G_1$ y $G_2$, donde $H^*_1$ y $H^*_2$ son los subgrafos inducidos por los
-    nodos de $H^*$ en $G_1$ y $G_2$, respectivamente.
+    Sea $H^*$ una tal solución. Es importante notar que $H^*$ tendrá algunos
+    de sus nodos en $G_1$ y los restantes en $G_2$. Más aún, podemos afirmar
+    que $H^* = H^*_1 \cup H^*_2$ o $H^* = H^*_1 \times H^*_2$, según cuál sea
+    la operación por la que se obtiene $G$ a partir de $G_1$ y $G_2$, donde
+    $H^*_1$ y $H^*_2$ son los subgrafos inducidos por los nodos de $H^*$ en
+    $G_1$ y $G_2$, respectivamente. Esto se puede ver ya que siendo $H^*_1$
+    subgrafo de $G_1$ y $H^*_2$ subgrafo de $G_2$, si $G = G_1 \cup G_2$ no
+    existen aristas que conecten un vértice de $H^*_1$ con uno de $H^*_2$, y
+    si $G = G_1 \times G_2$, existen todas las aristas posibles entre estos
+    vértices.
 
     Sea entonces $k$, con $0 \leq k \leq \#V(G_1)$, la cantidad de nodos de
     $H^*$ que son también nodos de $G_1$, y $K - k$ la cantidad de nodos de

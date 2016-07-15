@@ -38,13 +38,281 @@ definir la implementación de la metaheurística, fue necesario tomar decisiones
 sobre varios puntos, que serán expuestos a continuación.
 
 \subsubsection{Estructura del algoritmo}
+La metaheurística se implementó utilizando como base la heurística de búsqueda
+local presentada en la sección anterior, manteniendo la posibilidad de
+elegir cuál de las dos vecindades considerar. El esquema de ejecución es muy
+sencillo:
+\begin{enumerate}
+    \item Se ejecuta la heurística golosa, para utilizar la solución obtenida
+    como punto de partida.
+    \item Se ejecuta una iteración de la heurística de búsqueda local, con la
+    vecindad elegida. De esta forma se determina un \emph{movimiento} hacia
+    una solución vecina, que para ambas vecindades puede representarse
+    mediante un par de vértices de $G_2$ involucrados en la transformación: en
+    el caso de la vecindad I o de la operación \emph{exchange} de la vecindad
+    II, uno de los vértices pertenece al mapeo de la solución actual y el otro
+    no, mientras que en la operación \emph{swap} de la vecindad II ambos nodos
+    pertenecen al mapeo.
+    \item Se agrega a la lista tabú el movimiento inverso al realizado, para
+    indicar que no se desea revertirlo en el futuro.
+    \item Si no se cumple el criterio de parada elegido, se repite el paso 2,
+    pero prohibiendo realizar movimientos que se encuentren en la lista tabú.
+    Si se cumple el criterio de parada, se devuelve la mejor solución
+    encontrada hasta el momento.
+\end{enumerate}
 
-\subsubsection{Lista tabú}
+La diferencia entre este esquema metaheurístico y los algoritmos de búsqueda
+local es que, si al explorar la vecindad, todas las soluciones vecinas
+evaluadas resultan ser peores que la actual, se permite realizar un movimiento
+hacia una de ellas, que es elegida de forma aleatoria.
 
 \subsubsection{Criterio de eliminación}
+Dado que la capacidad de la lista tabú es limitada, se hace necesario contar
+con un criterio para decidir qué elementos eliminar de la misma cuando no hay
+espacio para almacenar movimientos nuevos. La opción más sencilla es,
+posiblemente, adoptar un enfoque \acr{FIFO}: cuando hay que eliminar un
+elemento, se selecciona el que más tiempo lleva en la lista. Sin embargo, esto
+puede ocasionar que movimientos que dieron muy buenos resultados (y que por
+lo tanto, no se desea revertir) sean rápidamente desplazados de la lista por
+movimientos menos significativos, lo cual no es deseable.
+
+Para solucionar este inconveniente, se decidió adoptar un criterio de
+eliminación híbrido. A cada elemento de la lista tabú se le asocia un peso, y
+cada vez que debe descartarse uno de ellos, se selecciona aquel cuyo peso es
+menor. El peso de un movimiento dado es directamente proporcional a la
+cantidad de aristas aportadas, e inversamente proporcional al tiempo que lleva
+en la lista, pudiendo regularse la influencia de cada uno de estos factores en
+el cálculo mediante un parámetro $c \in [0,1]$. La fórmula utilizada para
+calcular el peso de un movimiento, en función de la cantidad $a$ de aristas
+aportadas y de la cantidad $t$ de iteraciones que lleva en la lista tabú, es
+\[ P(t,a,c) = c \left( \frac{a + m} {2 m} \right) + (1-c) \left(\frac{1}{1+0.1t} \right) \]
+donde:
+\begin{itemize}
+    \item $m = \max_{v \in V(G_1)} \deg(v)$. Este valor fue seleccionado
+    porque, en cualquiera de las dos vecindades planteadas para la búsqueda
+    local, un movimiento cualquiera puede agregar o restar, a lo sumo, $m$
+    aristas de la solución. De esta forma $-m < a < m$, por lo que el valor
+    del primer término de la fórmula anterior resulta ser un número entre $0$
+    y $1$.
+    \item El segundo término de la suma es también un valor entre $0$ y $1$, y
+    además el valor del mismo disminuye cada vez más lentamente a medida que
+    pasa el tiempo. Esto favorece que los movimientos que aportan poca
+    cantidad de aristas sean rápidamente descartados de la lista, mientras que
+    los que resultan más significativos desarrollan cierta ``resistencia'' a
+    ser eliminados.
+\end{itemize}
+
+Notar que, con esta definición, el valor del peso para un movimiento
+determinado es siempre un valor entre $0$ y $1$. Cada vez que se agrega un
+nuevo elemento a la lista tabú, se calcula su peso con $t = 0$, y los pesos de
+todos los demás elementos son actualizados sumando $1$ al valor anterior de
+$t$. La lista, por su parte, es una cola de prioridad donde la prioridad de
+cada elemento es su peso; esto permite seleccionar en tiempo constante el
+próximo elemento a ser eliminado, y actualizar el peso de todos los demás en
+un tiempo lineal en el tamaño de la lista.
 
 \subsubsection{Criterio de parada}
+Otro de los elementos a definir fue qué criterio utilizar para decidir cuándo
+dejar de iterar. Se plantearon dos alternativas posibles, pudiendo utilizarse
+solo una de ellas o ambas en simultáneo, en cuyo caso el algoritmo se detendrá
+cuando cualquiera de los dos criterios se cumpla.
+
+\begin{enumerate}
+    \item \textbf{Cantidad de iteraciones}: el algoritmo se detiene luego de
+    ejecutar una cantidad determinada de iteraciones de la búsqueda local.
+    \item \textbf{Cantidad de iteraciones sin mejora}: el algoritmo se detiene
+    tras ejecutar una determinada cantidad de iteraciones de la búsqueda local
+    sin encontrar una solución mejor que la mejor solución encontrada hasta el
+    momento.
+\end{enumerate}
+
+En ambos casos, se entiende por iteración a explorar la vecindad de una
+solución; en otras palabras, cada movimiento hacia una solución vecina
+corresponde a una iteración.
 
 \subsubsection{Función de aspiración}
+En ocasiones, el resultado de realizar un determinado movimiento puede ser tan
+bueno que resulte deseable realizarlo incluso aunque aparezca en la lista
+tabú. A esto se lo conoce como \emph{función de aspiración}, y tiene como
+parámetro un umbral configurable $\alpha \in [0, 1]$. De esta forma, si la
+cantidad de aristas $a$ que tendría la solución resultante de realizar un
+determinado movimiento es mayor que el producto entre el umbral y la cantidad
+$a^*$ de aristas de la mejor solución hallada hasta el momento, es decir, si
+$a > \alpha a^*$, entonces el movimiento se realiza independientemente de que
+se encuentre o no en la lista tabú.
 
 \subsection{Experimentación}
+
+Para la experimentación sobre la implementación de esta metaheurística se
+llevo a cabo una comparación entre los resultados obtenidos de variar los
+distintos parámetros de la misma (tamaño de la lista taboo, criterios de
+parada, funcion de aspiración). La comparación consta de contrastar la
+cantidad de aristas encontrada y los tiempos de ejecución del algoritmo.
+Además se exhibe como referencia la cantidad maxima de aristas.
+
+En cuanto a los parametros son intrínsecos a la búsqueda local, se los
+fijó para diferentes valores, y sobre cada uno de ellos se varió los de
+la metaheurística.
+
+El grupo de instancias utilizado corresponde a un conjunto de grafos de varias
+familias distintas. Cografo vs cografo, grafo aleatorio vs subgrafo del mismo
+(variando las densidades de aristas), árbol vs subgrafo, completo vs subgrafo,
+ciclo vs subgrafo, aleatorio bipartito vs completo (variando cantidad de
+nodos), alatorio vs completo (variando cantidad de nodos). Se consideró que
+este conjunto de instancias resultaba representativo en cuanto al espectro a
+de grafos a explorar.
+
+Con el fin de lograr una mejor ALGO a los datos, el algoritmo fue ejecutado
+10 veces para cada instancia y combinación de parámetros, y de esos datos se
+calcula el promedio. Los datos que se exhiben corresponden a los promedios de
+las aristas encontradas por el algoritmo para cada combinación de parámetros.
+
+
+\pgfplotstableread[header=false]{../exp/small_optimal_solutions}{\optimalsolutions}
+\pgfplotstableread[header=false]{../exp/ej6/known_sol_greedy_exp}{\knowngreedy}
+
+% \pgfplotstableread[header=false]{../exp/ej6/1-0001-1000-0.01-0100-0.5-0.1-1.0}{\lowtaboolist}
+% \pgfplotstableread[header=false]{../exp/ej6/1-0060-1000-0.01-0100-0.5-0.1-1.0}{\hightaboolist}
+% \pgfplotstableread[header=false]{../exp/ej6/1-0600-1000-0.01-0100-0.5-0.1-1.0}{\highertaboolist}
+
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-1000-0.01-1000-0.5-0.1-0.3}{\lowiterationlowaspiration}
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-1000-0.01-1000-0.5-0.1-0.8}{\lowiterationhighaspiration}
+
+% \pgfplotstableread[header=false]{../exp/ej6/1-0600-4000-0.01-0100-0.5-0.1-0.8}{\mediumiteration}
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-2000-0.5-0.1-0.3}{\highiterationlowaspiration}
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-2000-0.5-0.1-0.8}{\highiterationhighaspiration}
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-2000-0.5-0.1-1.0}{\highiterationfullaspiration}
+
+\pgfplotstablecreatecol[copy column from table={\optimalsolutions}{[index] 1}]{solutions}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\knowngreedy}{[index] 1}]{greedy}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\knowngreedy}{[index] 3}]{greedytime}{\optimalsolutions}
+
+% \pgfplotstablecreatecol[copy column from table={\lowtaboolist}{[index] 1}]{lowtaboo}{\optimalsolutions}
+% \pgfplotstablecreatecol[copy column from table={\hightaboolist}{[index] 1}]{hightaboo}{\optimalsolutions}
+% \pgfplotstablecreatecol[copy column from table={\highertaboolist}{[index] 1}]{highertaboo}{\optimalsolutions}
+% \pgfplotstablecreatecol[copy column from table={\highertaboolist}{[index] 3}]{highertabootime}{\optimalsolutions}
+
+\pgfplotstablecreatecol[copy column from table={\lowiterationlowaspiration}{[index] 1}]{lowiterationlowaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\lowiterationhighaspiration}{[index] 1}]{lowiterationhighaspiration}{\optimalsolutions}
+
+% \pgfplotstablecreatecol[copy column from table={\mediumiteration}{[index] 1}]{mediumiteration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\highiterationlowaspiration}{[index] 1}]{highiterationlowaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\highiterationhighaspiration}{[index] 1}]{highiterationhighaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\highiterationfullaspiration}{[index] 1}]{highiterationfullaspiration}{\optimalsolutions}
+
+\pgfplotstableset{
+    every head row/.style={
+		after row=\hline
+	},
+    columns/0/.style={
+        column name=\textsc{Instancia},
+        column type={l},
+        string replace*={_}{\_},
+        string type,
+        assign cell content/.code={
+            \pgfkeyssetvalue{/pgfplots/table/@cell content}{\texttt{##1}}
+        }
+    },
+    columns/solutions/.style={
+        column name=$MCS$,
+        int detect
+    },
+    columns/greedy/.style={
+    	column name=$greedy$
+    },
+	% columns/lowtaboo/.style={
+ %        column name=$\#E(taboo 1)$
+ %    },
+ %    columns/hightaboo/.style={
+ %        column name=$\#E(taboo 60)$
+ %    },
+ %    columns/highertaboo/.style={
+ %        column name=$\#E(taboo 600)$
+ %    },
+    columns/lowiterationlowaspiration/.style={
+        column name=$i1000a0.3$
+    },
+    columns/lowiterationhighaspiration/.style={
+        column name=$i1000a0.8$
+    },
+    % columns/mediumiteration/.style={
+    %     column name=$\#E(ite 4000)$
+    % },
+    columns/highiterationlowaspiration/.style={
+        column name=$i2000a0.3$
+    },
+    columns/highiterationhighaspiration/.style={
+        column name=$i2000a0.8$
+    },
+    columns/highiterationfullaspiration/.style={
+        column name=$i2000a1.0$
+    },
+	create on use/ratiolist/.style=
+		{create col/expr={(\thisrow{greedy} * 100)/ \thisrow{highertaboo} - 100}},
+	columns/ratio/.style={
+        column name=$\% \Delta$,
+        column type={r},
+        fixed, precision=2,
+        postproc cell content/.append style={
+            /pgfplots/table/@cell content/.add={}{\%}
+        },
+        fonts by sign={}{\color{red}}
+    },
+    % create on use/ratiolisttime/.style=
+    %     {create col/expr={(\thisrow{highertabootime} * 100)/ \thisrow{greedytime} - 100}},
+    % columns/ratio/.style={
+    %     column name=$\% \Delta$,
+    %     column type={r},
+    %     fixed, precision=2,
+    %     postproc cell content/.append style={
+    %         /pgfplots/table/@cell content/.add={}{\%}
+    %     },
+    %     fonts by sign={}{\color{red}}
+    % },
+    create on use/ratioaspiration/.style=
+        {create col/expr={(\thisrow{lowiterationhighaspiration} * 100)/ \thisrow{lowiterationlowaspiration} - 100}},
+    columns/ratio/.style={
+        column name=$\% \Delta$,
+        column type={r},
+        fixed, precision=2,
+        postproc cell content/.append style={
+            /pgfplots/table/@cell content/.add={}{\%}
+        },
+        fonts by sign={}{\color{red}}
+    }
+}
+
+% \begin{figure}[H]
+% 	\centering
+% 	\caption{Comparación de calidad entre distintos tamaños de lista tabú}
+% 	\pgfplotstabletypeset[
+% 		columns={0, solutions, greedy, highertaboo, ratiolist}
+% 	]{\optimalsolutions}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Comparación de tiempos entre distintos tamaños de lista tabú}
+%     \pgfplotstabletypeset[
+%         columns={0, greedytime, highertaboo, ratiolista}
+%     ]{\optimalsolutions}
+% \end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Comparación entre distintos umbrales de la función de aspiración}
+    \pgfplotstabletypeset[
+        columns={0, greedy, lowiterationhighaspiration, highiterationlowaspiration, highiterationhighaspiration, highiterationfullaspiration}
+    ]{\optimalsolutions}
+\end{figure}
+
+En esta tabla se puede observar como la variación entre cantidad de
+iteraciones produce un cambio positivo en algunos de los casos. Puede notarse
+también el bajo efecto que tiene reducir el umbral de la función de,
+puesto que permanecen identicas las cantidades de aristas encontradas entre
+las ejecuciones un umbral de aspiración de 0.8 y 1.0, mientras que con un
+valor de 0.3, se produce una mejora solamente en uno de los casos, y es muy
+pequeña.
+
+
+(Los de 1000 iteraciones son todos iguales para cualquier aspiracion)

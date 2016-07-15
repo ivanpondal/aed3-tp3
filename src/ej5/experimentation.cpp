@@ -27,6 +27,11 @@ unsigned int quality_exp_local_search_with_swap::solve_instance(graph<int> &g1, 
     // is not the case, we have to exchange both graphs before passing them
     // to the function, and remember this fact so that we can read correctly
     // the obtained solution
+
+
+	cout << "g1.n() : " << g1.n() << endl;
+	cout << "g2.n() : " << g2.n() << endl;
+
     if (g1.n() <= g2.n()) {
         small_graph = &g1;
         large_graph = &g2;
@@ -36,16 +41,17 @@ unsigned int quality_exp_local_search_with_swap::solve_instance(graph<int> &g1, 
     }
 
     graph<pair<int, int>>* start_point = solve_greedy(*small_graph, *large_graph);
-    h = solve_local_search(*small_graph, *large_graph, *start_point, 2,50,0.002f,true);
-
+    h = solve_local_search(*small_graph, *large_graph, *start_point, 2,reps,0.002f,true);
     delete start_point;
+
+
+    cout << "h->m() :  " << h->m() << endl;
 
 	return h->m();
 }
 
 void quality_exp_local_search_with_swap::clean_solution() {
 	delete h;
-
 }
 
 
@@ -57,9 +63,14 @@ unsigned int quality_exp_local_search_without_swap::solve_instance(graph<int> &g
     // is not the case, we have to exchange both graphs before passing them
     // to the function, and remember this fact so that we can read correctly
     // the obtained solution
-    if(	g1.n() == g2.n() ){
 
-    	return -1;
+	cout << "g1.n() : " << g1.n() << endl;
+	cout << "g2.n() : " << g2.n() << endl;
+
+    if(	g1.n() == g2.n() ){
+    	cout << "h->m() :  " << -1 << endl;
+
+    	return 0;
 
     }else{
 
@@ -71,10 +82,13 @@ unsigned int quality_exp_local_search_without_swap::solve_instance(graph<int> &g
 	        large_graph = &g1;
 	    }
 	    graph<pair<int, int>>* start_point = solve_greedy(*small_graph, *large_graph);
-    	h = solve_local_search(*small_graph, *large_graph, *start_point, 1,100,0.002f,true);
+    	h = solve_local_search(*small_graph, *large_graph, *start_point, 1,reps,0.002f,true);
+    	
     	delete start_point;
     }
+    cout << "h->m() :  " << h->m() << endl;
 
+ 
 	return h->m();
 }
 
@@ -218,13 +232,33 @@ void run_experimentation(){
 
 	// quality similar_nodes_count_instance_generation
 
-	// quality_exp_local_search_with_swap local_search_2_exp_similar_nodes_count(
-	// 		similar_nodes_count_instances, "../exp/ej5/similar_nodes_count_instance_generation",
+	quality_exp_local_search_with_swap local_search_2_exp_similar_nodes_count(
+			similar_nodes_count_instances, "../exp/ej5/similar_nodes_count_instance_generation_2_exp",
+			0, repetitions_val);
+
+	quality_exp_local_search_without_swap local_search_1_exp_similar_nodes_count(
+			similar_nodes_count_instances, "../exp/ej5/similar_nodes_count_instance_generation_1_exp",
+			0, repetitions_val);
+
+	// quality diferents_nodes_count_instances
+
+	// quality_exp_local_search_with_swap local_search_2_exp_diferents_nodes_count(
+	// 		diferents_nodes_count_instances, "../exp/ej5/diferents_nodes_count_instance_generation_2_exp",
 	// 		0, repetitions_val);
 
+	// quality_exp_local_search_without_swap local_search_1_exp_diferents_nodes_count(
+	// 		diferents_nodes_count_instances, "../exp/ej5/diferents_nodes_count_instance_generation_1_exp",
+	// 		0, repetitions_val);
 
-	//quality_exp_suite.add(&local_search_1_exp);
-	/*quality_exp_suite.add(&local_search_2_exp);*/
+	// quality_exp_suite.add(&local_search_1_exp);
+	// quality_exp_suite.add(&local_search_2_exp);
+
+	quality_exp_suite.add(&local_search_2_exp_similar_nodes_count);
+	quality_exp_suite.add(&local_search_1_exp_similar_nodes_count);
+
+	// quality_exp_suite.add(&local_search_2_exp_diferents_nodes_count);
+	// quality_exp_suite.add(&local_search_1_exp_diferents_nodes_count);
+
 	quality_exp_suite.run();
 
 
@@ -623,15 +657,15 @@ void run_experimentation(){
 
 
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2);
 
 
 	 neighbourhood_proportion_calibrate_exp_suite.run();

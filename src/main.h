@@ -111,6 +111,7 @@ const std::vector<std::string> unknown_solution_instances = {
     "aleatorio_n1000_d10_c050_v025"
 };
 
+
 const std::vector<std::string> similar_nodes_count_instances = {
     "arbol_n501_vs_arbol_n500",
     "ciclo_n501_vs_ciclo_n500",
@@ -144,6 +145,20 @@ const std::vector<std::string> diferents_nodes_count_instances = {
 
 const std::vector<std::string> greedy_solution_instances = {
     "greedy_solution_instances"
+};
+
+const std::vector<std::string> small_known_solution_instances = {
+    "cografo_n100_k50",
+    "aleatorio_subgrafo_n150_c025",
+    "aleatorio_subgrafo_n150_c050",
+    "aleatorio_subgrafo_n150_c075",
+    "arbol_subgrafo_n150",
+    "ciclo_subgrafo_n150",
+    "aleatorio_bipartito_vs_completo_n150_k150_c050",
+    "aleatorio_bipartito_vs_completo_n500_k500_c050",
+    "bosque_vs_completo_n500_d10",
+    "aleatorio_vs_completo_n500_d10_c050",
+    "aleatorio_vs_completo_n1000_d10_c050"
 };
 
 #endif  // AED3_TP3_MAIN_H
