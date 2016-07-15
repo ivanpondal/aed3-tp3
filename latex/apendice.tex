@@ -1,1 +1,1638 @@
 \section{Apéndice}
+\subsection{Ejercicio 2 (Algoritmo exacto)}
+\begin{lstlisting}
+unsigned int degree_sum(const graph<int> *g, list<int> remaining_nodes) {
+    int sum = 0;
+    for (list<int>::iterator it = remaining_nodes.begin(); it != remaining_nodes.end(); it++) {
+        sum += g->degree(*it);
+    }
+    return sum;
+}
+bool mcs_backtracking(
+        const graph<int> *g1,
+        const graph<int> *g2,
+        // graph<int> *subgraph,
+        graph<pair<int, int> > *subgraph,
+        unordered_map<int, int> node_map,
+        list<int> &g1_remaining_nodes,
+        list<int> &g2_remaining_nodes,
+        // list<int>::iterator &g1_insert_it,
+        // list<int>::iterator &g2_insert_it,
+        // unsigned int g1_insert_it_pos,
+        // unsigned int g2_insert_it_pos,
+        unsigned int &maxEdges,
+        unordered_set<tuple<int, int, int, int>, hash_tuple_int> &permutations
+) {
+
+    if (subgraph->m() + degree_sum(g1, g1_remaining_nodes) <= maxEdges)
+        return false;
+
+    if (!g1_remaining_nodes.empty() && !g2_remaining_nodes.empty()) {
+
+        graph<pair<int, int> > *max_subgraph = new adj_list_graph<pair<int, int>, hash_pair_int>();
+
+        // This indexes will be used to prevent losing the reference to the iterator when an element is erased and re-inserted
+        list<int>::iterator g1_remaining_nodes_it = g1_remaining_nodes.begin();
+        unsigned int g1_remaining_nodes_index = 0;
+        while (g1_remaining_nodes_it != g1_remaining_nodes.end()) {
+
+            list<int>::iterator g2_remaining_nodes_it = g2_remaining_nodes.begin();
+            unsigned int g2_remaining_nodes_index = 0;
+            while (g2_remaining_nodes_it != g2_remaining_nodes.end()) {
+
+                int g1_node = *g1_remaining_nodes_it;
+                int g2_node = *g2_remaining_nodes_it;
+
+                // Verify if actual mapping can be permuted with a previous branch (only if it is the second mapping)
+                if (subgraph->n() == 1) {
+                    unordered_map<int, int>::iterator map_it = node_map.begin();
+                    tuple<int, int, int, int> permutation(map_it->first, map_it->second, g1_node, g2_node);
+                    // pair<int, int> first_mapping = subgraph->get_vertices[0];
+                    // tuple<int, int, int, int> permutation(first_mapping.first, first_mapping.second, g1_node, g2_node);
+
+                    // If actual mapping is a permutation of a already traversed mapping, it skips it
+                    if (permutations.find(permutation) != permutations.end()) {
+                        g2_remaining_nodes_it++;
+                        g2_remaining_nodes_index++;
+                        continue;
+                    }
+                    else {
+                        tuple<int, int, int, int> reverse_permutation(g1_node, g2_node, map_it->first, map_it->second);
+                        permutations.insert(reverse_permutation);
+                    }
+                }
+
+                // Erase mapped nodes from list of remaining
+                g1_remaining_nodes.erase(g1_remaining_nodes_it);
+                g2_remaining_nodes.erase(g2_remaining_nodes_it);
+
+                pair<int, int> actual_mapping(g1_node,g2_node);
+
+                // Copy unordered_map and map nodes
+                unordered_map<int, int> node_map_copy = node_map;
+                node_map_copy.insert(actual_mapping);
+
+                // Copy subgraph and dd new node
+                graph<pair<int, int> > *subgraph_copy = subgraph->clone();
+                // subgraph_copy->add_node(g1_node);
+                subgraph_copy->add_node(actual_mapping);
+
+                // Add edges to the existing neighbours
+                vector<int> g1_neighbours = g1->neighbours(g1_node);
+                for (unsigned int neighbour_index = 0; neighbour_index < g1_neighbours.size(); neighbour_index++) {
+
+                    int g1_neighbour = g1_neighbours[neighbour_index];
+
+                    // Check if the neighbour is in the subgraph
+                    if (node_map.find(g1_neighbour) != node_map.end()) {
+                        int g2_mapped_node = node_map.at(g1_neighbour);
+
+                        // Check if the neighbour is mapped to a neighbour of the remaining_g2 node-to-map
+                        if (g2->adjacent(g2_mapped_node, g2_node)) {
+                            // Add edge
+                            pair<int, int> subgraph_neighbour_node(g1_neighbour, g2_mapped_node);
+                            subgraph_copy->add_edge(actual_mapping, subgraph_neighbour_node);
+                        }
+                    }
+                }
+
+                bool valid_subgraph = mcs_backtracking( g1,
+                                                        g2,
+                                                        subgraph_copy,
+                                                        node_map_copy,
+                                                        g1_remaining_nodes,
+                                                        g2_remaining_nodes,
+                                                        // g1_remaining_nodes_it,
+                                                        // g2_remaining_nodes_it,
+                                                        // g1_remaining_nodes_index,
+                                                        // g2_remaining_nodes_index,
+                                                        maxEdges,
+                                                        permutations);
+
+                if (valid_subgraph && subgraph_copy->m() >= max_subgraph->m()) {
+                    *max_subgraph = *subgraph_copy;
+
+                    if (max_subgraph->m() > maxEdges)
+                        maxEdges = max_subgraph->m();
+                }
+
+                delete(subgraph_copy);
+
+                // Move iterator to position
+                g1_remaining_nodes_it = g1_remaining_nodes.begin();
+                for (unsigned int i = 0; i < g1_remaining_nodes_index; i++)
+                    g1_remaining_nodes_it++;
+
+
+                g2_remaining_nodes_it = g2_remaining_nodes.begin();
+                for (unsigned int i = 0; i < g2_remaining_nodes_index; i++)
+                    g2_remaining_nodes_it++;
+
+                // Re-insert previously erased nodes to remaining nodes lists
+                g1_remaining_nodes.insert(g1_remaining_nodes_it, g1_node);
+                g1_remaining_nodes_it--;
+                g2_remaining_nodes.insert(g2_remaining_nodes_it, g2_node);
+
+                // The indexes are necessary to track which position was erased in the previous call of the function
+                // If the element that is being re-inserted matches that position, then the iterator is stored in the iterator passed by refference
+                // if (g1_remaining_nodes_index == g1_insert_it_pos)
+                //     g1_insert_it = g1_remaining_nodes.insert(g1_remaining_nodes_it, g1_node);
+                // else
+                //     g1_remaining_nodes.insert(g1_remaining_nodes_it, g1_node);
+
+                // if (g2_remaining_nodes_index == g2_insert_it_pos)
+                //     g2_insert_it = g2_remaining_nodes.insert(g2_remaining_nodes_it, g2_node);
+                // else
+                //     g2_remaining_nodes.insert(g2_remaining_nodes_it, g2_node);
+
+                g2_remaining_nodes_index++;
+            }
+
+            g1_remaining_nodes_it++;
+            g1_remaining_nodes_index++;
+        }
+
+        *subgraph = *max_subgraph;
+        delete(max_subgraph);
+    }
+
+    return true;
+}
+
+graph<pair<int, int> >* solve_backtracking(const graph<int> *g1, const graph<int> *g2) {
+    graph<pair<int, int>> *empty_graph = new adj_list_graph<pair<int, int>, hash_pair_int>();
+    unordered_map<int, int> empty_map;
+    unordered_set<tuple<int, int, int, int>, hash_tuple_int> permutations;
+    unsigned int edges = 0;
+
+    vector<int> g1_vertices = g1->get_vertices();
+    vector<int> g2_vertices = g2->get_vertices();
+    list<int> g1_list, g2_list;
+
+    for (vector<int>::iterator it = g1_vertices.begin(); it != g1_vertices.end(); it++) {
+        g1_list.push_back(*it);
+    }
+
+    for (vector<int>::iterator it = g2_vertices.begin(); it != g2_vertices.end(); it++)
+        g2_list.push_back(*it);
+
+    mcs_backtracking(   g1,
+                        g2,
+                        empty_graph,
+                        empty_map,
+                        g1_list,
+                        g2_list,
+                        // g1_begining_it,
+                        // g2_begining_it,
+                        // 0,
+                        // 0,
+                        edges,
+                        permutations);
+
+    return empty_graph;
+}
+
+\end{lstlisting}
+
+\subsection{Ejercicio 3 (Algortimo excto para cografos)}
+\begin{lstlisting}
+solution solve_cograph_vs_complete(const graph<int>& g1, const graph<int>& g2){
+	if (g2.n() >= g1.n()) {
+		vector<int> g1_mapping = g1.get_vertices();
+
+		vector<int> g2_mapping(g1.n());
+		iota(g2_mapping.begin(), g2_mapping.end(), 0);
+
+		return {g1.clone(), g1_mapping, g2_mapping};
+	}
+
+	// Calculate cotree
+	cotree_node* cotree = generate_cotree(g1);
+	vector<info_cotree_node> vec_cotree = vectorize(cotree);
+
+	vector<vector<subsolution>> dp(
+		vec_cotree.size(),
+		vector<subsolution>(g2.n() + 1)
+	);
+
+	solver_dp(dp,vec_cotree,g2.n());
+
+	vector<int> g1_mapping = dp[vec_cotree.size() - 1][g2.n()].vertices;
+	vector<int> g2_mapping(g2.n());
+	iota(g2_mapping.begin(), g2_mapping.end(), 0);
+
+	return {induced_supgraph(g1, g1_mapping), g1_mapping, g2_mapping};
+}
+
+void solver_dp(std::vector<std::vector<subsolution>> &dp,std::vector<info_cotree_node> &vec_cotree, uint g2_n){
+
+    for (uint i = 0; i < vec_cotree.size(); i++) {
+        info_cotree_node current_info = vec_cotree[i];
+
+        for (uint j = 0; j <= g2_n; j++) {
+            // si pido 0 nodos
+            if (j == 0) {
+                dp[i][j] = {0, vector<int>()};
+            }
+            else {
+                // si es una hoja
+                if (current_info.node->get_type() == leaf) {
+                    cotree_node_leaf* current_node =
+                        (cotree_node_leaf*) current_info.node;
+
+                    // si pido 1 nodo
+                    if (j == 1) {
+                        dp[i][j] = {0, {current_node->get_vertex()}};
+                    }
+                    else {
+                        dp[i][j] = {-1, vector<int>()};
+                    }
+                }
+                else {
+                    cotree_node_operation* current_node =
+                        (cotree_node_operation*) current_info.node;
+
+                    // si le pido más nodos de los que tiene el cotree
+                    if (j > current_node->get_vertex_count()) {
+                        dp[i][j] = {-1, vector<int>()};
+                    }
+                    // si pido exactamente la cantidad de nodos que tiene el cotree
+                    else if (j == current_node->get_vertex_count()) {
+                        uint left_vertex_count =
+                            current_node->get_left_child()->get_vertex_count();
+                        uint right_vertex_count =
+                            current_node->get_right_child()->get_vertex_count();
+
+                        subsolution left_subsolution =
+                            dp[current_info.left_child_index][left_vertex_count];
+                        subsolution right_subsolution =
+                            dp[current_info.right_child_index][right_vertex_count];
+
+                        int current_edge_count;
+                        if (current_node->get_operation() == join) {
+                            current_edge_count = left_subsolution.edge_count +
+                                right_subsolution.edge_count +
+                                left_vertex_count * right_vertex_count;
+                        }
+                        else {
+                            current_edge_count = left_subsolution.edge_count +
+                                right_subsolution.edge_count;
+                        }
+
+                        vector<int> current_vertices = left_subsolution.vertices;
+                        current_vertices.insert(
+                            current_vertices.end(),
+                            right_subsolution.vertices.begin(),
+                            right_subsolution.vertices.end()
+                        );
+                        dp[i][j] = {current_edge_count, current_vertices};
+                    }
+                    else {
+                        // pruebo combinando tomando de 1 a i y de i a 1 en
+                        // los hijos del co-tree
+                        int best_edge_count = -1;
+
+                        for (uint k = 0; k <= j; k++) {
+                            subsolution left_subsolution =
+                                dp[current_info.left_child_index][j - k];
+                            subsolution right_subsolution =
+                                dp[current_info.right_child_index][k];
+
+                            int current_edge_count;
+                            // si es un caso válido
+                            if (left_subsolution.edge_count != -1
+                                && right_subsolution.edge_count != -1)
+                            {
+                                if (current_node->get_operation() == join) {
+                                    current_edge_count =
+                                        left_subsolution.edge_count +
+                                        right_subsolution.edge_count +
+                                        k * (j - k);
+                                }
+                                else {
+                                    current_edge_count =
+                                        left_subsolution.edge_count +
+                                        right_subsolution.edge_count;
+                                }
+
+                                if (current_edge_count > best_edge_count) {
+                                    best_edge_count = current_edge_count;
+                                    vector<int> current_vertices =
+                                        left_subsolution.vertices;
+                                    current_vertices.insert(
+                                        current_vertices.end(),
+                                        right_subsolution.vertices.begin(),
+                                        right_subsolution.vertices.end()
+                                    );
+                                    dp[i][j] =
+                                        {current_edge_count, current_vertices};
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+cotree_node* generate_cotree(const graph<int>& g) {
+    cotree_node* ret = NULL;
+
+    if (g.n() == 1) {
+        ret = new cotree_node_leaf(0);
+        return ret;
+    }
+
+    graph<int>* gc = complement(g);
+
+    enum direction {left, right, none};
+    struct pending_node {
+        subgraph sg;
+        cotree_node_operation* parent;
+        direction child_type;
+    };
+
+    pending_node start = {subgraph(g.n()), NULL, none};
+    stack<pending_node> to_expand;
+    stack<cotree_node_operation*> to_compute_size;
+    to_expand.push(start);
+
+    while (! to_expand.empty()) {
+        subgraph current_subgraph = to_expand.top().sg;
+        cotree_node_operation* current_parent = to_expand.top().parent;
+        direction current_child_type = to_expand.top().child_type;
+        to_expand.pop();
+
+        cotree_operation op;
+        subgraph cc1 = current_subgraph.find_connected_comp(g);
+
+        if (cc1.vertex_count() == current_subgraph.vertex_count()) {
+            cc1 = current_subgraph.find_connected_comp(*gc);
+            op = join;
+        }
+        else {
+            op = disj_union;
+        }
+
+        subgraph cc2 = current_subgraph;
+        cc2.substract(cc1);
+
+        cotree_node_operation* new_node = new cotree_node_operation(op);
+        to_compute_size.push(new_node);
+
+        if (current_parent == NULL) {
+            ret = new_node;
+        }
+        else {
+            if (current_child_type == left) {
+                current_parent->set_left_child(new_node);
+            }
+            else if (current_child_type == right) {
+                current_parent->set_right_child(new_node);
+            }
+        }
+
+        // Left child
+        if (cc1.vertex_count() == 1) {
+            // If it is a leaf
+            cotree_node* cc1_node = new cotree_node_leaf(cc1.get_vertex());
+            new_node->set_left_child(cc1_node);
+        }
+        else {
+            // If it is an operation
+            pending_node cc1_node = {cc1, new_node, left};
+            to_expand.push(cc1_node);
+        }
+
+        // Right child
+        if (cc2.vertex_count() == 1) {
+            // If it is a leaf
+            cotree_node* cc2_node = new cotree_node_leaf(cc2.get_vertex());
+            new_node->set_right_child(cc2_node);
+        }
+        else {
+            // If it is an operation
+            pending_node cc2_node = {cc2, new_node, right};
+            to_expand.push(cc2_node);
+        }
+    }
+
+    delete gc;
+
+    // Counting nodes and edges
+    cotree_node_operation* current_node;
+    while (! to_compute_size.empty()) {
+        current_node = to_compute_size.top();
+        to_compute_size.pop();
+
+        // Left child size
+        int left_child_vertex_count = 1;
+        int left_child_edge_count = 0;
+        if (current_node->get_left_child()->get_type() == operation) {
+            cotree_node_operation* left_child =
+                      (cotree_node_operation*) current_node->get_left_child();
+            left_child_vertex_count = left_child->get_vertex_count();
+            left_child_edge_count = left_child->get_edge_count();
+        }
+
+        // Right child size
+        int right_child_vertex_count = 1;
+        int right_child_edge_count = 0;
+        if (current_node->get_right_child()->get_type() == operation) {
+            cotree_node_operation* right_child =
+                      (cotree_node_operation*) current_node->get_right_child();
+            right_child_vertex_count = right_child->get_vertex_count();
+            right_child_edge_count = right_child->get_edge_count();
+        }
+
+        current_node->set_vertex_count(
+            left_child_vertex_count + right_child_vertex_count);
+
+        if (current_node->get_operation() == join) {
+            current_node->set_edge_count(
+                left_child_edge_count + right_child_edge_count +
+                (left_child_vertex_count * right_child_vertex_count));
+        }
+        else if (current_node->get_operation() == disj_union) {
+            current_node->set_edge_count(
+                left_child_edge_count + right_child_edge_count);
+        }
+    }
+
+    return ret;
+}
+
+vector<info_cotree_node> vectorize(cotree_node* cotree) {
+    vector<info_cotree_node> ret;
+    if (cotree->get_type() == leaf) {
+        ret = {{cotree, -1, -1}};
+    } else {
+        cotree_node_operation* cotree_root = (cotree_node_operation*) cotree;
+        int i = cotree_root->get_vertex_count() * 2 - 1;
+        ret = vector<info_cotree_node>(i);
+
+        enum direction {left, right, none};
+        struct pending_node {
+            cotree_node* addr;
+            int parent_index;
+            direction child_type;
+        };
+
+        stack<pending_node> to_explore;
+        to_explore.push({cotree, -1, none});
+
+        while (! to_explore.empty()) {
+            cotree_node* current_node = to_explore.top().addr;
+            int current_parent_index = to_explore.top().parent_index;
+            direction current_child_type = to_explore.top().child_type;
+            to_explore.pop();
+            i--;
+
+            if (current_node->get_type() == leaf) {
+                ret[i] = {current_node, -1, -1};
+            } else {
+                to_explore.push({current_node->get_left_child(), i, left});
+                to_explore.push({current_node->get_right_child(), i, right});
+                ret[i] = {current_node, -1, -1};
+            }
+
+            if (current_parent_index != -1) {
+                if (current_child_type == left) {
+                    ret[current_parent_index].left_child_index = i;
+                } else if (current_child_type == right) {
+                    ret[current_parent_index].right_child_index = i;
+                }
+            }
+        }
+    }
+
+    return ret;
+}
+
+graph<int>* complement(const graph<int>& g) {
+    graph<int>* ret = new adj_list_graph<int>();
+
+    for (typename vector<int>::const_iterator it1 = g.get_vertices().begin();
+        it1 != g.get_vertices().end();
+        it1++)
+    {
+        int current_node1 = *it1;
+        ret->add_node(current_node1);
+        for (typename vector<int>::const_iterator it2 = g.get_vertices().begin();
+            it2 != g.get_vertices().end();
+            it2++)
+        {
+            int current_node2 = *it2;
+            if (current_node1 != current_node2 &&
+                ! g.adjacent(current_node1, current_node2))
+            {
+                ret->add_edge(current_node1, current_node2);
+            }
+        }
+
+    }
+
+    return ret;
+};
+
+graph<int>* induced_supgraph(
+    const graph<int>& g,
+    const vector<int>& subgraph_vertices
+) {
+    adj_list_graph<int>* ret = new adj_list_graph<int>();
+    unordered_map<int, int> mapping;
+
+    int i = 0;
+    for (typename vector<int>::const_iterator it1 = subgraph_vertices.begin();
+        it1 != subgraph_vertices.end();
+        it1++)
+    {
+        mapping.insert(make_pair(*it1, i));
+        ret->add_node(i);
+        i++;
+    }
+
+    for (typename vector<int>::const_iterator it1 = subgraph_vertices.begin();
+        it1 != subgraph_vertices.end();
+        it1++)
+    {
+        i = mapping[*it1];
+        vector<int> neigh = g.neighbours(*it1);
+
+        for (typename vector<int>::const_iterator it2 = neigh.begin();
+            it2 != neigh.end();
+            it2++)
+        {
+            if (mapping.find(*it2) != mapping.end()) {
+                int j = mapping[*it2];
+                ret->add_edge(i, j);
+            }
+        }
+
+        mapping.erase(*it1);
+    }
+
+\end{lstlisting}
+
+\subsection{Ejercicio 4 (Algortimo goloso)}
+\begin{lstlisting}
+graph< std::pair<int, int>> *solve_greedy(const graph<int> &g1, const graph<int> &g2, bool add_neighbours){
+    // >>>>>>>>> add_neighbours
+    std::priority_queue<std::pair<int, int>,
+                        std::vector< std::pair<int, int>>,
+                        node_degree_pair_compare> unvisited_unmapped_g1;
+
+    std::priority_queue<std::pair<int, int>,
+                        std::vector< std::pair<int, int>>,
+                        node_degree_pair_compare> unvisited_unmapped_g2;
+
+    std::priority_queue<std::pair<int, int>,
+                        std::vector< std::pair<int, int>>,
+                        node_degree_pair_compare> clear_heap;
+
+    int g1_node_neighbour = 0;
+    int g2_node_neighbour = 0;
+
+    std::pair<int, int> mcs_node_neighbour;
+    // <<<<<<<<< add_neighbours
+
+    std::priority_queue<std::pair<int, int>,
+                        std::vector< std::pair<int, int>>,
+                        node_degree_pair_compare> unvisited_g1;
+
+    std::priority_queue<std::pair<int, int>,
+                        std::vector< std::pair<int, int>>,
+                        node_degree_pair_compare> unvisited_g2;
+
+    std::unordered_map<int, std::pair<int, int>> mapping_g1;
+    std::unordered_map<int, std::pair<int, int>> mapping_g2;
+
+    std::unordered_map<int, std::pair<int, int>>::iterator mapping_iterator;
+
+    std::unordered_set< std::pair<int, int>, hash_pair_int> valid_mapping;
+
+    graph< std::pair<int, int>> *g_mcs = new adj_list_graph<std::pair<int, int>, hash_pair_int>();
+
+    for(unsigned int i = 0; i < g1.n(); i++){
+        unvisited_g1.push(std::make_pair(g1.get_vertices()[i],
+                          g1.degree(g1.get_vertices()[i])));
+    }
+
+    for(unsigned int i = 0; i < g2.n(); i++){
+        unvisited_g2.push(std::make_pair(g2.get_vertices()[i],
+                          g2.degree(g2.get_vertices()[i])));
+    }
+    int g1_node = 0;
+    int g2_node = 0;
+
+    unsigned int added_edges = 0;
+
+    std::pair<int, int> mcs_node;
+
+    while(!unvisited_g1.empty() && !unvisited_g2.empty()){
+
+        g1_node = unvisited_g1.top().first;
+        g2_node = unvisited_g2.top().first;
+
+        unvisited_g1.pop();
+        unvisited_g2.pop();
+
+        if(add_neighbours){
+            while((mapping_g1.find(g1_node) != mapping_g1.end() ||
+                   mapping_g2.find(g2_node) != mapping_g2.end()) &&
+                   !unvisited_g1.empty() && !unvisited_g2.empty()){
+
+                if(mapping_g1.find(g1_node) != mapping_g1.end()){
+                    g1_node = unvisited_g1.top().first;
+                    unvisited_g1.pop();
+                }
+                else{
+                    g2_node = unvisited_g2.top().first;
+                    unvisited_g2.pop();
+                }
+            }
+
+            if(mapping_g1.find(g1_node) != mapping_g1.end() ||
+               mapping_g2.find(g2_node) != mapping_g2.end()){
+                break;
+            }
+        }
+
+        mcs_node = std::make_pair(g1_node, g2_node);
+
+        mapping_g1.insert(std::make_pair(g1_node, mcs_node));
+        mapping_g2.insert(std::make_pair(g2_node, mcs_node));
+
+        g_mcs->add_node(mcs_node);
+
+        for(unsigned int i = 0; i < g1.neighbours(g1_node).size(); i++){
+            mapping_iterator = mapping_g1.find(g1.neighbours(g1_node)[i]);
+            if(mapping_iterator != mapping_g1.end()){
+                valid_mapping.insert(mapping_iterator->second);
+            }
+            else{
+                if(add_neighbours){
+                    unvisited_unmapped_g1.push(std::make_pair(g1.neighbours(g1_node)[i],
+                                               g1.degree(g1.neighbours(g1_node)[i])));
+                }
+            }
+        }
+
+        if(!valid_mapping.empty() || add_neighbours){
+            for(unsigned int i = 0; i < g2.neighbours(g2_node).size(); i++){
+                mapping_iterator = mapping_g2.find(g2.neighbours(g2_node)[i]);
+                if(mapping_iterator != mapping_g2.end() &&
+                   valid_mapping.find(mapping_iterator->second) != valid_mapping.end()){
+
+                    g_mcs->add_edge(mcs_node, mapping_iterator->second);
+
+                    added_edges++;
+                    if(added_edges == valid_mapping.size() && !add_neighbours){
+                        break;
+                    }
+                }
+                else{
+                    if(add_neighbours && mapping_iterator == mapping_g2.end()){
+                        unvisited_unmapped_g2.push(std::make_pair(g2.neighbours(g2_node)[i],
+                                                   g2.degree(g2.neighbours(g2_node)[i])));
+                    }
+                }
+            }
+
+            if(add_neighbours){
+                while(!unvisited_unmapped_g1.empty() && !unvisited_unmapped_g2.empty()){
+                    g1_node_neighbour = unvisited_unmapped_g1.top().first;
+                    g2_node_neighbour = unvisited_unmapped_g2.top().first;
+
+                    unvisited_unmapped_g1.pop();
+                    unvisited_unmapped_g2.pop();
+
+                    mcs_node_neighbour = std::make_pair(g1_node_neighbour,
+                                                        g2_node_neighbour);
+
+                    mapping_g1.insert(std::make_pair(g1_node_neighbour,
+                                                     mcs_node_neighbour));
+                    mapping_g2.insert(std::make_pair(g2_node_neighbour,
+                                                     mcs_node_neighbour));
+
+                    g_mcs->add_node(mcs_node_neighbour);
+                    g_mcs->add_edge(mcs_node, mcs_node_neighbour);
+                }
+
+                unvisited_unmapped_g1 = clear_heap;
+                unvisited_unmapped_g2 = clear_heap;
+            }
+
+            valid_mapping.clear();
+            added_edges = 0;
+        }
+    }
+
+    return g_mcs;
+}
+
+\end{lstlisting}
+\subsection{Ejercicio 5 (Heuristica busqueda local)}
+\begin{lstlisting}
+graph<pair<int, int>>* solve_local_search(
+    graph<int>& g1,
+    graph<int>& g2,
+    graph<pair<int, int>>& start_point,
+    int neighbourhood_type,
+    int iteration_limit,
+    float neighbourhood_proportion,
+    bool strict_comparisons
+) {
+    // We need #V(g1) < #V(g2), #V(start_point) == #V(g_1)
+    assert(g1.n() <= g2.n());
+    assert(start_point.n() == g1.n());
+
+    bool (*improve_solution) (
+        graph<pair<int, int>>*,
+        graph<int>&,
+        graph<int>&,
+        unordered_map<int, int>&,
+        unordered_set<int>&,
+        unordered_set<int>&,
+        vector<int>&,
+        float,
+        bool
+    ) = &improve_solution_1;
+
+    if (neighbourhood_type == 2) {
+        improve_solution = &improve_solution_2;
+    }
+
+    unsigned int solution_size = start_point.n();
+
+    // This will store the node in g1 that corresponds to each node in g2
+    unordered_map<int, int> g2_to_g1_mapping;
+
+    // This will keep track of g2 vertices which are (not) mapped to any vertex in g1
+    unordered_set<int> mapped_nodes;
+    unordered_set<int> unmapped_nodes;
+    vector<int> unmapped_nodes_vector;
+
+    vector<int> g2_vertices = g2.get_vertices();
+    vector<pair<int, int>> solution_vertices = start_point.get_vertices();
+
+
+    // Read start solution as a mapping between g1 and g2 nodes
+    for (unsigned int i = 0; i < solution_size; i++) {
+        int g1_node = solution_vertices[i].first;
+        int g2_node = solution_vertices[i].second;
+        g2_to_g1_mapping.insert({g2_node, g1_node});
+        mapped_nodes.insert(g2_node);
+    }
+
+    for (unsigned int i = 0; i < g2.n(); i++) {
+        if (mapped_nodes.find(g2_vertices[i]) == mapped_nodes.end()) {
+            unmapped_nodes.insert(g2_vertices[i]);
+            unmapped_nodes_vector.push_back(g2_vertices[i]);
+        }
+    }
+
+    bool stop = false;
+    int iteration_count = 0;
+
+    // Here is where the solution will be saved at the end of each iteration
+    graph<pair<int, int>>* ret;
+
+    ret = start_point.clone();
+
+    while (! stop && (iteration_limit < 0 || iteration_count < iteration_limit)) {
+        // cout<< "iteration_count: " << iteration_count << endl;
+        bool any_improvement = improve_solution(
+            ret,
+            g1,
+            g2,
+            g2_to_g1_mapping,
+            mapped_nodes,
+            unmapped_nodes,
+            unmapped_nodes_vector,
+            neighbourhood_proportion,
+            strict_comparisons
+        );
+        if (! any_improvement) {
+            stop = true;
+        }
+
+        iteration_count++;
+    }
+
+    return ret;
+}
+
+
+// Neighbourhood type 1
+// --------------------
+
+// Each iteration exchanges one node of g2 in the mapping for one that is not
+// mapped to any node of g1
+
+bool improve_solution_1(
+    graph<pair<int, int>>* solution,
+    graph<int>& g1,
+    graph<int>& g2,
+    unordered_map<int, int>& g2_to_g1_mapping,
+    unordered_set<int>& mapped_nodes,
+    unordered_set<int>& unmapped_nodes,
+    vector<int>& unmapped_nodes_vector,
+    float neighbourhood_proportion,
+    bool strict_comparisons,
+    unsigned int tabu_list_size,
+    priority_queue<movement, vector<movement>,
+        movement_compare>& tabu_queue,
+    movement_compare& mc,
+    vector<movement>& tabu_list,
+    bool allow_worse,
+    const float time_delta,
+    int& max_edge_diff,
+    const float aspiration_threshold
+) {
+    vector<pair<int, int>> solution_vertices =
+        solution->get_vertices();
+
+    bool use_tabu = tabu_list_size > 0;
+    bool is_tabu_mapping = false;
+    vector<pair<int, int>> tabu_free_mappings;
+
+    bool any_improvement = false;
+    pair<int, int> best_to_remove;
+    pair<int, int> best_to_add;
+    int best_edge_diff = 0;
+    vector<int> best_new_edges;
+
+    // This iterates over every pair present in the solution, each of
+    // which corresponds to a vertex in g1
+    for (unsigned int i = 0; i < solution->n(); i++) {
+        // This iterates over the possible nodes in g2 to which the
+        // current g1 vertex could be associated
+
+        unsigned int neighbourhood_size = unmapped_nodes_vector.size();
+
+        for (unsigned int j = 0; j < neighbourhood_size; j++) {
+            if (rand() < neighbourhood_proportion * RAND_MAX) {
+                // Possible new pair. Let's evaluate its potential
+                int node_mapped    = solution_vertices[i].first;   // part of g1
+                int node_to_remove = solution_vertices[i].second;  // part of g2
+                int node_to_add    = unmapped_nodes_vector[j];     // part of g2
+
+                int lost_edges = solution->degree({node_mapped, node_to_remove});
+                vector<int> new_edges;
+
+                vector<int> node_to_add_neigh = g2.neighbours(node_to_add);
+                for (unsigned int k = 0; k < node_to_add_neigh.size(); k++) {
+                    if (node_to_add_neigh[k] != node_to_remove &&
+                        unmapped_nodes.find(node_to_add_neigh[k]) ==
+                            unmapped_nodes.end() &&
+                        g1.adjacent(node_mapped,
+                            g2_to_g1_mapping[node_to_add_neigh[k]])
+                    )
+                    {
+                        new_edges.push_back(node_to_add_neigh[k]);
+                    }
+                }
+
+                int edge_diff = new_edges.size() - lost_edges;
+
+                // Check if this movement is tabu
+                if (use_tabu && allow_worse) {
+                    for (unsigned int k = 0; k < tabu_list.size(); k++) {
+                        // If this movement is in the tabu list
+                        if (tabu_list[k].mapping.first == node_mapped &&
+                                tabu_list[k].mapping.second == node_to_add
+                            ) {
+                            // If it doesn't gain much edges, we discard it
+                            if (edge_diff < max_edge_diff*aspiration_threshold) {
+                                is_tabu_mapping = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Try with next potential matching
+                    if (is_tabu_mapping) {
+                        is_tabu_mapping = false;
+                        continue;
+                    }
+                    else {
+                        tabu_free_mappings.push_back({i, j});
+                    }
+                }
+
+                bool is_improvement = strict_comparisons
+                                        ? edge_diff > best_edge_diff
+                                        : edge_diff >= best_edge_diff;
+
+                if (is_improvement) {
+                    any_improvement = true;
+                    best_to_add = {node_mapped, node_to_add};
+                    best_to_remove = {node_mapped, node_to_remove};
+                    best_edge_diff = edge_diff;
+                    best_new_edges = new_edges;
+                }
+            }
+        }
+    }
+
+    if (use_tabu && allow_worse && !tabu_free_mappings.empty() && !any_improvement) {
+        any_improvement = true;
+        pair<int, int> random_valid_mapping = tabu_free_mappings[rand() % tabu_free_mappings.size()];
+
+        int node_mapped    = solution_vertices[random_valid_mapping.first].first;   // part of g1
+        int node_to_remove = solution_vertices[random_valid_mapping.first].second;  // part of g2
+        int node_to_add    = unmapped_nodes_vector[random_valid_mapping.second];    // part of g2
+
+        int lost_edges = solution->degree({node_mapped, node_to_remove});
+
+        vector<int> new_edges;
+
+        vector<int> node_to_add_neigh = g2.neighbours(node_to_add);
+        for (unsigned int k = 0; k < node_to_add_neigh.size(); k++) {
+            if (node_to_add_neigh[k] != node_to_remove &&
+                unmapped_nodes.find(node_to_add_neigh[k]) ==
+                    unmapped_nodes.end() &&
+                g1.adjacent(node_mapped,
+                    g2_to_g1_mapping[node_to_add_neigh[k]])
+            )
+            {
+                new_edges.push_back(node_to_add_neigh[k]);
+            }
+        }
+
+        int edge_diff = new_edges.size() - lost_edges;
+
+        best_to_add = {node_mapped, node_to_add};
+        best_to_remove = {node_mapped, node_to_remove};
+        best_edge_diff = edge_diff;
+        best_new_edges = new_edges;
+    }
+
+    if (any_improvement) {
+        solution->remove_node(best_to_remove);
+        g2_to_g1_mapping.erase(best_to_remove.second);
+        unmapped_nodes_vector.push_back(best_to_remove.second);
+        unmapped_nodes.insert(best_to_remove.second);
+
+        solution->add_node(best_to_add);
+        g2_to_g1_mapping.insert({best_to_add.second, best_to_add.first});
+        unmapped_nodes_vector.erase(find(unmapped_nodes_vector.begin(),
+            unmapped_nodes_vector.end(), best_to_add.second));
+        unmapped_nodes.erase(best_to_add.second);
+
+        for (unsigned int i = 0; i < best_new_edges.size(); i++) {
+            pair<int, int> new_edge_dest = {
+                g2_to_g1_mapping[best_new_edges[i]],
+                best_new_edges[i]
+            };
+            solution->add_edge(best_to_add, new_edge_dest);
+        }
+
+        if (use_tabu) {
+            // If this is the new best edge diff, we update our max
+            if (best_edge_diff > max_edge_diff) {
+                max_edge_diff = best_edge_diff;
+            }
+
+            // Update time for each movement
+            for (unsigned int i = 0; i < tabu_list.size(); i++) {
+                tabu_list[i].time += time_delta;
+            }
+
+            // Update heap
+            if (!tabu_queue.empty()) {
+                make_heap(const_cast<movement*>(&tabu_queue.top()),
+                    const_cast<movement*>(&tabu_queue.top()) + tabu_queue.size(),
+                    mc);
+            }
+
+            movement mov(best_to_remove, best_edge_diff, 0);
+
+            if (tabu_list.size() < tabu_list_size) {
+                mov.pos = tabu_list.size();
+                tabu_list.push_back(mov);
+            }
+            else {
+                mov.pos = tabu_queue.top().pos;
+                tabu_queue.pop();
+                tabu_list[mov.pos] = mov;
+            }
+
+            // Add movement to tabu heap
+            tabu_queue.push(mov);
+        }
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+// Neighbourhood type 2
+// --------------------
+
+// Each iteration either exchanges one node of g2 in the mapping for one that
+// is not mapped to any node of g1, or swaps two nodes of g2 in the mapping
+
+bool improve_solution_2(
+    graph<pair<int, int>>* solution,
+    graph<int>& g1,
+    graph<int>& g2,
+    unordered_map<int, int>& g2_to_g1_mapping,
+    unordered_set<int>& mapped_nodes,
+    unordered_set<int>& unmapped_nodes,
+    vector<int>& unmapped_nodes_vector,
+    float neighbourhood_proportion,
+    bool strict_comparisons,
+    unsigned int tabu_list_size,
+    priority_queue<movement, vector<movement>,
+        movement_compare>& tabu_queue,
+    movement_compare& mc,
+    vector<movement>& tabu_list,
+    bool allow_worse,
+    const float time_delta,
+    int& max_edge_diff,
+    const float aspiration_threshold
+) {
+    enum action_type {none, swap, exchange};
+
+    vector<pair<int, int>> solution_vertices = solution->get_vertices();
+    vector<int> g2_vertices = g2.get_vertices();
+
+    bool use_tabu = tabu_list_size > 0;
+    bool is_tabu_mapping = false;
+    vector<pair<int, int>> tabu_free_mappings;
+    vector<bool> tabu_free_mapping_type;
+
+    bool any_improvement = false;
+    int best_edge_diff = 0;
+    action_type best_action = none;
+    pair<int, int> best_node_1;
+    pair<int, int> best_node_2;
+    vector<int> best_new_edges_1;
+    vector<int> best_new_edges_2;
+
+    for (unsigned int i = 0; i < g2.n(); i++) {
+        bool i_mapped = mapped_nodes.find(g2_vertices[i]) != mapped_nodes.end();
+        for (unsigned int j = 0; j < i; j++) {
+            if (rand() < neighbourhood_proportion * RAND_MAX) {
+                bool j_mapped = mapped_nodes.find(g2_vertices[j]) != mapped_nodes.end();
+
+                action_type action;
+                int node_1;  // to add if exchange
+                int node_2;  // to remove if exchange
+                int node_1_mapped;
+                int node_2_mapped;
+                int lost_edges;
+                vector<int> new_edges_1;
+                vector<int> new_edges_2;
+                int edge_diff = -1;  // to avoid trying to make invalid moves
+
+                if (i_mapped && j_mapped) {
+                    // cout << "  try SWAP  " << g2_vertices[i] << " <-> " << g2_vertices[j] << endl;
+                    action = swap;
+
+                    node_1 = g2_vertices[i];
+                    node_2 = g2_vertices[j];
+                    node_1_mapped = g2_to_g1_mapping[node_1];
+                    node_2_mapped = g2_to_g1_mapping[node_2];
+
+                    lost_edges =
+                        solution->degree({node_1_mapped, node_1}) +
+                        solution->degree({node_2_mapped, node_2});
+                    if (solution->adjacent({node_1_mapped, node_1}, {node_2_mapped, node_2})) {
+                        lost_edges -= 2;
+                    }
+
+                    vector<int> node_1_neigh = g2.neighbours(node_1);
+                    for (unsigned int k = 0; k < node_1_neigh.size(); k++) {
+                        if (node_1_neigh[k] != node_2 &&
+                            unmapped_nodes.find(node_1_neigh[k]) ==
+                                unmapped_nodes.end() &&
+                            g1.adjacent(node_2_mapped,
+                                g2_to_g1_mapping[node_1_neigh[k]])
+                        )
+                        {
+                            new_edges_1.push_back(node_1_neigh[k]);
+                        }
+                    }
+
+                    vector<int> node_2_neigh = g2.neighbours(node_2);
+                    for (unsigned int k = 0; k < node_2_neigh.size(); k++) {
+                        if (node_2_neigh[k] != node_1 &&
+                            unmapped_nodes.find(node_2_neigh[k]) ==
+                                unmapped_nodes.end() &&
+                            g1.adjacent(node_1_mapped,
+                                g2_to_g1_mapping[node_2_neigh[k]])
+                        )
+                        {
+                            new_edges_2.push_back(node_2_neigh[k]);
+                        }
+                    }
+                    // cout << "      lost edges:  " << lost_edges  << endl;
+                    // cout << "      new edges 1: " << new_edges_1 << endl;
+                    // cout << "      new edges 2: " << new_edges_2 << endl;
+
+                    edge_diff = new_edges_1.size() + new_edges_2.size() - lost_edges;
+                    // cout << "    edge diff: " << edge_diff << endl;
+                }
+                else if (i_mapped || j_mapped) {
+                    unsigned int mapped_node = i_mapped ? i : j;
+                    unsigned int unmapped_node = i_mapped ? j : i;
+                    // cout << "  try EXCHG " << g2_vertices[mapped_node] << " --> " << g2_vertices[unmapped_node] << endl;
+                    action = exchange;
+
+                    node_1        = g2_vertices[unmapped_node]; // to add, part of g2
+                    node_2        = g2_vertices[mapped_node];   // to remove, part of g2
+                    node_2_mapped = g2_to_g1_mapping[node_2];   // part of g1
+                    node_1_mapped = node_2_mapped;
+
+                    lost_edges = solution->degree({node_2_mapped, node_2});
+
+                    vector<int> node_1_neigh = g2.neighbours(node_1);
+                    for (unsigned int k = 0; k < node_1_neigh.size(); k++) {
+                        if (node_1_neigh[k] != node_2 &&
+                            unmapped_nodes.find(node_1_neigh[k]) ==
+                                unmapped_nodes.end() &&
+                            g1.adjacent(node_1_mapped,
+                                g2_to_g1_mapping[node_1_neigh[k]])
+                        )
+                        {
+                            new_edges_1.push_back(node_1_neigh[k]);
+                        }
+                    }
+
+                    // cout << "      lost edges: " << lost_edges  << endl;
+                    // cout << "      new edges:  " << new_edges_1 << endl;
+
+                    edge_diff = new_edges_1.size() - lost_edges;
+                    // cout << "    edge diff: " << edge_diff << endl;
+                }
+
+                // Check if this movement is tabu
+                if (use_tabu && allow_worse) {
+                    for (unsigned int k = 0; k < tabu_list.size(); k++) {
+                        // If this movement is in the tabu list
+                        if (tabu_list[k].mapping.first == node_1 &&
+                            tabu_list[k].mapping.second == node_2
+                        ) {
+                            // If it doesn't gain much edges, we discard it
+                            if (((tabu_list[k].is_swap && action == swap) ||
+                                (!tabu_list[k].is_swap && action == exchange)) &&
+                                edge_diff < max_edge_diff*aspiration_threshold
+                            ) {
+                                is_tabu_mapping = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Try with next potential matching
+                    if (is_tabu_mapping) {
+                        is_tabu_mapping = false;
+                        continue;
+                    }
+                    else {
+                        tabu_free_mappings.push_back({node_1, node_2});
+                        tabu_free_mapping_type.push_back(action == swap);
+                    }
+                }
+
+                bool is_improvement = strict_comparisons
+                                        ? edge_diff > best_edge_diff
+                                        : edge_diff >= best_edge_diff;
+
+                if (is_improvement) {
+                    any_improvement = true;
+                    best_edge_diff = edge_diff;
+                    best_action = action;
+                    best_node_1 = {node_1_mapped, node_1};
+                    best_node_2 = {node_2_mapped, node_2};
+                    best_new_edges_1 = new_edges_1;
+                    best_new_edges_2 = new_edges_2;
+                }
+            }
+        }
+    }
+
+    if (use_tabu && allow_worse && !tabu_free_mappings.empty() && !any_improvement) {
+        int random_number = rand() % tabu_free_mappings.size();
+        int node_1 = tabu_free_mappings[random_number].first;
+        int node_2 = tabu_free_mappings[random_number].second;
+
+        action_type action = tabu_free_mapping_type[random_number] ? swap : exchange;
+        int node_1_mapped;
+        int node_2_mapped;
+        int lost_edges;
+        vector<int> new_edges_1;
+        vector<int> new_edges_2;
+        int edge_diff;
+
+        if (action == swap) {
+            node_1_mapped = g2_to_g1_mapping[node_1];
+            node_2_mapped = g2_to_g1_mapping[node_2];
+
+            lost_edges =
+                solution->degree({node_1_mapped, node_1}) +
+                solution->degree({node_2_mapped, node_2});
+            if (solution->adjacent({node_1_mapped, node_1}, {node_2_mapped, node_2})) {
+                lost_edges -= 2;
+            }
+
+            vector<int> node_1_neigh = g2.neighbours(node_1);
+            for (unsigned int k = 0; k < node_1_neigh.size(); k++) {
+                if (node_1_neigh[k] != node_2 &&
+                    unmapped_nodes.find(node_1_neigh[k]) ==
+                        unmapped_nodes.end() &&
+                    g1.adjacent(node_2_mapped,
+                        g2_to_g1_mapping[node_1_neigh[k]])
+                )
+                {
+                    new_edges_1.push_back(node_1_neigh[k]);
+                }
+            }
+
+            vector<int> node_2_neigh = g2.neighbours(node_2);
+            for (unsigned int k = 0; k < node_2_neigh.size(); k++) {
+                if (node_2_neigh[k] != node_1 &&
+                    unmapped_nodes.find(node_2_neigh[k]) ==
+                        unmapped_nodes.end() &&
+                    g1.adjacent(node_1_mapped,
+                        g2_to_g1_mapping[node_2_neigh[k]])
+                )
+                {
+                    new_edges_2.push_back(node_2_neigh[k]);
+                }
+            }
+
+            edge_diff = new_edges_1.size() + new_edges_2.size() - lost_edges;
+        }
+        else {
+            node_2_mapped = g2_to_g1_mapping[node_2];
+            node_1_mapped = node_2_mapped;
+
+            lost_edges = solution->degree({node_2_mapped, node_2});
+
+            vector<int> node_1_neigh = g2.neighbours(node_1);
+            for (unsigned int k = 0; k < node_1_neigh.size(); k++) {
+                if (node_1_neigh[k] != node_2 &&
+                    unmapped_nodes.find(node_1_neigh[k]) ==
+                        unmapped_nodes.end() &&
+                    g1.adjacent(node_1_mapped,
+                        g2_to_g1_mapping[node_1_neigh[k]])
+                )
+                {
+                    new_edges_1.push_back(node_1_neigh[k]);
+                }
+            }
+
+            edge_diff = new_edges_1.size() - lost_edges;
+        }
+
+        any_improvement = true;
+        best_edge_diff = edge_diff;
+        best_action = action;
+        best_node_1 = {node_1_mapped, node_1};
+        best_node_2 = {node_2_mapped, node_2};
+        best_new_edges_1 = new_edges_1;
+        best_new_edges_2 = new_edges_2;
+    }
+
+    if (any_improvement) {
+        if (best_action == swap) {
+            // cout << "best action SWAP  " << best_node_1 << " <-> " << best_node_2 << " (" << best_edge_diff << ")" << endl;
+
+            bool swapping_adjacents = solution->adjacent(best_node_1, best_node_2);
+            solution->remove_node(best_node_1);
+            solution->remove_node(best_node_2);
+
+            pair<int, int> new_node_1 = {best_node_2.first, best_node_1.second};
+            pair<int, int> new_node_2 = {best_node_1.first, best_node_2.second};
+
+            solution->add_node(new_node_1);
+            solution->add_node(new_node_2);
+
+            if (swapping_adjacents) {
+                solution->add_edge(new_node_1, new_node_2);
+            }
+
+            for (unsigned int i = 0; i < best_new_edges_1.size(); i++) {
+                pair<int, int> new_edge_dest = {
+                    g2_to_g1_mapping[best_new_edges_1[i]],
+                    best_new_edges_1[i]
+                };
+                solution->add_edge(new_node_1, new_edge_dest);
+            }
+
+            for (unsigned int i = 0; i < best_new_edges_2.size(); i++) {
+                pair<int, int> new_edge_dest = {
+                    g2_to_g1_mapping[best_new_edges_2[i]],
+                    best_new_edges_2[i]
+                };
+                solution->add_edge(new_node_2, new_edge_dest);
+            }
+
+            g2_to_g1_mapping[new_node_1.second] = new_node_1.first;
+            g2_to_g1_mapping[new_node_2.second] = new_node_2.first;
+        }
+
+        else if (best_action == exchange) {
+            // cout << "best action EXCHG " << best_node_2 << " --> " << best_node_1 << " (" << best_edge_diff << ")" << endl;
+            solution->remove_node(best_node_2);
+            g2_to_g1_mapping.erase(best_node_2.second);
+            mapped_nodes.erase(best_node_2.second);
+            unmapped_nodes.insert(best_node_2.second);
+            unmapped_nodes_vector.push_back(best_node_2.second);
+
+            solution->add_node(best_node_1);
+            g2_to_g1_mapping.insert({best_node_1.second, best_node_1.first});
+            mapped_nodes.insert(best_node_1.second);
+            unmapped_nodes.erase(best_node_1.second);
+            unmapped_nodes_vector.erase(find(unmapped_nodes_vector.begin(),
+                unmapped_nodes_vector.end(), best_node_1.second));
+
+            for (unsigned int i = 0; i < best_new_edges_1.size(); i++) {
+                pair<int, int> new_edge_dest = {
+                    g2_to_g1_mapping[best_new_edges_1[i]],
+                    best_new_edges_1[i]
+                };
+                solution->add_edge(best_node_1, new_edge_dest);
+            }
+        }
+
+        if (use_tabu) {
+            // If this is the new best edge diff, we update our max
+            if (best_edge_diff > max_edge_diff) {
+                max_edge_diff = best_edge_diff;
+            }
+
+            // Update time for each movement
+            for (unsigned int i = 0; i < tabu_list.size(); i++) {
+                tabu_list[i].time += time_delta;
+            }
+
+            // Update heap
+            if (!tabu_queue.empty()) {
+                make_heap(const_cast<movement*>(&tabu_queue.top()),
+                    const_cast<movement*>(&tabu_queue.top()) + tabu_queue.size(),
+                    mc);
+            }
+
+            movement mov({best_node_2.second, best_node_1.second},
+                best_edge_diff, 0, best_action == swap);
+
+            if (tabu_list.size() < tabu_list_size) {
+                mov.pos = tabu_list.size();
+                tabu_list.push_back(mov);
+            }
+            else {
+                mov.pos = tabu_queue.top().pos;
+                tabu_queue.pop();
+                tabu_list[mov.pos] = mov;
+            }
+
+            // Add movement to tabu heap
+            tabu_queue.push(mov);
+        }
+        return true;
+    } else {
+        // cout << "no improvements are possible" << endl;
+        return false;
+    }
+}
+
+bool improve_solution_1(
+    graph<pair<int, int>>* solution,
+    graph<int>& g1,
+    graph<int>& g2,
+    unordered_map<int, int>& g2_to_g1_mapping,
+    unordered_set<int>& mapped_nodes,
+    unordered_set<int>& unmapped_nodes,
+    vector<int>& unmapped_nodes_vector,
+    float neighbourhood_proportion,
+    bool strict_comparisons
+) {
+    priority_queue<movement, vector<movement>,
+        movement_compare> tabu_queue;
+    vector<movement> tabu_list;
+    movement_compare mc(0.0f, 0, &tabu_list);
+    int max_edge_diff = 0;
+    return improve_solution_1(
+            solution, g1, g2, g2_to_g1_mapping, mapped_nodes,
+            unmapped_nodes, unmapped_nodes_vector,
+            neighbourhood_proportion, strict_comparisons,
+            0, tabu_queue, mc, tabu_list, false, 0, max_edge_diff, 0
+        );
+};
+
+bool improve_solution_2(
+    graph<pair<int, int>>* solution,
+    graph<int>& g1,
+    graph<int>& g2,
+    unordered_map<int, int>& g2_to_g1_mapping,
+    unordered_set<int>& mapped_nodes,
+    unordered_set<int>& unmapped_nodes,
+    vector<int>& unmapped_nodes_vector,
+    float neighbourhood_proportion,
+    bool strict_comparisons
+) {
+    priority_queue<movement, vector<movement>,
+        movement_compare> tabu_queue;
+    vector<movement> tabu_list;
+    movement_compare mc(0.0f, 0, &tabu_list);
+    int max_edge_diff = 0;
+    return improve_solution_2(
+            solution, g1, g2, g2_to_g1_mapping, mapped_nodes,
+            unmapped_nodes, unmapped_nodes_vector,
+            neighbourhood_proportion, strict_comparisons,
+            0, tabu_queue, mc, tabu_list, false, 0, max_edge_diff, 0
+        );
+};
+\end{lstlisting}
+
+\subsection{Ejercicio 6 (Heuristica busqueda con lista tabu)}
+\begin{lstlisting}
+graph<pair<int, int>>* solve_tabu(
+    graph<int>& g1,
+    graph<int>& g2,
+    graph<pair<int, int>>& start_point,
+    int neighbourhood_type,
+    unsigned int tabu_list_size,
+    int iteration_limit,
+    float neighbourhood_proportion,
+    bool strict_comparisons,
+    int no_gain_iteration_limit,
+    float edges_vs_time,
+    float time_delta,
+    float aspiration_threshold
+) {
+    // We need #V(g1) < #V(g2), #V(start_point) == #V(g_1)
+    assert(g1.n() <= g2.n());
+    assert(start_point.n() == g1.n());
+
+    bool (*improve_solution) (
+        graph<pair<int, int>>*,
+        graph<int>&,
+        graph<int>&,
+        unordered_map<int, int>&,
+        unordered_set<int>&,
+        unordered_set<int>&,
+        vector<int>&,
+        float,
+        bool,
+        unsigned int,
+        priority_queue<movement,
+            vector<movement>,
+            movement_compare>&,
+        movement_compare&,
+        vector<movement>&,
+        bool,
+        const float,
+        int&,
+        const float
+    ) = &improve_solution_1;
+
+    if (neighbourhood_type == 2) {
+        improve_solution = &improve_solution_2;
+    }
+
+    unsigned int solution_size = start_point.n();
+
+    // This will store the node in g1 that corresponds to each node in g2
+    unordered_map<int, int> g2_to_g1_mapping;
+
+    // This will keep track of g2 vertices which are (not) mapped to any vertex in g1
+    unordered_set<int> mapped_nodes;
+    unordered_set<int> unmapped_nodes;
+    vector<int> unmapped_nodes_vector;
+
+    vector<int> g2_vertices = g2.get_vertices();
+    vector<pair<int, int>> solution_vertices = start_point.get_vertices();
+
+
+    // Read start solution as a mapping between g1 and g2 nodes
+    for (unsigned int i = 0; i < solution_size; i++) {
+        int g1_node = solution_vertices[i].first;
+        int g2_node = solution_vertices[i].second;
+        g2_to_g1_mapping.insert({g2_node, g1_node});
+        mapped_nodes.insert(g2_node);
+    }
+
+    for (unsigned int i = 0; i < g2.n(); i++) {
+        if (mapped_nodes.find(g2_vertices[i]) == mapped_nodes.end()) {
+            unmapped_nodes.insert(g2_vertices[i]);
+            unmapped_nodes_vector.push_back(g2_vertices[i]);
+        }
+    }
+
+    // Search for max degree
+    unsigned int max_degree = 0;
+    for (unsigned int i = 0; i < g1.n(); i++) {
+        if (g1.degree(g1.get_vertices()[i]) > max_degree) {
+            max_degree = g1.degree(g1.get_vertices()[i]);
+        }
+    }
+    cout << "MAX DEGREE " << max_degree << endl;
+
+    bool stop = false;
+    int iteration_count = 0;
+
+    vector<movement> tabu_list;
+
+    movement_compare mc(edges_vs_time, max_degree, &tabu_list);
+
+    priority_queue<movement, vector<movement>,
+        movement_compare> tabu_queue(mc);
+
+    int max_edge_diff = 0;
+
+    // Here is where the solution will be saved at the end of each iteration
+    graph<pair<int, int>>* best_sol;
+
+    best_sol = start_point.clone();
+
+    // Get initial solution
+    while (! stop && (iteration_limit < 0 || iteration_count < iteration_limit)) {
+        bool any_improvement = improve_solution(
+            best_sol,
+            g1,
+            g2,
+            g2_to_g1_mapping,
+            mapped_nodes,
+            unmapped_nodes,
+            unmapped_nodes_vector,
+            neighbourhood_proportion,
+            strict_comparisons,
+            tabu_list_size,
+            tabu_queue,
+            mc,
+            tabu_list,
+            false,
+            time_delta,
+            max_edge_diff,
+            aspiration_threshold
+        );
+        if (! any_improvement) {
+            stop = true;
+        }
+
+        iteration_count++;
+    }
+
+    // std::cout << "LOCAL SEARCH: " << best_sol->n() << " nodes, " << best_sol->m() << " edges\n";
+
+    // This will be the initial solution from which we'll move
+    graph<pair<int, int>>* neighbour_sol = best_sol->clone();
+
+    stop = false;
+    iteration_count = 0;
+    int no_gain_iterations = 0;
+
+    // Move to neighbour solutions in search of a better one
+    while (! stop && (iteration_limit < 0 || iteration_count < iteration_limit)
+        && no_gain_iteration_limit > no_gain_iterations
+    ) {
+        bool any_modification = improve_solution(
+            neighbour_sol,
+            g1,
+            g2,
+            g2_to_g1_mapping,
+            mapped_nodes,
+            unmapped_nodes,
+            unmapped_nodes_vector,
+            neighbourhood_proportion,
+            strict_comparisons,
+            tabu_list_size,
+            tabu_queue,
+            mc,
+            tabu_list,
+            true,
+            time_delta,
+            max_edge_diff,
+            aspiration_threshold
+        );
+        if (! any_modification) {
+            stop = true;
+        }
+        else {
+            // If we find a better solution, we update the best found
+            if (neighbour_sol->m() > best_sol->m()) {
+                *best_sol = *neighbour_sol;
+                no_gain_iterations = 0;
+            }
+            else {
+                no_gain_iterations++;
+            }
+        }
+        iteration_count++;
+    }
+
+    delete neighbour_sol;
+
+    return best_sol;
+}
+
+\end{lstlisting}
