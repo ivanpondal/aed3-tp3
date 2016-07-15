@@ -61,7 +61,6 @@ class cograph_n_incremental_edges_experiment:public incremental_experiment<float
         element_generator_int e_gen;
 };
 
-
 // probe n1 lineal dependecy
 class cograph_K_1_union_dp_experiment:public incremental_experiment<int, adj_list_graph<int> > {
     public:
