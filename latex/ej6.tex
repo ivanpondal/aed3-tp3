@@ -195,6 +195,12 @@ metaheurística con parámetro de límite de iteraciones sin registrar ganancia 
 \item $\Delta \%$: Diferencia porcentual entre un caso y otro.
 \end{itemize}
 
+En principio se experimentó con grafos pequeños, pero al contrastar la calidad
+de las soluciones con la de la búsqueda local se observó que no había cambio
+alguno. En razón de obtener una experimentación adecuada se decidió utilizar
+isntancias de grafos con grandes cantidades de aristas. De esta forma puede
+apreciarse en mayor medida la diferencia entre un algoritmo y otro.
+
 En la siguiente experimentación se varió el umbral de la función de
 aspiración. Los valores que se mantuvieron fijos fueron:
 
@@ -524,3 +530,14 @@ Como puede apreciarse, existe una diferencia de tiempo de ejecución entre una
 corrida y otra muy grande para los casos con mayor cantidad de aristas.
 Esta diferencia es mucho más grande si hacemos la comparación con la búsqueda
 local.
+
+\subsection{Conclusiones}
+
+La implementación de una metaheurística basada en el uso de una lista tabú para el algoritmo de busqueda proporciona resultados positivos para varias configuraciones de parámetros, pero como es natural, con ellos los tiempos de ejecución incrementan.
+
+Para grafos pequeños se observó que el aporte de una metaheurística era nulo.
+Al tener una baja cantidad de aristas, la búsqueda local es capaz de encontrar
+la solución óptima sin necesidad de la lista tabú. Para aquellos casos en
+que no se obtiene la máxima cantidad de aristas tampoco representa una mejora.
+
+Para grafos grandes resulta muy beneficioso, pero al mismo tiempo muy caro en cuestión de tiempo de ejecución. Dependiendo de la necesidad de aproximación a la cantidad máxima de aristas uno debe elegir que configuración utilizar, ya que las de mejor calidad, como lo son las de mayor cantidad de repeticiones, tienen mucho tiempo de ejecución y no encuentran demasiadas aristas más que las de menor calidad.
