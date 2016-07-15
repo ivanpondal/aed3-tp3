@@ -41,13 +41,15 @@ unsigned int quality_exp_local_search_with_swap::solve_instance(graph<int> &g1, 
 	}
 
 	graph<pair<int, int>>* start_point = solve_greedy(*small_graph, *large_graph);
-	graph< pair<int, int> >* h  = solve_local_search(*small_graph, *large_graph, *start_point, 2,reps,0.002f,true);
+	graph< pair<int, int> >* h  = solve_local_search(*small_graph, *large_graph, *start_point, 2,reps,
+		0.002f,true);
 
 	int res = h->m();
 
 	delete start_point;
 	delete h;
 
+	cout << "h->m() :  " << res << endl;
 
 	return res;
 }
@@ -84,7 +86,8 @@ unsigned int quality_exp_local_search_without_swap::solve_instance(graph<int> &g
 			large_graph = &g1;
 		}
 		graph<pair<int, int>>* start_point = solve_greedy(*small_graph, *large_graph);
-		graph<pair<int, int>>* h = solve_local_search(*small_graph, *large_graph, *start_point, 1,reps,0.002f,true);
+		graph<pair<int, int>>* h = solve_local_search(*small_graph, *large_graph, *start_point, 1,reps,
+			0.002f,true);
 		res = h->m();
 
 		delete start_point;
@@ -222,11 +225,9 @@ void run_experimentation(){
 	experiment_suite  neighbourhood_proportion_calibrate_exp_suite;
 	experiment_suite  iteration_calibrate_exp_suite;
 
-/*
 	// Quality
 
 	int repetitions_val = 1;
-	int sample_val = 200;
 
 	// // quality local_search_2_exp
 	// quality_exp_local_search_with_swap local_search_2_exp(
@@ -254,19 +255,19 @@ void run_experimentation(){
 
 	// quality diferents_nodes_count_instances
 
-	// quality_exp_local_search_with_swap local_search_2_exp_diferents_nodes_count(
-	// 		diferents_nodes_count_instances, "../exp/ej5/diferents_nodes_count_instance_generation_2_exp",
-	// 		0, repetitions_val);
+	quality_exp_local_search_with_swap local_search_2_exp_diferents_nodes_count(
+			diferents_nodes_count_instances, "../exp/ej5/diferents_nodes_count_instance_generation_2_exp",
+			0, repetitions_val);
 
-	// quality_exp_local_search_without_swap local_search_1_exp_diferents_nodes_count(
-	// 		diferents_nodes_count_instances, "../exp/ej5/diferents_nodes_count_instance_generation_1_exp",
-	// 		0, repetitions_val);
-*/
+	quality_exp_local_search_without_swap local_search_1_exp_diferents_nodes_count(
+			diferents_nodes_count_instances, "../exp/ej5/diferents_nodes_count_instance_generation_1_exp",
+			0, repetitions_val);
+
 
 
 	// Neighbourhood proportion
 
-	int repetitions_val = 5;
+	repetitions_val = 5;
 	int sample_val = 5;
 	int sample_val_granular = 40;
 
@@ -873,15 +874,15 @@ void run_experimentation(){
     *  Add experiments to suites
     */
 
-/*
-	// Quality
-	quality_exp_suite.add(&local_search_1_exp);
-	quality_exp_suite.add(&local_search_2_exp);
-	quality_exp_suite.add(&local_search_1_exp_similar_nodes_count);
-	quality_exp_suite.add(&local_search_2_exp_similar_nodes_count);
+
+	// // Quality
+	// quality_exp_suite.add(&local_search_1_exp);
+	// quality_exp_suite.add(&local_search_2_exp);
+	// quality_exp_suite.add(&local_search_1_exp_similar_nodes_count);
+	// quality_exp_suite.add(&local_search_2_exp_similar_nodes_count);
 	quality_exp_suite.add(&local_search_2_exp_diferents_nodes_count);
 	quality_exp_suite.add(&local_search_1_exp_diferents_nodes_count);
-*/
+
 
 	// Neighbourhood proportion
 	// Neighbourhood I
@@ -930,6 +931,6 @@ void run_experimentation(){
 
 	// quality_exp_suite.run();
 	// neighbourhood_proportion_calibrate_exp_suite.run();
-	iteration_calibrate_exp_suite.run();
+	// iteration_calibrate_exp_suite.run();
 
 }
