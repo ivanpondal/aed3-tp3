@@ -214,6 +214,13 @@ A continuación se muestra una tabla exponiendo los datos obtenidos.
 
 \pgfplotstableread[header=false]{../exp/ej6/1-0600-0000-0.01-2000-0.5-0.1-0.3}{\nolimititerationlowaspiration}
 
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-4000-0.01-0100-0.5-0.1-0.8}{\higheriterationlowernogainhighaspiration}
+% \pgfplotstableread[header=false]{../exp/ej6/1-0060-2000-0.01-2000-0.5-0.1-0.3}{\lowtaboohighiteration}
+
+\pgfplotstableread[header=false]{../exp/ej6/1-0060-2000-0.01-100-0.5-0.1-0.3}{\highiterationlowernogainlowaspiration}
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-2000-0.5-0.1-0.3}{\highiterationhighnogainlowaspiration}
+% \pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-800-0.5-0.1-0.3}{\highiterationlownogainlowaspiration}
+
 \pgfplotstablecreatecol[copy column from table={\optimalsolutions}{[index] 1}]{solutions}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\knowngreedy}{[index] 1}]{greedy}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\knowngreedy}{[index] 3}]{greedytime}{\optimalsolutions}
@@ -226,15 +233,23 @@ A continuación se muestra una tabla exponiendo los datos obtenidos.
 % \pgfplotstablecreatecol[copy column from table={\highertaboolist}{[index] 3}]{highertabootime}{\optimalsolutions}
 
 \pgfplotstablecreatecol[copy column from table={\lowiterationlowaspiration}{[index] 1}]{lowiterationlowaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\lowiterationlowaspiration}{[index] 3}]{lowiterationlowaspirationtime}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\lowiterationhighaspiration}{[index] 1}]{lowiterationhighaspiration}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\lowiterationfullaspiration}{[index] 1}]{lowiterationfullaspiration}{\optimalsolutions}
 
 % \pgfplotstablecreatecol[copy column from table={\mediumiteration}{[index] 1}]{mediumiteration}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\highiterationlowaspiration}{[index] 1}]{highiterationlowaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\highiterationlowaspiration}{[index] 3}]{highiterationlowaspirationtime}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\highiterationhighaspiration}{[index] 1}]{highiterationhighaspiration}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\highiterationfullaspiration}{[index] 1}]{highiterationfullaspiration}{\optimalsolutions}
 
 \pgfplotstablecreatecol[copy column from table={\nolimititerationlowaspiration}{[index] 1}]{nolimititerationlowaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\nolimititerationlowaspiration}{[index] 3}]{nolimititerationlowaspirationtime}{\optimalsolutions}
+
+\pgfplotstablecreatecol[copy column from table={\highiterationlowernogainlowaspiration}{[index] 1}]{highiterationlowernogainlowaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\highiterationlowernogainlowaspiration}{[index] 3}]{highiterationlowernogainlowaspirationtime}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\highiterationhighnogainlowaspiration}{[index] 1}]{highiterationhighnogainlowaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\highiterationhighnogainlowaspiration}{[index] 3}]{highiterationhighnogainlowaspirationtime}{\optimalsolutions}
 
 \pgfplotstableset{
     every head row/.style={
@@ -259,6 +274,9 @@ A continuación se muestra una tabla exponiendo los datos obtenidos.
     columns/localsearch/.style={
         column name=$LS$
     },
+    columns/localsearchtime/.style={
+        column name=$T(LS)$
+    },
 	% columns/lowtaboo/.style={
  %        column name=$\#E(taboo 1)$
  %    },
@@ -270,6 +288,9 @@ A continuación se muestra una tabla exponiendo los datos obtenidos.
  %    },
     columns/lowiterationlowaspiration/.style={
         column name=$i1000a0.3$
+    },
+    columns/lowiterationlowaspirationtime/.style={
+        column name=$T(i1000)$
     },
     columns/lowiterationhighaspiration/.style={
         column name=$i1000a0.8$
@@ -283,6 +304,9 @@ A continuación se muestra una tabla exponiendo los datos obtenidos.
     columns/highiterationlowaspiration/.style={
         column name=$i2000a0.3$
     },
+    columns/highiterationlowaspirationtime/.style={
+        column name=$T(i2000)$
+    },
     columns/highiterationhighaspiration/.style={
         column name=$i2000a0.8$
     },
@@ -291,6 +315,21 @@ A continuación se muestra una tabla exponiendo los datos obtenidos.
     },
     columns/nolimititerationlowaspiration/.style={
         column name=$iINFa0.3$
+    },
+    columns/nolimititerationlowaspirationtime/.style={
+        column name=$T(iINF)$
+    },
+    columns/highiterationlowernogainlowaspiration/.style={
+        column name=$ng 100$
+    },
+    columns/highiterationhighnogainlowaspiration/.style={
+        column name=$ng 2000$
+    },
+    columns/highiterationlowernogainlowaspirationtime/.style={
+        column name=$T(ng 100)$
+    },
+    columns/highiterationhighnogainlowaspirationtime/.style={
+        column name=$T(ng 2000)$
     },
 	create on use/ratiolist/.style=
 		{create col/expr={(\thisrow{greedy} * 100)/ \thisrow{highertaboo} - 100}},
@@ -324,6 +363,17 @@ A continuación se muestra una tabla exponiendo los datos obtenidos.
             /pgfplots/table/@cell content/.add={}{\%}
         },
         fonts by sign={}{\color{red}}
+    },
+    create on use/rationogaintime/.style=
+        {create col/expr={(\thisrow{highiterationhighnogainlowaspirationtime} * 100)/ \thisrow{highiterationlowernogainlowaspirationtime} - 100}},
+    columns/rationogaintime/.style={
+        column name=$\% \Delta$,
+        column type={r},
+        fixed, precision=2,
+        postproc cell content/.append style={
+            /pgfplots/table/@cell content/.add={}{\%}
+        },
+        fonts by sign={}{\color{red}}
     }
 }
 
@@ -345,7 +395,7 @@ A continuación se muestra una tabla exponiendo los datos obtenidos.
 
 \begin{figure}[H]
     \centering
-    \caption{Comparación entre distintos umbrales de la función de aspiración}
+    \caption{Comparación de calidad entre distintos umbrales de la función de aspiración con i = 1000}
     \pgfplotstabletypeset[
         columns={0, solutions, localsearch, lowiterationlowaspiration, lowiterationhighaspiration, lowiterationfullaspiration}
     ]{\optimalsolutions}
@@ -358,7 +408,7 @@ Es por eso que se corrió esta prueba para una cantidad de iteraciones total e i
 
 \begin{figure}[H]
     \centering
-    \caption{Comparación entre distintos umbrales de la función de aspiración}
+    \caption{Comparación de calidad entre distintos umbrales de la función de aspiración con i = 2000}
     \pgfplotstabletypeset[
         columns={0, solutions, localsearch, highiterationlowaspiration, highiterationhighaspiration, highiterationfullaspiration}
     ]{\optimalsolutions}
@@ -370,9 +420,7 @@ Se corrió otra experimentación en donde el valor a variar es la cantidad de it
 \item Tipo de vecindad = \textit{exchange}
 \item Proporción de vecinos considerada = 1\%
 \item Tamaño de lista tabú = 600
-\item Relacion entre valor del peso de aristas vs. tiempo = 0.5 (el tiempo que
-lleva un movimiento en la lista tabú y la cantidad de aristas que proporciona
-tienen igual importancia)
+\item Relacion entre valor del peso de aristas vs. tiempo = 0.5
 \item Umbral de la función de aspiración = 0.3. Fue elegido este valor debido
 a que se lo consideró un buen indicador, la hipótesis es que cuanto más
 abierto sea el umbral hay más probabilidad de explorar soluciones que por
@@ -383,7 +431,7 @@ A continuación se exhiben los datos obtenidos.
 
 \begin{figure}[H]
     \centering
-    \caption{Comparación entre distintos umbrales de la función de aspiración}
+    \caption{Comparación de calidad entre cantidades de iteraciones}
     \pgfplotstabletypeset[
         columns={0, solutions, localsearch, lowiterationlowaspiration, highiterationlowaspiration, nolimititerationlowaspiration}
     ]{\optimalsolutions}
@@ -393,3 +441,49 @@ Como era de esperarse, se observa que en la mayoria de los casos se produce
 una mejora a medida que la cantidad de iteraciones incrementa. Naturalmente,
 al ejecutarse la búsqueda una mayor cantidad de veces existe una probabilidad
 mayor de encontrar una solución con una mayor cantidad de aristas.
+
+Sin embargo el tiempo de ejecución aumenta considerablemente a medida que
+aumenta la cantdad de iteraciones, por lo que es necesario plantearse qué
+es conveniente sacrificar en cada caso al momento de decidir qué combinación
+de parámetros emplear. La decisión está entre tiempo de ejecución y calidad de
+la solución.
+
+\begin{figure}[H]
+    \centering
+    \caption{Comparación de tiempos entre cantidades de iteraciones}
+    \pgfplotstabletypeset[
+        columns={0, localsearchtime, lowiterationlowaspirationtime, highiterationlowaspirationtime, nolimititerationlowaspirationtime}
+    ]{\optimalsolutions}
+\end{figure}
+
+La siguiente experimentación consta de variar la cantidad de iteraciones
+sin mejora, permaneciendo fijos los siguientes parámetros:
+
+\begin{itemize}
+\item Tipo de vecindad = \textit{exchange}
+\item Proporción de vecinos considerada = 1\%
+\item Tamaño de lista tabú = 60
+\item Cantidad de iteraciones total = 2000
+\item Relacion entre valor del peso de aristas vs. tiempo = 0.5
+\item Umbral de la función de aspiración = 0.3.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \caption{Comparación de calidad entre cantidades de iteraciones sin mejora}
+    \pgfplotstabletypeset[
+        columns={0, solutions, localsearch, highiterationlowernogainlowaspiration, highiterationhighnogainlowaspiration}
+    ]{\optimalsolutions}
+\end{figure}
+
+Se observa una clara ganancia entre un tiempo de parada y otro, pero también
+un tiempo de ejecución elevado. En el siguiente cuadro se exhibe una
+comparación entre ellos.
+
+\begin{figure}[H]
+    \centering
+    \caption{Comparación de tiemos entre cantidades de iteraciones sin mejora}
+    \pgfplotstabletypeset[
+        columns={0, localsearchtime, highiterationlowernogainlowaspirationtime, highiterationhighnogainlowaspirationtime, rationogaintime}
+    ]{\optimalsolutions}
+\end{figure}

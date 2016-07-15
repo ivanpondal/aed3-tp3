@@ -70,8 +70,8 @@ unsigned int quality_exp::solve_instance(graph<int> &g1, graph<int> &g2) {
                                     2000,                  // int iteration_limit,
                                     0.01,                // float neighbourhood_proportion,
                                     true,               // bool strict_comparisons,
-                                    2000,                  // int no_gain_iteration_limit,
-                                    0.9,                // float edges_vs_time,
+                                    800,                  // int no_gain_iteration_limit,
+                                    0.5,                // float edges_vs_time,
                                     0.1,                  // float time_delta,
                                     0.3);                 // float aspiration_threshold
 
