@@ -146,42 +146,59 @@ se encuentre o no en la lista tabú.
 Para la experimentación sobre la implementación de esta metaheurística se
 llevo a cabo una comparación entre los resultados obtenidos de variar los
 distintos parámetros de la misma (tamaño de la lista taboo, criterios de
-parada ). La comparación consta de contrastar la cantidad de aristas
-encontrada y los tiempos de ejecución del algoritmo.
+parada, funcion de aspiración). La comparación consta de contrastar la
+cantidad de aristas encontrada y los tiempos de ejecución del algoritmo.
+Además se exhibe como referencia la cantidad maxima de aristas.
 
-En cuanto a los parametros que son intrínsecos a la búsqueda local, se los
-experimentó para diferentes valores, y para cada uno de ellos se varió los de
-la metaheurística, manteniéndolos fijos.
+En cuanto a los parametros son intrínsecos a la búsqueda local, se los
+fijó para diferentes valores, y sobre cada uno de ellos se varió los de
+la metaheurística.
 
+El grupo de instancias utilizado corresponde a un conjunto de grafos de varias
+familias distintas. Cografo vs cografo, grafo aleatorio vs subgrafo del mismo
+(variando las densidades de aristas), árbol vs subgrafo, completo vs subgrafo,
+ciclo vs subgrafo, aleatorio bipartito vs completo (variando cantidad de
+nodos), alatorio vs completo (variando cantidad de nodos). Se consideró que
+este conjunto de instancias resultaba representativo en cuanto al espectro a
+de grafos a explorar.
 
-Los criterios de parada son 2:
-\begin{itemize}
-	\item asd
-\end{itemize}
+Con el fin de lograr una mejor ALGO a los datos, el algoritmo fue ejecutado
+10 veces para cada instancia y combinación de parámetros, y de esos datos se
+calcula el promedio. Los datos que se exhiben corresponden a los promedios de
+las aristas encontradas por el algoritmo para cada combinación de parámetros.
 
-
-
-El grupo de instancias utilizado corresponde a un conjunto de grafos de varias familias distintas. Cografo vs cografo, grafo aleatorio vs subgrafo del mismo (variando las densidades de aristas), árbol vs subgrafo, completo vs subgrafo, ciclo vs subgrafo, aleatorio bipartito vs completo (variando cantidad de nodos), alatorio vs completo (variando cantidad de nodos).
-
-
-Se experimentó variando los tamaños de la lista taboo. Los resultados en
-cuanto a cantidad de aristas encontradas no variaron para los distintos
-tamaños. Permaneció fija la cantidad de iteraciones = 1000,
-
-A continuacion promedios de las aristas...
 
 \pgfplotstableread[header=false]{../exp/small_optimal_solutions}{\optimalsolutions}
 \pgfplotstableread[header=false]{../exp/ej6/known_sol_greedy_exp}{\knowngreedy}
 
-\pgfplotstableread[header=false]{../exp/ej6/1-0001-1000-0.01-0100-0.5-0.1-1.0}{\smalltabulist}
-\pgfplotstableread[header=false]{../exp/ej6/1-0060-1000-0.01-0100-0.5-0.1-1.0}{\bigtabulist}
-\pgfplotstableread[header=false]{../exp/ej6/1-0600-1000-0.01-0100-0.5-0.1-1.0}{\biggertabulist}
+% \pgfplotstableread[header=false]{../exp/ej6/1-0001-1000-0.01-0100-0.5-0.1-1.0}{\lowtaboolist}
+% \pgfplotstableread[header=false]{../exp/ej6/1-0060-1000-0.01-0100-0.5-0.1-1.0}{\hightaboolist}
+% \pgfplotstableread[header=false]{../exp/ej6/1-0600-1000-0.01-0100-0.5-0.1-1.0}{\highertaboolist}
+
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-1000-0.01-1000-0.5-0.1-0.3}{\lowiterationlowaspiration}
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-1000-0.01-1000-0.5-0.1-0.8}{\lowiterationhighaspiration}
+
+% \pgfplotstableread[header=false]{../exp/ej6/1-0600-4000-0.01-0100-0.5-0.1-0.8}{\mediumiteration}
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-2000-0.5-0.1-0.3}{\highiterationlowaspiration}
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-2000-0.5-0.1-0.8}{\highiterationhighaspiration}
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-2000-0.5-0.1-1.0}{\highiterationfullaspiration}
 
 \pgfplotstablecreatecol[copy column from table={\optimalsolutions}{[index] 1}]{solutions}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\knowngreedy}{[index] 1}]{greedy}{\optimalsolutions}
-\pgfplotstablecreatecol[copy column from table={\smalltabulist}{[index] 1}]{small}{\optimalsolutions}
-\pgfplotstablecreatecol[copy column from table={\bigtabulist}{[index] 1}]{big}{\optimalsolutions}
-\pgfplotstablecreatecol[copy column from table={\biggertabulist}{[index] 1}]{bigger}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\knowngreedy}{[index] 3}]{greedytime}{\optimalsolutions}
+
+% \pgfplotstablecreatecol[copy column from table={\lowtaboolist}{[index] 1}]{lowtaboo}{\optimalsolutions}
+% \pgfplotstablecreatecol[copy column from table={\hightaboolist}{[index] 1}]{hightaboo}{\optimalsolutions}
+% \pgfplotstablecreatecol[copy column from table={\highertaboolist}{[index] 1}]{highertaboo}{\optimalsolutions}
+% \pgfplotstablecreatecol[copy column from table={\highertaboolist}{[index] 3}]{highertabootime}{\optimalsolutions}
+
+\pgfplotstablecreatecol[copy column from table={\lowiterationlowaspiration}{[index] 1}]{lowiterationlowaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\lowiterationhighaspiration}{[index] 1}]{lowiterationhighaspiration}{\optimalsolutions}
+
+% \pgfplotstablecreatecol[copy column from table={\mediumiteration}{[index] 1}]{mediumiteration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\highiterationlowaspiration}{[index] 1}]{highiterationlowaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\highiterationhighaspiration}{[index] 1}]{highiterationhighaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\highiterationfullaspiration}{[index] 1}]{highiterationfullaspiration}{\optimalsolutions}
 
 \pgfplotstableset{
     every head row/.style={
@@ -197,38 +214,105 @@ A continuacion promedios de las aristas...
         }
     },
     columns/solutions/.style={
-        column name=$\#E(MCS)$,
+        column name=$MCS$,
         int detect
     },
     columns/greedy/.style={
-    	column name=$\#E(goloso)$
+    	column name=$greedy$
     },
-	columns/small/.style={
-        column name=$\#E(chica)$
+	% columns/lowtaboo/.style={
+ %        column name=$\#E(taboo 1)$
+ %    },
+ %    columns/hightaboo/.style={
+ %        column name=$\#E(taboo 60)$
+ %    },
+ %    columns/highertaboo/.style={
+ %        column name=$\#E(taboo 600)$
+ %    },
+    columns/lowiterationlowaspiration/.style={
+        column name=$i1000a0.3$
     },
-    columns/big/.style={
-        column name=$\#E(grande)$
+    columns/lowiterationhighaspiration/.style={
+        column name=$i1000a0.8$
     },
-    columns/bigger/.style={
-        column name=$\#E(mas grande)$
+    % columns/mediumiteration/.style={
+    %     column name=$\#E(ite 4000)$
+    % },
+    columns/highiterationlowaspiration/.style={
+        column name=$i2000a0.3$
+    },
+    columns/highiterationhighaspiration/.style={
+        column name=$i2000a0.8$
+    },
+    columns/highiterationfullaspiration/.style={
+        column name=$i2000a1.0$
+    },
+	create on use/ratiolist/.style=
+		{create col/expr={(\thisrow{greedy} * 100)/ \thisrow{highertaboo} - 100}},
+	columns/ratio/.style={
+        column name=$\% \Delta$,
+        column type={r},
+        fixed, precision=2,
+        postproc cell content/.append style={
+            /pgfplots/table/@cell content/.add={}{\%}
+        },
+        fonts by sign={}{\color{red}}
+    },
+    % create on use/ratiolisttime/.style=
+    %     {create col/expr={(\thisrow{highertabootime} * 100)/ \thisrow{greedytime} - 100}},
+    % columns/ratio/.style={
+    %     column name=$\% \Delta$,
+    %     column type={r},
+    %     fixed, precision=2,
+    %     postproc cell content/.append style={
+    %         /pgfplots/table/@cell content/.add={}{\%}
+    %     },
+    %     fonts by sign={}{\color{red}}
+    % },
+    create on use/ratioaspiration/.style=
+        {create col/expr={(\thisrow{lowiterationhighaspiration} * 100)/ \thisrow{lowiterationlowaspiration} - 100}},
+    columns/ratio/.style={
+        column name=$\% \Delta$,
+        column type={r},
+        fixed, precision=2,
+        postproc cell content/.append style={
+            /pgfplots/table/@cell content/.add={}{\%}
+        },
+        fonts by sign={}{\color{red}}
     }
-	% create on use/ratio/.style=
-	% 	{create col/expr={(\thisrow{1} * 100)/ \thisrow{alternative} - 100}},
-	% columns/ratio/.style={
- %        column name=$\% \Delta$,
- %        column type={r},
- %        fixed, precision=2,
- %        postproc cell content/.append style={
- %            /pgfplots/table/@cell content/.add={}{\%}
- %        },
- %        fonts by sign={}{\color{red}}
- %    }
 }
 
+% \begin{figure}[H]
+% 	\centering
+% 	\caption{Comparación de calidad entre distintos tamaños de lista tabú}
+% 	\pgfplotstabletypeset[
+% 		columns={0, solutions, greedy, highertaboo, ratiolist}
+% 	]{\optimalsolutions}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \caption{Comparación de tiempos entre distintos tamaños de lista tabú}
+%     \pgfplotstabletypeset[
+%         columns={0, greedytime, highertaboo, ratiolista}
+%     ]{\optimalsolutions}
+% \end{figure}
+
 \begin{figure}[H]
-	\centering
-	\caption{Grupo de instancias con solución óptima conocida}
-	\pgfplotstabletypeset[
-		columns={0, solutions, greedy, small, big, bigger}
-	]{\optimalsolutions}
+    \centering
+    \caption{Comparación entre distintos umbrales de la función de aspiración}
+    \pgfplotstabletypeset[
+        columns={0, greedy, lowiterationhighaspiration, highiterationlowaspiration, highiterationhighaspiration, highiterationfullaspiration}
+    ]{\optimalsolutions}
 \end{figure}
+
+En esta tabla se puede observar como la variación entre cantidad de
+iteraciones produce un cambio positivo en algunos de los casos. Puede notarse
+también el bajo efecto que tiene reducir el umbral de la función de,
+puesto que permanecen identicas las cantidades de aristas encontradas entre
+las ejecuciones un umbral de aspiración de 0.8 y 1.0, mientras que con un
+valor de 0.3, se produce una mejora solamente en uno de los casos, y es muy
+pequeña.
+
+
+(Los de 1000 iteraciones son todos iguales para cualquier aspiracion)
