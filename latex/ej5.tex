@@ -1086,3 +1086,102 @@ Se puede concluir que con mirar un pequeño porcentaje de la vecindad, se logra 
 
    \subsubsection{Mejores y peores casos para cada vecindad}
 
+
+
+    \pgfplotstableread[header=false]{../exp/ej5/similar_nodes_count_instance_generation_1_exp}\similarnodescounlocalsearchone
+
+    \pgfplotstableread[header=false]{../exp/ej5/similar_nodes_count_instance_generation_2_exp}\similarnodescounlocalsearchtwo
+
+    \pgfplotstableread[header=false]{../exp/ej5/diferents_nodes_count_instance_generation_2_exp}\diferentnodescounlocalsearchtwo
+
+    \pgfplotstableread[header=false]{../exp/ej5/diferents_nodes_count_instance_generation_1_exp}\diferentnodescounlocalsearchone
+
+
+    \pgfplotstableset{
+        create on use/sctls2/.style={copy column from table={\similarnodescounlocalsearchtwo}{[index] 3}}
+    }
+
+      \pgfplotstableset{
+        create on use/scsol2/.style={copy column from table={\similarnodescounlocalsearchtwo}{[index] 1}}
+    }
+
+    \pgfplotstabletypeset[
+        every head row/.style={
+            after row=\hline
+        },
+        columns={0,1,scsol2,3,sctls2},
+        columns/0/.style={
+            column name=\textsc{Instancia},
+            column type={l},
+            string replace*={_}{\_},
+            string type,
+            assign cell content/.code={
+                \pgfkeyssetvalue{/pgfplots/table/@cell content}{\texttt{##1}}
+            }
+        },
+        columns/1/.style={
+            column name=$\#E(LS_1)$,
+            int detect,
+            fixed
+        },
+        columns/scsol2/.style={
+            column name=$\#E(LS_2)$,
+            fixed
+        },
+        columns/3/.style={
+            column name=$T(LS_1)$,
+            int detect,
+            sci,precision=3
+        },
+        columns/sctls2/.style={
+            column name=$T(LS_2)$,
+            sci,precision=3
+        }
+    ]\similarnodescounlocalsearchone
+
+    ~
+
+    \pgfplotstableset{
+        create on use/sctls2/.style={copy column from table={\diferentnodescounlocalsearchtwo}{[index] 3}}
+    }
+
+      \pgfplotstableset{
+        create on use/scsol2/.style={copy column from table={\diferentnodescounlocalsearchtwo}{[index] 1}}
+    }
+
+    \pgfplotstabletypeset[
+        every head row/.style={
+            after row=\hline
+        },
+        columns={0,1,scsol2,3,sctls2},
+        columns/0/.style={
+            column name=\textsc{Instancia},
+            column type={l},
+            string replace*={_}{\_},
+            string type,
+            assign cell content/.code={
+                \pgfkeyssetvalue{/pgfplots/table/@cell content}{\texttt{##1}}
+            }
+        },
+        columns/1/.style={
+            column name=$\#E(LS_1)$,
+            int detect,
+            fixed
+        },
+        columns/scsol2/.style={
+            column name=$\#E(LS_2)$,
+            fixed
+        },
+        columns/3/.style={
+            column name=$T(LS_1)$,
+            int detect,
+            sci,precision=3
+        },
+        columns/sctls2/.style={
+            column name=$T(LS_2)$,
+            sci,precision=3
+        }
+    ]\diferentnodescounlocalsearchone
+
+
+

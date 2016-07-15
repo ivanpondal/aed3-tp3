@@ -45,6 +45,7 @@ unsigned int quality_exp_local_search_with_swap::solve_instance(graph<int> &g1, 
     delete start_point;
 
 
+
     cout << "h->m() :  " << h->m() << endl;
 
 	return h->m();
@@ -64,13 +65,14 @@ unsigned int quality_exp_local_search_without_swap::solve_instance(graph<int> &g
     // to the function, and remember this fact so that we can read correctly
     // the obtained solution
 
+
 	cout << "g1.n() : " << g1.n() << endl;
 	cout << "g2.n() : " << g2.n() << endl;
 
     if(	g1.n() == g2.n() ){
     	cout << "h->m() :  " << -1 << endl;
 
-    	return 0;
+    	return -1;
 
     }else{
 
@@ -88,7 +90,7 @@ unsigned int quality_exp_local_search_without_swap::solve_instance(graph<int> &g
     }
     cout << "h->m() :  " << h->m() << endl;
 
- 
+
 	return h->m();
 }
 
@@ -214,19 +216,23 @@ void run_experimentation(){
 	experiment_suite  iteration_calibrate_exp_suite;
 
 	// quality exp
-	int repetitions_val = 3;
+	int repetitions_val = 2;
 	int sample_val = 200;
 
-	/*// quality local_search_2_exp
-	quality_exp_local_search_with_swap local_search_2_exp(
-			known_solution_instances, "../exp/ej5/known_solution_instances_search_2_exp", 0, repetitions_val);
-	*/
+	// // quality local_search_2_exp
+	// quality_exp_local_search_with_swap local_search_2_exp(
+	// 		known_solution_instances, "../exp/ej5/known_solution_instances_search_2_exp", 0, repetitions_val);
+	
+
+	// // quality local_search_1_exp 50 iterates (change reps in .h!!!)
+	// quality_exp_local_search_without_swap local_search_1_exp(
+	// 		known_solution_instances, "../exp/ej5/known_solution_instances_search_1_exp", 0, repetitions_val);
 
 
-	// quality local_search_1_exp
-	/*quality_exp_local_search_without_swap local_search_1_exp(
-			known_solution_instances, "../exp/ej5/known_solution_instances_search_1_exp_100", 0, repetitions_val);
-	*/
+	// // quality local_search_1_exp 100 iterates
+	// quality_exp_local_search_without_swap local_search_1_exp(
+	// 		known_solution_instances, "../exp/ej5/known_solution_instances_search_1_exp_100", 0, repetitions_val);
+	
 
 
 
@@ -253,8 +259,10 @@ void run_experimentation(){
 	// quality_exp_suite.add(&local_search_1_exp);
 	// quality_exp_suite.add(&local_search_2_exp);
 
-	quality_exp_suite.add(&local_search_2_exp_similar_nodes_count);
+	
 	quality_exp_suite.add(&local_search_1_exp_similar_nodes_count);
+	quality_exp_suite.add(&local_search_2_exp_similar_nodes_count);
+
 
 	// quality_exp_suite.add(&local_search_2_exp_diferents_nodes_count);
 	// quality_exp_suite.add(&local_search_1_exp_diferents_nodes_count);

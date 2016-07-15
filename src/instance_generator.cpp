@@ -441,8 +441,7 @@ void run_unknown_solution_instance_generation(){
 
 void run_similar_nodes_count_instance_generation(){
 
-	ofstream similar_nodes_count_file;
-	similar_nodes_count_file.open("../exp/similar_nodes_count_instance");
+	
 
 
 	element_generator_int e_gen;
@@ -576,7 +575,7 @@ void run_similar_nodes_count_instance_generation(){
 	g2.clear();
 	srand(MAGIC_SEED);
 
-	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 1.0f);
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 1.0f);
 	e_gen.reset();
 	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, 2*n1);
 	e_gen.reset();
@@ -602,18 +601,18 @@ void run_similar_nodes_count_instance_generation(){
 
 	n1 = 501;
 	n2 = 500;
-	strncpy(instance_name, "arbol_n501_vs_completo_n500", 80);
+	strncpy(instance_name, "ciclo_n501_vs_completo_n500", 80);
 
 	g1.clear();
 	g2.clear();
 	srand(MAGIC_SEED);
-	g1= graph_factory<int>::cycle_graph(e_gen, n2);
+	g1= graph_factory<int>::cycle_graph(e_gen, n1);
 	e_gen.reset();
 	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n2);
 	e_gen.reset();
 
 	save_instance(g1, g2, instance_name);
-	similar_nodes_count_file.close();
+
 
 
 }
@@ -732,7 +731,7 @@ void run_diferents_nodes_count_instance_generation(){
 	g2.clear();
 	srand(MAGIC_SEED);
 
-	g2 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 0.5f);
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 0.5f);
 	e_gen.reset();
 	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
 	e_gen.reset();
@@ -747,7 +746,7 @@ void run_diferents_nodes_count_instance_generation(){
 	g2.clear();
 	srand(MAGIC_SEED);
 
-	g2 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 1.0f);
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 1.0f);
 	e_gen.reset();
 	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
 	e_gen.reset();
@@ -890,7 +889,7 @@ void run_diferents_nodes_count_instance_generation(){
 	g2.clear();
 	srand(MAGIC_SEED);
 
-	g2 = graph_factory<int>::random_bipartite_graph(e_gen, k2, k2, 0.5f);
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k2, k2, 0.5f);
 	e_gen.reset();
 	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
 	e_gen.reset();
@@ -905,7 +904,7 @@ void run_diferents_nodes_count_instance_generation(){
 	g2.clear();
 	srand(MAGIC_SEED);
 
-	g2 = graph_factory<int>::random_bipartite_graph(e_gen, k2, k2, 1.0f);
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k2, k2, 1.0f);
 	e_gen.reset();
 	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
 	e_gen.reset();

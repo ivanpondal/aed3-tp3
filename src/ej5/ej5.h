@@ -41,6 +41,7 @@ class quality_exp_local_search_without_swap: public quality_experiment {
 		unsigned int solve_instance(graph<int> &g1, graph<int> &g2);
 		void clean_solution();
 		graph<std::pair<int, int>>* h;
+         int reps = 100;
 };
 
 // Local search , neighbourhood with swap
@@ -56,6 +57,7 @@ class quality_exp_local_search_with_swap: public quality_experiment {
 		unsigned int solve_instance(graph<int> &g1, graph<int> &g2);
 		void clean_solution();
 		graph<std::pair<int, int>>* h;
+        int reps = 50;
 };
 
 class g1_vs_g2_neighbourhood_1_proportion_incremental_experiment:public quality_incremental_experiment< float,
@@ -69,6 +71,7 @@ class g1_vs_g2_neighbourhood_1_proportion_incremental_experiment:public quality_
         void load_instance(incremental_experiment_input< float, star_solution > *input);
         int solve_instance(incremental_experiment_input< float, star_solution >*input);
         int last_h_m;
+        int reps = 100;
 };
 
 class g1_vs_g2_neighbourhood_2_proportion_incremental_experiment:public quality_incremental_experiment< float,
@@ -82,6 +85,7 @@ class g1_vs_g2_neighbourhood_2_proportion_incremental_experiment:public quality_
         void load_instance(incremental_experiment_input< float, star_solution > *input);
         int solve_instance(incremental_experiment_input< float, star_solution >*input);
         int last_h_m;
+        int reps = 50;
 };
 
 class g1_vs_g2_neighbourhood_2_iterations_incremental_experiment:public quality_incremental_experiment< int,
