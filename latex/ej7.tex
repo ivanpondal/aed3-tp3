@@ -13,3 +13,41 @@
 % deben presentarles todos los resultados obtenidos mediante gráficos
 % adecuados (u otras opciones que consideren provechosas) y discutir al
 % respecto de los mismos.
+
+Para concluir el trabajo, se pedía comparar las heurísticas anteriores con
+un conjunto de instancias nuevo. Para esto se decidió construir una familia
+de instancias para las que fuera posible conocer el resultado exacto, aun
+sin necesidad de correr el algoritmo. A continuación se presenta dicha
+familia, y se muestra cuál es la solución correcta del problema de \acr{MCS}
+para la misma.
+
+\begin{itemize}
+    \item $G_1$ es un camino simple con $r$ nodos, es decir, $G_1 = P_r$.
+    \item $G_2$ es un bipartito completo con particiones de $s$ y $t$ nodos,
+    es decir, $G_2 = K_{s,t}$, con $s < t$.
+    \item Además, se cumple que $r \geq t$.
+\end{itemize}
+
+En tal caso, la solución de \acr{MCS}, por ser isomorfa a un subgrafo de
+$G_1$, deberá ser un camino simple o una unión de caminos simples. En otras
+palabras, deberemos buscar caminos simples que sean subgrafos de $G_1$. Ahora
+bien, por ser $G_1$ bipartito, todo camino simple dentro del mismo deberá
+alternar un nodo de cada partición. Como la menor de las particiones tiene $s$
+nodos, es claro que no puede haber ningún camino con más de $2s + 1$ nodos que
+sea subgrafo de $G_2$. Más aún, tal camino existe: si se toma de forma
+sucesiva un nodo de cada partición, comenzando por la que tiene $t$ nodos, dos
+nodos consecutivos siempre estarán unidos por una arista, por ser $G_2$
+bipartito completo. Este proceso termina cuando se acaban los nodos de la
+partición más chica, es decir, al haber tomado $s$ nodos de cada partición;
+entonces, todavía es posible extender el camino con un último nodo de la otra
+partición (por ser $t > s$), pero ya no se podrá conectar este último a un
+nodo de $s$.
+
+De lo anterior, deducimos que existe un subgrafo de $G_2$ isomorfo a
+$P_{2s+1}$. Claramente, $P_{2s+1}$ también es isomorfo a un subgrafo de $G_1$.
+Por otra parte, la cantidad de aristas de este grafo es máxima entre los de
+este tipo: cualquier otra arista que se intente agregar y que sea respetada en
+$G_2$ por el isomorfismo unirá un nodo de cada partición de este grafo, es
+decir, y todos los nodos de la partición más chica ya están mapeados por el
+isomorfismo a algún nodo de $G_1$, donde sus dos aristas ya están mapeadas a
+otras aristas de $G_2$.
