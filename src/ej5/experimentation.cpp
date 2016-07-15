@@ -690,7 +690,7 @@ void run_experimentation(){
 		repetitions_val,
 		sample_val,
 		parameters,
-		"../exp/ej5/big_cicle_vs_small_tree_1_iteration"
+		"../exp/ej5/big_cicle_vs_small_tree_ǹeighbourhood_1_iteration"
 	);
 
 	g1_vs_g2_neighbourhood_1_iterations_incremental_experiment big_cicle_vs_small_tree_iteration_exp =
@@ -885,26 +885,26 @@ void run_experimentation(){
 
 	// Neighbourhood proportion
 	// Neighbourhood I
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_granular);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_granular);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_granular);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_granular);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_granular);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_granular);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_granular);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_granular);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_granular);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_granular);
 
 	// Neighbourhood II
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2_granular);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2_granular);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2_granular);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2);
-	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2_granular);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2_granular);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2_granular);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2_granular);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2);
+	// neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2_granular);
 	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2);
 	neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2_granular);
 
@@ -928,8 +928,8 @@ void run_experimentation(){
     *  Run experiments
     */
 
-	quality_exp_suite.run();
-	// neighbourhood_proportion_calibrate_exp_suite.run();
-	iteration_calibrate_exp_suite.run();
+	// quality_exp_suite.run();
+	neighbourhood_proportion_calibrate_exp_suite.run();
+	// iteration_calibrate_exp_suite.run();
 
 }
