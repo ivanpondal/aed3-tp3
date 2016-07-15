@@ -878,10 +878,10 @@ void run_experimentation(){
 	// // Quality
 	// quality_exp_suite.add(&local_search_1_exp);
 	// quality_exp_suite.add(&local_search_2_exp);
-	// quality_exp_suite.add(&local_search_1_exp_similar_nodes_count);
-	// quality_exp_suite.add(&local_search_2_exp_similar_nodes_count);
-	quality_exp_suite.add(&local_search_2_exp_diferents_nodes_count);
-	quality_exp_suite.add(&local_search_1_exp_diferents_nodes_count);
+	quality_exp_suite.add(&local_search_1_exp_similar_nodes_count);
+	quality_exp_suite.add(&local_search_2_exp_similar_nodes_count);
+	// quality_exp_suite.add(&local_search_2_exp_diferents_nodes_count);
+	// quality_exp_suite.add(&local_search_1_exp_diferents_nodes_count);
 
 
 	// Neighbourhood proportion

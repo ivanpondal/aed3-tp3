@@ -948,6 +948,8 @@ un maximo local, en cambio la segunda puede buscar una mejor solución.
 \subsubsection{Mejores y peores casos para cada vecindad}
 
 
+Se corrio la primera vecindad con 100 iteraciones como máximo y viendo $0.2\%$ de la vecindad, la segunda con $50$ iteraciones como máximo y viendo $0.2\%$ de la vecindad.
+
 
 \pgfplotstableread[header=false]{../exp/ej5/similar_nodes_count_instance_generation_1_exp}\similarnodescounlocalsearchone
 
@@ -1002,6 +1004,14 @@ un maximo local, en cambio la segunda puede buscar una mejor solución.
 
 ~
 
+
+Se puede concluir que para grafos en muy parecidos en cardinalidad de nodos la primera vecindad devuelve una solución mala, pero tarda muy poc. Aumentado la cantidad de iteraciones máximas se esperaría una mejor solución. 
+
+La segunda vecindad devuelve una buena solución ya que al poder hacer permutaciones aumenta los candidatos a probar.
+
+
+~
+
 \pgfplotstableset{
     create on use/sctls2/.style={copy column from table={\diferentnodescounlocalsearchtwo}{[index] 3}}
 }
@@ -1043,3 +1053,11 @@ un maximo local, en cambio la segunda puede buscar una mejor solución.
         sci,precision=3
     }
 ]\diferentnodescounlocalsearchone
+
+~
+
+
+En linea general la primera vecindad tiene una mejor solución y tarda menos que la segunda, ya que la segunda tarda más por iteración, en lo cual prueba menos nodos.
+
+
+Se puede concluir que para grafos con una diferencia razonable de nodos (sea la la mitad o el doble de nodos) la primera vecindad es notablemente mejor que la segunda.

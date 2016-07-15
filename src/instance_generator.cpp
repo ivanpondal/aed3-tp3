@@ -559,7 +559,7 @@ void run_similar_nodes_count_instance_generation(){
 	g2.clear();
 	srand(MAGIC_SEED);
 
-	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 0.5f);
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 0.5f);
 	e_gen.reset();
 	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, 500);
 	e_gen.reset();
@@ -1204,12 +1204,12 @@ int main (int argc, char* argv[]) {
 	// instances were we don't
 	// run_unknown_solution_instance_generation();
 	// similar_nodes_count_instance
-	//run_similar_nodes_count_instance_generation();
+	run_similar_nodes_count_instance_generation();
 	// diferents_nodes_count_instance
 	//run_diferents_nodes_count_instance_generation();
 	//run_small_known_solution_instance_generation();
 	// run_unknown_solution_instance_generation();
 	// small instances for ex6 were we know the optimum solution
 	// run_small_known_solution_instance_generation();
-	run_new_instance_generation();
+	// run_new_instance_generation();
 }
