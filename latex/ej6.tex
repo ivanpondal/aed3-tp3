@@ -144,32 +144,60 @@ se encuentre o no en la lista tabú.
 \subsection{Experimentación}
 
 Para la experimentación sobre la implementación de esta metaheurística se
-llevo a cabo una comparación entre los resultados obtenidos de variar los
+llevó a cabo una comparación entre los resultados obtenidos de variar los
 distintos parámetros de la misma (tamaño de la lista taboo, criterios de
 parada, funcion de aspiración). La comparación consta de contrastar la
 cantidad de aristas encontrada y los tiempos de ejecución del algoritmo.
 Además se exhibe como referencia la cantidad maxima de aristas.
 
-En cuanto a los parametros son intrínsecos a la búsqueda local, se los
+En cuanto a los parametros intrínsecos a la búsqueda local, se los
 fijó para diferentes valores, y sobre cada uno de ellos se varió los de
 la metaheurística.
 
 El grupo de instancias utilizado corresponde a un conjunto de grafos de varias
-familias distintas. Cografo vs cografo, grafo aleatorio vs subgrafo del mismo
-(variando las densidades de aristas), árbol vs subgrafo, completo vs subgrafo,
-ciclo vs subgrafo, aleatorio bipartito vs completo (variando cantidad de
-nodos), alatorio vs completo (variando cantidad de nodos). Se consideró que
-este conjunto de instancias resultaba representativo en cuanto al espectro a
-de grafos a explorar.
+familias distintas.
 
-Con el fin de lograr una mejor ALGO a los datos, el algoritmo fue ejecutado
-10 veces para cada instancia y combinación de parámetros, y de esos datos se
-calcula el promedio. Los datos que se exhiben corresponden a los promedios de
-las aristas encontradas por el algoritmo para cada combinación de parámetros.
+\begin{itemize}
+\item Cografo vs. cografo
+\item Grafo aleatorio vs. subgrafo del mismo (variando las densidades de
+aristas)
+\item Árbol vs. subgrafo
+\item Completo vs. subgrafo
+\item Ciclo vs. subgrafo
+\item Aleatorio bipartito vs. completo (variando cantidad de nodos)
+\item Aleatorio vs. completo (variando cantidad de nodos)
+\end{itemize}
 
+Se consideró que este conjunto de instancias resultaba representativo en
+cuanto al espectro a de grafos a explorar.
+
+Con el fin de lograr una mayor precisión en los datos, el algoritmo fue
+ejecutado 10 veces para cada instancia y combinación de parámetros, y de esos
+datos se calcula el promedio. Los datos que se exhiben corresponden a los
+promedios de las aristas encontradas por el algoritmo para cada combinación de
+parámetros.
+
+En la siguiente experimentación se varió el umbral de la función de
+aspiración. Los valores que se mantuvieron fijos fueron:
+
+\begin{itemize}
+\item Tipo de vecindad = \textit{exchange}
+\item Proporción de vecinos considerada = 1\%
+\item Tamaño de lista tabú = 600
+\item Cantidad de iteraciones = 1000
+\item Cantidad de iteraciones sin mejora = 1000 (equivalente a no tener en
+cuenta este parámetro ya que tiene el mismo valor que la cantidad de
+iteraciones total)
+\item Relacion entre valor del peso de aristas vs. tiempo = 0.5 (el tiempo que
+lleva un movimiento en la lista tabú y la cantidad de aristas que proporciona
+tienen igual importancia)
+\end{itemize}
+
+A continuación se muestra una tabla exponiendo los datos obtenidos.
 
 \pgfplotstableread[header=false]{../exp/small_optimal_solutions}{\optimalsolutions}
 \pgfplotstableread[header=false]{../exp/ej6/known_sol_greedy_exp}{\knowngreedy}
+\pgfplotstableread[header=false]{../exp/ej6/known_sol_local_search_exp}{\knownlocalsearch}
 
 % \pgfplotstableread[header=false]{../exp/ej6/1-0001-1000-0.01-0100-0.5-0.1-1.0}{\lowtaboolist}
 % \pgfplotstableread[header=false]{../exp/ej6/1-0060-1000-0.01-0100-0.5-0.1-1.0}{\hightaboolist}
@@ -177,15 +205,20 @@ las aristas encontradas por el algoritmo para cada combinación de parámetros.
 
 \pgfplotstableread[header=false]{../exp/ej6/1-0600-1000-0.01-1000-0.5-0.1-0.3}{\lowiterationlowaspiration}
 \pgfplotstableread[header=false]{../exp/ej6/1-0600-1000-0.01-1000-0.5-0.1-0.8}{\lowiterationhighaspiration}
+\pgfplotstableread[header=false]{../exp/ej6//1-0600-1000-0.01-1000-0.5-0.1-0.8}{\lowiterationfullaspiration}
 
 % \pgfplotstableread[header=false]{../exp/ej6/1-0600-4000-0.01-0100-0.5-0.1-0.8}{\mediumiteration}
 \pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-2000-0.5-0.1-0.3}{\highiterationlowaspiration}
 \pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-2000-0.5-0.1-0.8}{\highiterationhighaspiration}
 \pgfplotstableread[header=false]{../exp/ej6/1-0600-2000-0.01-2000-0.5-0.1-1.0}{\highiterationfullaspiration}
 
+\pgfplotstableread[header=false]{../exp/ej6/1-0600-0000-0.01-2000-0.5-0.1-0.3}{\nolimititerationlowaspiration}
+
 \pgfplotstablecreatecol[copy column from table={\optimalsolutions}{[index] 1}]{solutions}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\knowngreedy}{[index] 1}]{greedy}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\knowngreedy}{[index] 3}]{greedytime}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\knownlocalsearch}{[index] 1}]{localsearch}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\knownlocalsearch}{[index] 3}]{localsearchtime}{\optimalsolutions}
 
 % \pgfplotstablecreatecol[copy column from table={\lowtaboolist}{[index] 1}]{lowtaboo}{\optimalsolutions}
 % \pgfplotstablecreatecol[copy column from table={\hightaboolist}{[index] 1}]{hightaboo}{\optimalsolutions}
@@ -194,11 +227,14 @@ las aristas encontradas por el algoritmo para cada combinación de parámetros.
 
 \pgfplotstablecreatecol[copy column from table={\lowiterationlowaspiration}{[index] 1}]{lowiterationlowaspiration}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\lowiterationhighaspiration}{[index] 1}]{lowiterationhighaspiration}{\optimalsolutions}
+\pgfplotstablecreatecol[copy column from table={\lowiterationfullaspiration}{[index] 1}]{lowiterationfullaspiration}{\optimalsolutions}
 
 % \pgfplotstablecreatecol[copy column from table={\mediumiteration}{[index] 1}]{mediumiteration}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\highiterationlowaspiration}{[index] 1}]{highiterationlowaspiration}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\highiterationhighaspiration}{[index] 1}]{highiterationhighaspiration}{\optimalsolutions}
 \pgfplotstablecreatecol[copy column from table={\highiterationfullaspiration}{[index] 1}]{highiterationfullaspiration}{\optimalsolutions}
+
+\pgfplotstablecreatecol[copy column from table={\nolimititerationlowaspiration}{[index] 1}]{nolimititerationlowaspiration}{\optimalsolutions}
 
 \pgfplotstableset{
     every head row/.style={
@@ -220,6 +256,9 @@ las aristas encontradas por el algoritmo para cada combinación de parámetros.
     columns/greedy/.style={
     	column name=$greedy$
     },
+    columns/localsearch/.style={
+        column name=$LS$
+    },
 	% columns/lowtaboo/.style={
  %        column name=$\#E(taboo 1)$
  %    },
@@ -235,6 +274,9 @@ las aristas encontradas por el algoritmo para cada combinación de parámetros.
     columns/lowiterationhighaspiration/.style={
         column name=$i1000a0.8$
     },
+    columns/lowiterationfullaspiration/.style={
+        column name=$i1000a1.0$
+    },
     % columns/mediumiteration/.style={
     %     column name=$\#E(ite 4000)$
     % },
@@ -246,6 +288,9 @@ las aristas encontradas por el algoritmo para cada combinación de parámetros.
     },
     columns/highiterationfullaspiration/.style={
         column name=$i2000a1.0$
+    },
+    columns/nolimititerationlowaspiration/.style={
+        column name=$iINFa0.3$
     },
 	create on use/ratiolist/.style=
 		{create col/expr={(\thisrow{greedy} * 100)/ \thisrow{highertaboo} - 100}},
@@ -302,17 +347,49 @@ las aristas encontradas por el algoritmo para cada combinación de parámetros.
     \centering
     \caption{Comparación entre distintos umbrales de la función de aspiración}
     \pgfplotstabletypeset[
-        columns={0, greedy, lowiterationhighaspiration, highiterationlowaspiration, highiterationhighaspiration, highiterationfullaspiration}
+        columns={0, solutions, localsearch, lowiterationlowaspiration, lowiterationhighaspiration, lowiterationfullaspiration}
     ]{\optimalsolutions}
 \end{figure}
 
-En esta tabla se puede observar como la variación entre cantidad de
-iteraciones produce un cambio positivo en algunos de los casos. Puede notarse
-también el bajo efecto que tiene reducir el umbral de la función de,
-puesto que permanecen identicas las cantidades de aristas encontradas entre
-las ejecuciones un umbral de aspiración de 0.8 y 1.0, mientras que con un
-valor de 0.3, se produce una mejora solamente en uno de los casos, y es muy
-pequeña.
+Es notoria la mejora que representa la metaheurística con respecto a la búsqueda local. En la mayoría de los casos, sobretodo en los que mayor cantidad de aristas tienen como los grafos aleatorios de 150 nodos, puede apreciarse una mejora sustancial en la cantidad de aristas encontradas. Sin embargo, disminuir el valor del umbral de la función de aspiración (que significa abrir paso a soluciones con menor cantidad de aristas) no tuvo un
+efecto positivo, al contrario de lo que era esperado. La cantidad de aristas encontradas no varió en lo absoluto en cuanto a la metaheurística para estos parámetros.
 
+Es por eso que se corrió esta prueba para una cantidad de iteraciones total e iteraciones sin mejora de 2000. Para esta cantidad de iteraciones el algoritmo ya toma un tiempo de ejecución considerablemente alto, y aún así no representa una mejora clara. Únicamente para la prueba con árboles de 150 nodos puede verse una mejora, y es muy pequeña. Para el resto de las instancias la cantidad de aristas encontrada por el algoritmo bajo estos parámetros permance idéntica.
 
-(Los de 1000 iteraciones son todos iguales para cualquier aspiracion)
+\begin{figure}[H]
+    \centering
+    \caption{Comparación entre distintos umbrales de la función de aspiración}
+    \pgfplotstabletypeset[
+        columns={0, solutions, localsearch, highiterationlowaspiration, highiterationhighaspiration, highiterationfullaspiration}
+    ]{\optimalsolutions}
+\end{figure}
+
+Se corrió otra experimentación en donde el valor a variar es la cantidad de iteraciones. Manteniendo fijos los siguierntas parametros:
+
+\begin{itemize}
+\item Tipo de vecindad = \textit{exchange}
+\item Proporción de vecinos considerada = 1\%
+\item Tamaño de lista tabú = 600
+\item Relacion entre valor del peso de aristas vs. tiempo = 0.5 (el tiempo que
+lleva un movimiento en la lista tabú y la cantidad de aristas que proporciona
+tienen igual importancia)
+\item Umbral de la función de aspiración = 0.3. Fue elegido este valor debido
+a que se lo consideró un buen indicador, la hipótesis es que cuanto más
+abierto sea el umbral hay más probabilidad de explorar soluciones que por
+momento sean muy malas pero que culminen en una mucho mejor.
+\end{itemize}
+
+A continuación se exhiben los datos obtenidos.
+
+\begin{figure}[H]
+    \centering
+    \caption{Comparación entre distintos umbrales de la función de aspiración}
+    \pgfplotstabletypeset[
+        columns={0, solutions, localsearch, lowiterationlowaspiration, highiterationlowaspiration, nolimititerationlowaspiration}
+    ]{\optimalsolutions}
+\end{figure}
+
+Como era de esperarse, se observa que en la mayoria de los casos se produce
+una mejora a medida que la cantidad de iteraciones incrementa. Naturalmente,
+al ejecutarse la búsqueda una mayor cantidad de veces existe una probabilidad
+mayor de encontrar una solución con una mayor cantidad de aristas.
