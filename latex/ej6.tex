@@ -177,6 +177,24 @@ datos se calcula el promedio. Los datos que se exhiben corresponden a los
 promedios de las aristas encontradas por el algoritmo para cada combinación de
 parámetros.
 
+Se hará uso de la siguiente notación:
+
+\begin{itemize}
+\item $MCS$: Cantidad de aristas de la solucíon óptima.
+\item $LS$: Cantidad de aristas encontradas con el algoritmo de búsqueda
+local.
+\item $i$\textbf{num}: Cantidad de aristas encontradas por la metaheurística
+con parámetro de cantidad total de iteraciones = \textbf{num}. En el caso de
+$INF$, se considera que no hay límite de iteraciones.
+\item $a$\textbf{umbral}: Cantidad de aristas encontradas por la
+metaheurística con parámetro de función de aspiración = \textbf{umbral}.
+\item $ng$\textbf{límite}: Cantidad de aristas encontradas por la
+metaheurística con parámetro de límite de iteraciones sin registrar ganancia =
+\textbf{límite}
+\item $T(*)$: Tiempo de ejecución de $*$ medido en nanosegundos.
+\item $\Delta \%$: Diferencia porcentual entre un caso y otro.
+\end{itemize}
+
 En la siguiente experimentación se varió el umbral de la función de
 aspiración. Los valores que se mantuvieron fijos fueron:
 
@@ -374,6 +392,17 @@ A continuación se muestra una tabla exponiendo los datos obtenidos.
             /pgfplots/table/@cell content/.add={}{\%}
         },
         fonts by sign={}{\color{red}}
+    },
+    create on use/rationogaintime2/.style=
+        {create col/expr={(\thisrow{highiterationhighnogainlowaspirationtime} * 100)/ \thisrow{localsearchtime} - 100}},
+    columns/rationogaintime2/.style={
+        column name=$\% \Delta_2$,
+        column type={r},
+        fixed, precision=2,
+        postproc cell content/.append style={
+            /pgfplots/table/@cell content/.add={}{\%}
+        },
+        fonts by sign={}{\color{red}}
     }
 }
 
@@ -480,6 +509,9 @@ Se observa una clara ganancia entre un tiempo de parada y otro, pero también
 un tiempo de ejecución elevado. En el siguiente cuadro se exhibe una
 comparación entre ellos.
 
+En este experimento $\Delta\%$ representa la diferencia porcentual entre el
+tiempo de ejecución de $ng 100$ y $ng 2000$.
+
 \begin{figure}[H]
     \centering
     \caption{Comparación de tiemos entre cantidades de iteraciones sin mejora}
@@ -487,3 +519,8 @@ comparación entre ellos.
         columns={0, localsearchtime, highiterationlowernogainlowaspirationtime, highiterationhighnogainlowaspirationtime, rationogaintime}
     ]{\optimalsolutions}
 \end{figure}
+
+Como puede apreciarse, existe una diferencia de tiempo de ejecución entre una
+corrida y otra muy grande para los casos con mayor cantidad de aristas.
+Esta diferencia es mucho más grande si hacemos la comparación con la búsqueda
+local.
