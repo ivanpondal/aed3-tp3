@@ -594,26 +594,350 @@ void run_experimentation(){
 
 
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_0_to_20);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_0_to_20);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_0_to_20);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_0_to_20);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_0_to_20);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_0_to_20);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_0_to_20);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_0_to_20);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_0_to_20);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_0_to_20);
 
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_20_to_100);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_20_to_100);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_20_to_100);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_20_to_100);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_20_to_100);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_20_to_100);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_20_to_100);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_20_to_100);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_20_to_100);
+    // neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_20_to_100);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // big_tree_vs_small_tree
+	start_point = solve_greedy(small_tree,big_tree);
+
+	parameters.g1 =  small_tree;
+	parameters.g2 =  big_tree;
+	parameters.greedy_solve = start_point;
+
+
+	incremental_experiment_input_float< star_solution >  big_tree_vs_small_tree_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_tree_vs_small_tree_neighbourhood_2_proportion_0_to_20");
+
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment  big_tree_vs_small_tree_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_tree_vs_small_tree_input_2_0_to_20);
+
+
+    incremental_experiment_input_float< star_solution >  big_tree_vs_small_tree_input_2_20_to_100(0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_tree_vs_small_tree_neighbourhood_2_proportion_20_to_100");
+
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment  big_tree_vs_small_tree_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_tree_vs_small_tree_input_2_20_to_100);
+
+
+
+    // big_cicle_vs_small_cicle
+	start_point = solve_greedy(small_cicle,big_cicle);
+
+	parameters.g1 =  small_cicle;
+	parameters.g2 =  big_cicle;
+	parameters.greedy_solve = start_point;
+
+
+	incremental_experiment_input_float< star_solution >  big_cicle_vs_small_cicle_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_cicle_vs_small_cicle_neighbourhood_2_proportion_0_to_20");
+
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment  big_cicle_vs_small_cicle_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_cicle_vs_small_cicle_input_2_0_to_20);
+
+
+	incremental_experiment_input_float< star_solution >  big_cicle_vs_small_cicle_input_2_20_to_100(0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_cicle_vs_small_cicle_neighbourhood_2_proportion_20_to_100");
+
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment  big_cicle_vs_small_cicle_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_cicle_vs_small_cicle_input_2_20_to_100);
+
+
+
+	// tree_vs_big_complete
+	start_point = solve_greedy(big_complete,big_tree);
+
+	parameters.g1 =  big_complete;
+	parameters.g2 =  big_tree;
+	parameters.greedy_solve = start_point;
+
+
+
+    incremental_experiment_input_float< star_solution >  big_tree_vs_big_complete_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_tree_vs_big_complete_neighbourhood_2_proportion_0_to_20");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_tree_vs_big_complete_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_tree_vs_big_complete_input_2_0_to_20);
+
+    incremental_experiment_input_float< star_solution >  big_tree_vs_big_complete_input_2_20_to_100(0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_tree_vs_big_complete_neighbourhood_2_proportion_20_to_100");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_tree_vs_big_complete_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_tree_vs_big_complete_input_2_20_to_100);
+
+    // big_cicle_vs_big_complete
+    start_point = solve_greedy(big_complete,big_cicle);
+
+
+	parameters.g1 =  big_complete;
+	parameters.g2 =  big_cicle;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_cicle_vs_big_complete_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_cicle_vs_big_complete_neighbourhood_2_proportion_0_to_20");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_cicle_vs_big_complete_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_cicle_vs_big_complete_input_2_0_to_20);
+
+
+    incremental_experiment_input_float< star_solution >  big_cicle_vs_big_complete_input_2_20_to_100 (0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_cicle_vs_big_complete_neighbourhood_2_proportion_20_to_100");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_cicle_vs_big_complete_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_cicle_vs_big_complete_input_2_20_to_100);
+
+
+    //big_tree_vs_small_cicle_exp
+
+    start_point = solve_greedy(small_cicle,big_tree);
+
+    parameters.g1 =  small_cicle;
+	parameters.g2 =  big_tree;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_tree_vs_small_cicle_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_tree_vs_small_cicle_neighbourhood_2_proportion_0_to_20");
+
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_tree_vs_small_cicle_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_tree_vs_small_cicle_input_2_0_to_20);
+
+    incremental_experiment_input_float< star_solution >  big_tree_vs_small_cicle_input_2_20_to_100(0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_tree_vs_small_cicle_neighbourhood_2_proportion_20_to_100");
+
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_tree_vs_small_cicle_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_tree_vs_small_cicle_input_2_20_to_100);
+
+    // big_cicle_vs_small_tree_exp
+
+
+    start_point = solve_greedy(small_tree,big_tree);
+
+
+    parameters.g1 =  small_tree;
+	parameters.g2 =  big_cicle;
+	parameters.greedy_solve = start_point;
+
+
+	incremental_experiment_input_float< star_solution >  big_cicle_vs_small_tree_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_cicle_vs_small_tree_2_proportion_0_to_20");
+
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_cicle_vs_small_tree_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_cicle_vs_small_tree_input_2_0_to_20);
+
+
+    incremental_experiment_input_float< star_solution >  big_cicle_vs_small_tree_input_2_20_to_100(0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_cicle_vs_small_tree_2_proportion_20_to_100");
+
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_cicle_vs_small_tree_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_cicle_vs_small_tree_input_2_20_to_100);
+
+
+
+	// big_bipartite_low_edges_vs_small_bipartite_low_edges
+    start_point = solve_greedy(small_bipartite_low_edges,big_bipartite_low_edges);
+
+    parameters.g1 =  small_bipartite_low_edges;
+	parameters.g2 =  big_bipartite_low_edges;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_low_edges_vs_small_bipartite_low_edges_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_bipartite_low_edges_vs_small_bipartite_low_edges_neighbourhood_2_proportion");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_low_edges_vs_small_bipartite_low_edges_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_low_edges_vs_small_bipartite_low_edges_input_2_0_to_20);
+
+
+    incremental_experiment_input_float< star_solution >  big_bipartite_low_edges_vs_small_bipartite_low_edges_input_2_20_to_100(0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_bipartite_low_edges_vs_small_bipartite_low_edges_neighbourhood_2_proportion_20_to_100");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_low_edges_vs_small_bipartite_low_edges_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_low_edges_vs_small_bipartite_low_edges_input_2_20_to_100);
+
+
+    // big_bipartite_some_edges_vs_small_bipartite_some_edges
+
+    start_point = solve_greedy(small_bipartite_some_edges,big_bipartite_some_edges);
+
+    parameters.g1 =  small_bipartite_some_edges;
+	parameters.g2 =  big_bipartite_some_edges;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_small_bipartite_some_edges_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_bipartite_some_edges_vs_small_bipartite_some_edges_neighbourhood_2_proportion_0_to_20");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_small_bipartite_some_edges_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_small_bipartite_some_edges_input_2_0_to_20);
+
+
+    incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_small_bipartite_some_edges_input_2_20_to_100(0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_bipartite_some_edges_vs_small_bipartite_some_edges_neighbourhood_2_proportion_20_to_100");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_small_bipartite_some_edges_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_small_bipartite_some_edges_input_2_20_to_100);
+
+    // big_bipartite_complete_vs_small_bipartite_complete
+
+    start_point = solve_greedy(small_bipartite_complete,big_bipartite_complete);
+
+    parameters.g1 =  small_bipartite_complete;
+	parameters.g2 =  big_bipartite_complete;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_complete_vs_small_bipartite_complete_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_bipartite_complete_vs_small_bipartite_complete_neighbourhood_2_proportion_0_to_20");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_complete_vs_small_bipartite_complete_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_complete_vs_small_bipartite_complete_input_2_0_to_20);
+
+
+    incremental_experiment_input_float< star_solution >  big_bipartite_complete_vs_small_bipartite_complete_input_2_20_to_100(0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_bipartite_complete_vs_small_bipartite_complete_neighbourhood_2_proportion_20_to_100");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_complete_vs_small_bipartite_complete_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_complete_vs_small_bipartite_complete_input_2_20_to_100);
+
+    // big_bipartite_some_edges_vs_big_tree
+
+
+    start_point = solve_greedy(big_bipartite_some_edges,big_tree);
+
+    parameters.g1 =  big_bipartite_some_edges;
+	parameters.g2 =  big_tree;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_big_tree_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_bipartite_some_edges_vs_big_tree_neighbourhood_2_proportion_0_to_20");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_big_tree_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_big_tree_input_2_0_to_20);
+
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_big_tree_input_2_20_to_100(0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_bipartite_some_edges_vs_big_tree_neighbourhood_2_proportion_20_to_100");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_big_tree_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_big_tree_input_2_20_to_100);
+
+    // big_bipartite_some_edges_vs_big_cicle
+
+    start_point = solve_greedy(big_bipartite_some_edges,big_cicle);
+
+    parameters.g1 =  big_bipartite_some_edges;
+	parameters.g2 =  big_cicle;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_big_cicle_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_bipartite_some_edges_vs_big_cicle_neighbourhood_2_proportion_0_to_20");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_big_cicle_exp_2_0_to_20 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_big_cicle_input_2_0_to_20);
+
+
+    incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_big_cicle_input_2_20_to_100(0.2f, 1.0f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_bipartite_some_edges_vs_big_cicle_neighbourhood_2_proportion_20_to_100");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_big_cicle_exp_2_20_to_100 = 
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_big_cicle_input_2_20_to_100);
+
+    // big_bipartite_some_edges_vs_small_complete	
+
+
+    start_point = solve_greedy(small_complete,big_bipartite_some_edges);
+
+    parameters.g1 =  small_complete;
+	parameters.g2 =  big_bipartite_some_edges;
+	parameters.greedy_solve = start_point;
+
+	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_small_complete_input_2_0_to_20(0.0f, 0.2f, 0, repetitions_val,
+		sample_val_0_to_20, parameters, "../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_2_proportion_0_to_20");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_small_complete_exp_2_0_to_20 =
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_small_complete_input_2_0_to_20);
+
+
+    incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_small_complete_input_2_20_to_100(0.2f, 1.f, 0, repetitions_val,
+		sample_val_20_to_100, parameters, "../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_2_proportion_2_20_to_100");
+
+    g1_vs_g2_neighbourhood_2_proportion_incremental_experiment big_bipartite_some_edges_vs_small_complete_exp_2_20_to_100 =
+    	g1_vs_g2_neighbourhood_2_proportion_incremental_experiment(&big_bipartite_some_edges_vs_small_complete_input_2_20_to_100);
+
+
+
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2_0_to_20);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2_0_to_20);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2_0_to_20);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2_0_to_20);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2_0_to_20);
+
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2_20_to_100);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2_20_to_100);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2_20_to_100);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2_20_to_100);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2_20_to_100);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
