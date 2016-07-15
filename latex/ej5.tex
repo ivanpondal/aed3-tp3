@@ -751,9 +751,13 @@ resultados de las primeras cuatro instancias con los de la instancia $I_5$,
 que tienen una cantidad de aristas mucho mayor, parece indicar que en las
 primeras iteraciones realizan incrementos proporcionales al tamaño de la
 solución, mientras que luego los incrementos son solo de unas pocas aristas.
+Una de las observaciones que puede hacerse sobre los resultados es la
+presencia de oscilaciones a medida que crece la cantidad de iteraciones:
+esto se debe a que la vecindad es elegida al azar, pudiendo obtener resultados
+peores incluso aunque aumente el número de iteraciones.
 Por último, de los resultados observados, parece desprenderse que para las
 proporciones de vecindad utilizadas, podría cortarse la ejecución del
-algoritmo luego de las primeras 100 iteraciones, ya que las mejoras obtenidas
+algoritmo luego de las primeras 150 iteraciones, ya que las mejoras obtenidas
 en iteraciones posteriores resultan poco significativas.
 
 \subsubsection{Comparación de vecindades}
