@@ -40,7 +40,6 @@ class quality_exp_local_search_without_swap: public quality_experiment {
 	private:
 		unsigned int solve_instance(graph<int> &g1, graph<int> &g2);
 		void clean_solution();
-		graph<std::pair<int, int>>* h;
          int reps = 100;
 };
 
@@ -56,7 +55,6 @@ class quality_exp_local_search_with_swap: public quality_experiment {
 	private:
 		unsigned int solve_instance(graph<int> &g1, graph<int> &g2);
 		void clean_solution();
-		graph<std::pair<int, int>>* h;
         int reps = 50;
 };
 

@@ -41,18 +41,18 @@ unsigned int quality_exp_local_search_with_swap::solve_instance(graph<int> &g1, 
     }
 
     graph<pair<int, int>>* start_point = solve_greedy(*small_graph, *large_graph);
-    h = solve_local_search(*small_graph, *large_graph, *start_point, 2,reps,0.002f,true);
+    graph< pair<int, int> >* h  = solve_local_search(*small_graph, *large_graph, *start_point, 2,reps,0.002f,true);
+   
+	int res = h->m();
+
     delete start_point;
+    delete h;
 
-
-
-    cout << "h->m() :  " << h->m() << endl;
-
-	return h->m();
+	
+	return res;
 }
 
 void quality_exp_local_search_with_swap::clean_solution() {
-	delete h;
 }
 
 
@@ -68,7 +68,7 @@ unsigned int quality_exp_local_search_without_swap::solve_instance(graph<int> &g
 
 	cout << "g1.n() : " << g1.n() << endl;
 	cout << "g2.n() : " << g2.n() << endl;
-
+	int res = 0;
     if(	g1.n() == g2.n() ){
     	cout << "h->m() :  " << -1 << endl;
 
@@ -84,20 +84,24 @@ unsigned int quality_exp_local_search_without_swap::solve_instance(graph<int> &g
 	        large_graph = &g1;
 	    }
 	    graph<pair<int, int>>* start_point = solve_greedy(*small_graph, *large_graph);
-    	h = solve_local_search(*small_graph, *large_graph, *start_point, 1,reps,0.002f,true);
-    	
+    	graph<pair<int, int>>* h = solve_local_search(*small_graph, *large_graph, *start_point, 1,reps,0.002f,true);
+    	res = h->m();
+
     	delete start_point;
+    	delete h;
+    	
+
     }
-    cout << "h->m() :  " << h->m() << endl;
+    cout << "h->m() :  " << res << endl;
+  
 
-
-	return h->m();
+	return res;
 }
 
 
 
 void quality_exp_local_search_without_swap::clean_solution() {
-	delete h;
+	
 
 }
 
@@ -152,7 +156,7 @@ int g1_vs_g2_neighbourhood_2_proportion_incremental_experiment::solve_instance(i
 	graph<pair<int, int>>* h;
 	if(input->get_inc_val() <0.2f){
 		h = solve_local_search(input->get_subject().g1, input->get_subject().g2,
-		*input->get_subject().greedy_solve,1,-1,input->get_inc_val(),true);
+		*input->get_subject().greedy_solve,2,-1,input->get_inc_val(),true);
 		last_h_m = h->m();
 	}else{
 		int porcentage = (int) ( input->get_inc_val() * 100.0f);
@@ -216,7 +220,7 @@ void run_experimentation(){
 	experiment_suite  iteration_calibrate_exp_suite;
 
 	// quality exp
-	int repetitions_val = 2;
+	int repetitions_val = 1;
 	int sample_val = 200;
 
 	// // quality local_search_2_exp

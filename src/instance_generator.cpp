@@ -561,7 +561,7 @@ void run_similar_nodes_count_instance_generation(){
 
 	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 0.5f);
 	e_gen.reset();
-	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, 2*n1);
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, 500);
 	e_gen.reset();
 
 	// bipartito complete vs complete
@@ -577,7 +577,7 @@ void run_similar_nodes_count_instance_generation(){
 
 	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 1.0f);
 	e_gen.reset();
-	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, 2*n1);
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, 500);
 	e_gen.reset();
 
 	save_instance(g1, g2, instance_name);
