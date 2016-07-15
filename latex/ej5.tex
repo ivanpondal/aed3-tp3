@@ -842,7 +842,7 @@ complejidad total de una iteración de la vecindad II tiene un costo
     \end{figure}
 
 
-    
+
 
 
 
@@ -991,7 +991,7 @@ complejidad total de una iteración de la vecindad II tiene un costo
 ~
     Se puede concluir que luego del la centesima iteración no se agregan una cantidad significativa arristas.
 
-    \subsubsection{Greedy vs Busqueda Local}
+    \subsubsection{Comparación de vecindades}
 
     Se corrieron con viendo el $0.1$ porciento de la vecindad y cortando a las $50$ iteraciones.
 
@@ -1026,12 +1026,12 @@ complejidad total de una iteración de la vecindad II tiene un costo
         },
         columns/sol/.style={
             column name=$\#E(G)$,
-            int detect, 
+            int detect,
             fixed
         },
         columns/1/.style={
             column name=$\#E(LS_1)$,
-            int detect, 
+            int detect,
             fixed
         },
         columns/solls2/.style={
@@ -1042,11 +1042,11 @@ complejidad total de una iteración de la vecindad II tiene un costo
 
 
    ~
-    
+
     Se puede ver que en linea general es sustancialmente mejor la vecindad uno ($\#E(LS_1)$) e que la dos($\#E(LS_2)$).
 
     En los casos en los cuales la solución greedy ($\#E(G)$), no devuelve una buena solución, la busqueda local agrega muchas arristas. Entre la vecindad uno y la dos, particularmente en estos casos la vecindad uno agrega bastante más que la segunda.
-    
+
 
     \subheading{Tiempos}
 
@@ -1073,17 +1073,17 @@ complejidad total de una iteración de la vecindad II tiene un costo
         },
         columns/sol/.style={
             column name=$T(G)$,
-            int detect, 
-            fixed
+            int detect,
+            sci,precision=3
         },
         columns/tls1/.style={
             column name=$T(LS_1)$,
-            int detect, 
-            fixed
+            int detect,
+            sci,precision=3
         },
         columns/3/.style={
             column name=$T(LS_2)$,
-            fixed
+            sci,precision=3
         }
     ]\knownlocalsearchdos
 
@@ -1114,31 +1114,34 @@ complejidad total de una iteración de la vecindad II tiene un costo
         },
         columns/1/.style={
             column name=$\#E(LS_1)$,
-            int detect, 
+            int detect,
             fixed
         },
         columns/3/.style={
             column name=$T(LS_1)$,
-            int detect, 
+            int detect,
             fixed
         }
     ]\knownlocalsearchunocien
 
     ~
 
-    Los tiempos son parecidos a exsepción de los casos en los cuales parecio haber encontrado un maximó local, ya que agregandole más iteraciones no mejora la solución y tarda casi lo mismo.
+    Los tiempos son parecidos a exsepción de los casos en los cuales parecio
+    haber encontrado un máximo local, ya que agregandole más iteraciones no
+    mejora la solución y tarda casi lo mismo.
 
 
     \pgfplotstableset{
         create on use/tls2/.style={copy column from table={\knownlocalsearchdos}{[index] 3}}
     }
 
+       ~
 
     \pgfplotstabletypeset[
         every head row/.style={
             after row=\hline
         },
-        columns={0,  1, solls2,3,tls1},
+        columns={0,  1, solls2,3,tls2},
         columns/0/.style={
             column name=\textsc{Instancia},
             column type={l},
@@ -1150,7 +1153,7 @@ complejidad total de una iteración de la vecindad II tiene un costo
         },
         columns/1/.style={
             column name=$\#E(LS_1)$,
-            int detect, 
+            int detect,
             fixed
         },
         columns/solls2/.style={
@@ -1162,7 +1165,7 @@ complejidad total de una iteración de la vecindad II tiene un costo
             int detect,
             sci,precision=3
         },
-        columns/tls1/.style={
+        columns/tls2/.style={
             column name=$T(LS_2)$,
             sci,precision=3
         }
@@ -1170,3 +1173,11 @@ complejidad total de una iteración de la vecindad II tiene un costo
 
 
    ~
+
+   En los casos que tardan un tiempo parecido la vecindad uno es mejor que la
+   dos. Pero cuando la vecindad dos es mejor que la uno, la segunda vecindad
+   tarda ordenes de magnitud más, siendo que la primera tiende a quedarse en
+   un maximo local, en cambio la segunda puede buscar una mejor solución.
+
+   \subsubsection{Mejores y peores casos para cada vecindad}
+

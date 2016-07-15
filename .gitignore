@@ -27,6 +27,7 @@
 *.out
 *.app
 ej*_solver
+instance_generator
 
 # Latex
 *.aux

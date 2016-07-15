@@ -21,6 +21,7 @@
 // global variables, etc.
 
 
+
 struct star_solution {
 	adj_list_graph<int> g1;
 	adj_list_graph<int> g2;
@@ -67,6 +68,7 @@ class g1_vs_g2_neighbourhood_1_proportion_incremental_experiment:public quality_
     private:
         void load_instance(incremental_experiment_input< float, star_solution > *input);
         int solve_instance(incremental_experiment_input< float, star_solution >*input);
+        int last_h_m;
 };
 
 class g1_vs_g2_neighbourhood_2_proportion_incremental_experiment:public quality_incremental_experiment< float,

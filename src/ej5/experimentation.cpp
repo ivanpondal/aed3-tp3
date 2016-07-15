@@ -18,6 +18,7 @@
 
 using namespace std;
 
+
 unsigned int quality_exp_local_search_with_swap::solve_instance(graph<int> &g1, graph<int> &g2) {
 
 	graph<int>* large_graph, * small_graph;
@@ -38,8 +39,7 @@ unsigned int quality_exp_local_search_with_swap::solve_instance(graph<int> &g1, 
     h = solve_local_search(*small_graph, *large_graph, *start_point, 2,50,0.002f,true);
 
     delete start_point;
-    
-	
+
 	return h->m();
 }
 
@@ -58,9 +58,9 @@ unsigned int quality_exp_local_search_without_swap::solve_instance(graph<int> &g
     // to the function, and remember this fact so that we can read correctly
     // the obtained solution
     if(	g1.n() == g2.n() ){
-    
-    	h = solve_greedy(g1,g2);
-    
+
+    	return -1;
+
     }else{
 
     	if (g1.n() <= g2.n()) {
@@ -74,13 +74,7 @@ unsigned int quality_exp_local_search_without_swap::solve_instance(graph<int> &g
     	h = solve_local_search(*small_graph, *large_graph, *start_point, 1,100,0.002f,true);
     	delete start_point;
     }
-   
 
-    
-
-    
-    
-	
 	return h->m();
 }
 
@@ -103,8 +97,23 @@ void g1_vs_g2_neighbourhood_1_proportion_incremental_experiment::load_instance(i
 int g1_vs_g2_neighbourhood_1_proportion_incremental_experiment::solve_instance(incremental_experiment_input<float,
 	star_solution > *input){
 	// solve_local_search(graph<int>&, graph<int>&, graph<std::pair<int, int> >&, int, int, float, bool)
-	graph<pair<int, int>>* h = solve_local_search(input->get_subject().g1, input->get_subject().g2,
+	graph<pair<int, int>>* h;
+	if(input->get_inc_val() <0.2f){
+		h = solve_local_search(input->get_subject().g1, input->get_subject().g2,
 		*input->get_subject().greedy_solve,1,-1,input->get_inc_val(),true);
+		last_h_m = h->m();
+	}else{
+		int porcentage = (int) ( input->get_inc_val() * 100.0f);
+		if (porcentage % 20 == 0){
+			h = solve_local_search(input->get_subject().g1, input->get_subject().g2,
+			*input->get_subject().greedy_solve,1,-1,input->get_inc_val(),true);
+			last_h_m = h->m();
+		}else{
+			return last_h_m;
+		}
+
+	}
+
 
 	cout << "h->m() :  " << h->m() << endl;
 
@@ -177,10 +186,9 @@ void run_experimentation(){
 	experiment_suite  neighbourhood_proportion_calibrate_exp_suite;
 	experiment_suite  iteration_calibrate_exp_suite;
 
-	
 	// quality exp
-	int repetitions_val = 2;
-	int sample_val = 5;
+	int repetitions_val = 3;
+	int sample_val = 200;
 
 	/*// quality local_search_2_exp
 	quality_exp_local_search_with_swap local_search_2_exp(
@@ -189,20 +197,28 @@ void run_experimentation(){
 
 
 	// quality local_search_1_exp
-	quality_exp_local_search_without_swap local_search_1_exp(
+	/*quality_exp_local_search_without_swap local_search_1_exp(
 			known_solution_instances, "../exp/ej5/known_solution_instances_search_1_exp_100", 0, repetitions_val);
-	
+	*/
+
+
+
+	// quality similar_nodes_count_instance_generation
+
+	quality_exp_local_search_with_swap local_search_2_exp_similar_nodes_count(
+			similar_nodes_count_instances, "../exp/ej5/similar_nodes_count_instance_generation",
+			0, repetitions_val);
+
 
 	//quality_exp_suite.add(&local_search_1_exp);
 	/*quality_exp_suite.add(&local_search_2_exp);*/
-
 	quality_exp_suite.run();
 
 
 
 
 	// neighbourhood proportion calibrate
-	
+
 	// neighbourhood 1
 	element_generator_int e_gen;
 	// generate graph families
@@ -211,7 +227,7 @@ void run_experimentation(){
 	e_gen.reset();
 	adj_list_graph<int> small_tree;
 	graph_factory<int>::add_n_tree_vertices(small_tree, e_gen, 300);
-	
+
 	e_gen.reset();
 	adj_list_graph<int> big_complete;
 	graph_factory<int>::add_n_vertices_and_all_edges(big_complete, e_gen, 300);
@@ -241,11 +257,11 @@ void run_experimentation(){
 
 
 	// neighbourhood proportion calibrate
-	
+
 	// neighbourhood 1
 
 
-	// big_tree_vs_small_tree 
+	// big_tree_vs_small_tree
 	start_point = solve_greedy(small_tree,big_tree);
 
 	parameters.g1 =  small_tree;
@@ -260,7 +276,7 @@ void run_experimentation(){
     g1_vs_g2_neighbourhood_1_proportion_incremental_experiment  big_tree_vs_small_tree_exp = 
     	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_tree_vs_small_tree_input);
 
-   
+
 
     // big_cicle_vs_small_cicle
 	start_point = solve_greedy(small_cicle,big_cicle);
@@ -292,7 +308,7 @@ void run_experimentation(){
     g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_tree_vs_big_complete_exp = 
     	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_tree_vs_big_complete_input);
 
-    // big_cicle_vs_big_complete 
+    // big_cicle_vs_big_complete
     start_point = solve_greedy(big_complete,big_cicle);
 
 
@@ -307,7 +323,7 @@ void run_experimentation(){
     	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_cicle_vs_big_complete_input);
 
 
- 
+
 
     //big_tree_vs_small_cicle_exp
 
@@ -426,13 +442,13 @@ void run_experimentation(){
 	incremental_experiment_input_float< star_solution >  big_bipartite_some_edges_vs_small_complete_input(0.0f, 1.0f, 3, repetitions_val,
 		sample_val, parameters, "../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_1_proportion");
 
-    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_bipartite_some_edges_vs_small_complete_exp = 
+    g1_vs_g2_neighbourhood_1_proportion_incremental_experiment big_bipartite_some_edges_vs_small_complete_exp =
     	g1_vs_g2_neighbourhood_1_proportion_incremental_experiment(&big_bipartite_some_edges_vs_small_complete_input);
 
 
 
 
-    /*neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp);
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp);
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp);
 
@@ -440,7 +456,7 @@ void run_experimentation(){
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp);
 
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp);*/
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp);
 
 
 
@@ -601,7 +617,7 @@ void run_experimentation(){
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2);
 */
-    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2);
+    //neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2);
 
     //neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2);
 
@@ -611,11 +627,13 @@ void run_experimentation(){
 	// neighbourhood 1
 
 	// iteration calibrate
-	 
+	repetitions_val = 3;
+	sample_val = 10;
+
 	int max_iteration= 200;
 	//big_tree_vs_small_cicle_exp
 
-	
+
     start_point = solve_greedy(small_cicle,big_tree);
 
     parameters.g1 =  small_cicle;
