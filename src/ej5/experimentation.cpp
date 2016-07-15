@@ -610,16 +610,16 @@ void run_experimentation(){
 
 
 
-  /*  neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2);
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_tree_vs_small_cicle_exp_2);
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_cicle_vs_small_tree_exp_2);
 
 
     neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_tree_exp_2);
-*/
-    //neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2);
 
-    //neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2);
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_big_cicle_exp_2);
+
+    neighbourhood_proportion_calibrate_exp_suite.add(&big_bipartite_some_edges_vs_small_complete_exp_2);
 
 
 	 neighbourhood_proportion_calibrate_exp_suite.run();
@@ -724,7 +724,7 @@ void run_experimentation(){
 
 	//big_tree_vs_small_cicle_exp
 
-	
+
     start_point = solve_greedy(small_cicle,big_tree);
 
     parameters.g1 =  small_cicle;

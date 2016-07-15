@@ -412,292 +412,168 @@ complejidad total de una iteración de la vecindad II tiene un costo
 
 \subsection{Experimentación}
 
-	Dadas ciertas familias de grafos (arboles, ciclos, completos y bipartos) y distintos tamaños de grafos ($\#(g_1)$ $n$ veces mas que $\#(g_2)$, variando el $n$ entre 1 y $\#(g_2)$), se querra comparar, cuanto mejor que la solución greedy es el local search, cual de las dos vecindades es mejor, que porcentaje de vencindad a mirar da un mejor resultado y a partir de cuantas iteraciones empieza a agragar pocas ó deja de agregar arristas.
+Con el objetivo de evaluar el rendimiento de la heurística implementada, en
+cuanto a tiempo de ejecución y calidad de las soluciones obtenidas, y para
+comparar las dos vecindades planteadas, se realizó una serie de pruebas
+experimentales. Las familias de grafos utilizadas para experimentar fueron las
+mismas que se utilizaron para experimentar con la heurística golosa
+(incluyendo árboles, ciclcos, completos y bipartitos).
 
+Se diseñaron pruebas para evaluar la mejora de las soluciones de la búsqueda
+local con respecto a las de la heurística golosa, para comparar los resultados
+obtenidos con ambas vecindades. Además, se experimentó variando la proporción
+de la vecindad que se explorará en cada iteración, a fin de hallar el valor
+óptimo para este parámetro. Se estudió la cantidad de aristas nuevas halladas
+por cada iteración, para determinar si existe un punto a partir del cual
+continuar iterando resulta superfluo. Por último, se estudiaron hipótesis
+acerca de características de las instancias que pudieran favorecer a una de las
+vecindades por sobre la otra.
 
-	\subsubsection{Porcentaje de vencindad optimo}
+\subsubsection{Proporción de vecindad óptima}
+Para realizar estas pruebas, se ejecutó la heurística repetidas veces sobre
+la misma instancia, variando la proporción de la vecindad evaluada en cada
+iteración. En todos los casos, se limitó la cantidad máxima de iteraciones
+de la heurística a 200.
 
-	Dadas familias con orden $n$(tree, ciclo) de arristas y orden $n^2$,(bipartito, completo) se varia el porcentaje de vecindad a mirar en cada iteración.
+En una primera etapa, se consideraron pocos valores para obtener a grandes
+rasgos una idea de los resultados. Esto permitió observar que, en todos los
+casos, examinar más del 20\% de la vecindad no produce ninguna ventaja
+significativa en la calidad de los mismos, pese a empeorar de forma
+considerable el tiempo de ejecución. Por este motivo, se decidió estudiar con
+mayor detalle únicamente proporciones entre 0\% y 20\%. A continuación, se
+exponen los resultados obtenidos, para cada una de las vecindades, al
+considerar los siguientes tipos de instancias:
 
+\begin{itemize}
+    \item $I_1$: $G_1$ es un ciclo de 300 nodos, y $G_2$ es un árbol generado
+    de forma aleatoria de 600 nodos.
+    \item $I_2$: $G_1$ es un árbol generado de forma aleatoria de 300 nodos, y
+    $G_2$ es un ciclo de 600 nodos.
+    \item $I_3$: $G_1$ es un bipartito de 300 nodos con la mitad de las
+    aristas de un completo, y $G_2$ es un árbol generado de forma aleatoria de
+    600 nodos.
+    \item $I_4$: $G_1$ es un bipartito de 300 nodos con la mitad de las
+    aristas de un completo, y $G_2$ es un ciclo de 600 nodos.
+    \item $I_5$: $G_1$ es un bipartito de 300 nodos con la mitad de las
+    aristas de un completo, y $G_2$ es un completo de 150 nodos.
+\end{itemize}
 
-    \subheading{Primera vecindad}
+\subheading{Vecindad I}
 
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[baseline]
+        \begin{axis}[
+                title={},
+                xlabel={Proporción explorada de la vecindad},
+                ylabel={Cantidad de arristas promedio},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=south east,
+                legend cell align=left,
+                xmin=0
+            ]
 
+            \addplot[color=orange] table[x index=0,y index=1]
+                {../exp/ej5/big_tree_vs_small_cicle_neighbourhood_1_proportion};
+            \addplot[color=green] table[x index=0,y index=1]
+                {../exp/ej5/big_cicle_vs_small_tree_1_proportion};
+            \addplot[color=red] table[x index=0,y index=1]
+                {../exp/ej5/big_bipartite_some_edges_vs_big_tree_neighbourhood_1_proportion};
+            \addplot[color=blue] table[x index=0,y index=1]
+                {../exp/ej5/big_bipartite_some_edges_vs_big_cicle_neighbourhood_1_proportion};
 
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Porcentaje de vecindad a mirar en cada iteración.},
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
+            \legend{$I_1$, $I_2$, $I_3$, $I_4$}
+        \end{axis}
+    \end{tikzpicture}%
+    ~\hspace{1em}~%
+    \begin{tikzpicture}[baseline]
+        \begin{axis}[
+                title={},
+                xlabel={Proporción explorada de la vecindad},
+                ylabel={Cantidad de arristas promedio},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=south east,
+                legend cell align=left,
+                xmin=0
+            ]
 
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_tree_vs_small_cicle_neighbourhood_1_proportion};
+            \addplot[color=violet] table[x index=0,y index=1]
+                {../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_1_proportion};
 
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{$g_1$ es un ciclo de 300 nodos y $g_2$ es un random tree de 600 .}
-        \label{fig:exp5:var-pym-base}
-    \end{figure}
+            \legend{$I_5$}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Cantidad de aristas encontradas según la proporción explorada de
+    la vecindad I}
+    \label{fig:exp5:var-pym-base}
+\end{figure}
 
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Porcentaje de vecindad a mirar en cada iteración.},
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
+\subheading{Vecindad II}
 
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_cicle_vs_small_tree_1_proportion};
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[baseline]
+        \begin{axis}[
+                title={},
+                xlabel={Proporción explorada de la vecindad},
+                ylabel={Cantidad de arristas promedio},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=south east,
+                legend cell align=left,
+                xmin=0
+            ]
 
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{$g_1$ es un random tree de 300 nodos y $g_2$ es un ciclo de 600.}
-        \label{fig:exp5:var-pym-base}
-    \end{figure}
+            \addplot[color=orange] table[x index=0,y index=1]
+                {../exp/ej5/big_tree_vs_small_cicle_neighbourhood_2_proportion};
+            \addplot[color=green] table[x index=0,y index=1]
+                {../exp/ej5/big_cicle_vs_small_tree_2_proportion};
+            \addplot[color=red] table[x index=0,y index=1]
+                {../exp/ej5/big_bipartite_some_edges_vs_big_tree_neighbourhood_2_proportion};
+            \addplot[color=blue] table[x index=0,y index=1]
+                {../exp/ej5/big_bipartite_some_edges_vs_big_cicle_neighbourhood_2_proportion};
 
+            \legend{$I_1$, $I_2$, $I_3$, $I_4$}
+        \end{axis}
+    \end{tikzpicture}%
+    ~\hspace{1em}~%
+    \begin{tikzpicture}[baseline]
+        \begin{axis}[
+                title={},
+                xlabel={Proporción explorada de la vecindad},
+                ylabel={Cantidad de arristas promedio},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                enlargelimits=0.05,
+                width=0.5\textwidth,
+                height=0.5\textwidth,
+                legend pos=south east,
+                legend cell align=left,
+                xmin=0
+            ]
 
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Porcentaje de vecindad a mirar en cada iteración.},
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
+            \addplot[color=violet] table[x index=0,y index=1]
+                {../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_2_proportion};
 
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_bipartite_some_edges_vs_big_tree_neighbourhood_1_proportion};
+            \legend{$I_5$}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Cantidad de aristas encontradas según la proporción explorada de la vecindad II}
+    \label{fig:exp5:var-pym-base}
+\end{figure}
 
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{$g_1$ es un bipartito  300 nodos con promedio de arristas de $0.5$ y  $g_2$ es un random tree de 600.}
-
-        \label{fig:exp5:var-pym-base}
-    \end{figure}
-
-      \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Porcentaje de vecindad a mirar en cada iteración.},
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_bipartite_some_edges_vs_big_cicle_neighbourhood_1_proportion};
-
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{$g_1$ es un bipartito  300 nodos con promedio de arristas de $0.5$ y $g_2$ es un ciclo de 600.}
-
-        \label{fig:exp5:var-pym-base}
-    \end{figure}
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Porcentaje de vecindad a mirar en cada iteración. },
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_2_proportion};
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{$g_1$ es un bipartito  300 nodos con promedio de arristas de $0.5$ y $g_2$ es un completo de 150.}
-
-        \label{fig:exp5:var-pym-base}
-    \end{figure}
-
-
-    \subheading{Segunda Vecindad}
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Porcentaje de vecindad a mirar en cada iteración. },
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_tree_vs_small_cicle_neighbourhood_2_proportion};
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{$g_1$ es un ciclo de 300 nodos y $g_2$ es un random tree de 600.}
-        \label{fig:exp5:var-pym-base}
-    \end{figure}
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Porcentaje de vecindad a mirar en cada iteración.},
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_cicle_vs_small_tree_2_proportion};
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{$g_1$ es un random tree de 300 nodos y $g_2$ es un ciclo de 600.}
-        \label{fig:exp5:var-pym-base}
-    \end{figure}
-
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Porcentaje de vecindad a mirar en cada iteración.},
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_bipartite_some_edges_vs_big_tree_neighbourhood_2_proportion};
-
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{$g_1$ es un bipartito 300 nodos con promedio de arristas de $0.5$ y $g_2$ es un random tree de 600.}
-
-        \label{fig:exp5:var-pym-base}
-    \end{figure}
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Porcentaje de vecindad a mirar en cada iteración.},
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_bipartite_some_edges_vs_big_cicle_neighbourhood_2_proportion};
-
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{$g_1$ es un bipartito 300 nodos con promedio de arristas de $0.5$ y $g_2$ es un ciclo de 600.}
-
-        \label{fig:exp5:var-pym-base}
-    \end{figure}
-
-    \begin{figure}[H]
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    title={},
-                    xlabel={Porcentaje de vecindad a mirar en cada iteración.},
-                    ylabel={Cantidad de arristas promedio},
-                    scaled x ticks=false,
-                    scaled y ticks=false,
-                    enlargelimits=0.05,
-                    width=0.5\textwidth,
-                    height=0.5\textwidth,
-                    legend pos=north west,
-                    legend cell align=left,
-                    xmin=0
-                ]
-
-                \addplot[color=black] table[x index=0,y index=1]{../exp/ej5/big_bipartite_some_edges_vs_small_complete_neighbourhood_1_proportion};
-
-                \legend{$T_{M}$}
-            \end{axis}
-        \end{tikzpicture}
-        \caption{ $g_1$ es un bipartito  300 nodos con promedio de arristas de $0.5$ y $g_2$ es un completo de 150.}
-        \label{fig:exp5:var-pym-base}
-    \end{figure}
-
-    Se puede concluir que con mirar un pequeño porcentaje de la vecindad, se logra una buena solución.
+Se puede concluir que con mirar un pequeño porcentaje de la vecindad, se logra una buena solución.
 
 
 	\subsubsection{Cantidad de iteraciones optima}
