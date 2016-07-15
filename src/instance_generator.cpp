@@ -6,6 +6,7 @@
 #include "framework/utils/graph_factory.h"
 #include "framework/utils/element_generator_int.h"
 #include "exact/exact.h"
+#include "heuristics/heuristics.h"
 
 #define MAGIC_SEED 42
 
@@ -437,13 +438,517 @@ void run_unknown_solution_instance_generation(){
 	save_instance(g1, g2, "aleatorio_n1000_d10_c050_v025");
 }
 
-void run_small_known_solution_instance_generation() {
-	ofstream optimal_solutions_file;
-	optimal_solutions_file.open("../exp/small_optimal_solutions");
+
+void run_similar_nodes_count_instance_generation(){
+
+	
+
 
 	element_generator_int e_gen;
 	adj_list_graph<int> g1, g2;
 
+
+	// arbol
+	int n1 = 501;
+	int n2 = 500;
+	char instance_name[80] = "arbol_n501_vs_arbol_n500";
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n1);
+	e_gen.reset();
+	graph_factory<int>::add_n_tree_vertices(g2, e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// ciclo
+	n1 = 501;
+	n2 = 500;
+	strncpy(instance_name, "ciclo_n501_vs_ciclo_n500", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	g1=graph_factory<int>::cycle_graph(e_gen, n1);
+	e_gen.reset();
+	g2= graph_factory<int>::cycle_graph(e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// arbol vs ciclo
+	n1 = 501;
+	n2 = 500;
+	strncpy(instance_name, "arbol_n501_vs_ciclo_n500", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n1);
+	e_gen.reset();
+	g2= graph_factory<int>::cycle_graph(e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+	// bipartito c 0.1
+
+	n1 = 250;
+	n2 = 251;
+	strncpy(instance_name, "bipartito_n501_c_0_1_vs_bipartito_n500_c_0_1", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 0.1f);
+	e_gen.reset();
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n1, 0.1f);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// bipartito c 0.5
+
+	n1 = 250;
+	n2 = 251;
+	strncpy(instance_name, "bipartito_n501_c_0_5_vs_bipartito_n500_c_0_5", 80);
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 0.5f);
+	e_gen.reset();
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n1, 0.5f);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// bipartito c 0.5 vs bipartito c 0.1
+
+	n1 = 250;
+	n2 = 251;
+	strncpy(instance_name, "bipartito_n501_c_0_5_vs_bipartito_n500_c_0_1", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 0.5f);
+	e_gen.reset();
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n1, 0.1f);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// bipartito complete vs complete
+
+	n1 = 250;
+	n2 = 251;
+	strncpy(instance_name, "bipartito_n501_c_0_5_vs_complete_n500", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 0.5f);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, 500);
+	e_gen.reset();
+
+	// bipartito complete vs complete
+
+	n1 = 250;
+	n2 = 251;
+	strncpy(instance_name, "bipartito_n501_c_1_vs_complete_n500", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, n1, n2, 1.0f);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, 500);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// arbol vs completo
+	n1 = 501;
+	n2 = 500;
+	strncpy(instance_name, "arbol_n501_vs_completo_n500", 80);
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n1);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// ciclo vs completo
+
+	n1 = 501;
+	n2 = 500;
+	strncpy(instance_name, "ciclo_n501_vs_completo_n500", 80);
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	g1= graph_factory<int>::cycle_graph(e_gen, n1);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+
+
+}
+
+void run_diferents_nodes_count_instance_generation(){
+
+	ofstream diferents_nodes_count_file;
+	diferents_nodes_count_file.open("../exp/diferents_nodes_count_instance");
+
+	element_generator_int e_gen;
+	adj_list_graph<int> g1, g2;
+
+
+	int n1 = 500;
+	int n2 = 750;
+
+	int k1 = 250;
+	int k2 = 500;
+
+	char instance_name[80] = "arbol_n500_vs_arbol_n750";
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n1);
+	e_gen.reset();
+	graph_factory<int>::add_n_tree_vertices(g2, e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// ciclo
+
+	strncpy(instance_name, "ciclo_n500_vs_ciclo_n750", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	g1=graph_factory<int>::cycle_graph(e_gen, n1);
+	e_gen.reset();
+	g2= graph_factory<int>::cycle_graph(e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// arbol vs ciclo
+
+	strncpy(instance_name, "arbol_n500_vs_ciclo_n750", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n1);
+	e_gen.reset();
+	g2= graph_factory<int>::cycle_graph(e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+	// bipartito c 0.1
+
+	strncpy(instance_name, "bipartito_n750_c_0_1_vs_bipartito_n500_c_0_1", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k1, 0.1f);
+	e_gen.reset();
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 0.1f);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// bipartito c 0.5
+
+	strncpy(instance_name, "bipartito_n500_c_0_5_vs_bipartito_n750_c_0_5", 80);
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k1, 0.5f);
+	e_gen.reset();
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 0.5f);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// bipartito c 0.5 vs bipartito c 0.1
+
+	strncpy(instance_name, "bipartito_n500_c_0_5_vs_bipartito_n750_c_0_1", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k1, 0.5f);
+	e_gen.reset();
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 0.1f);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// bipartito complete vs complete
+
+
+	strncpy(instance_name, "bipartito_n750_c_0_5_vs_complete_n500", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 0.5f);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
+	e_gen.reset();
+
+	// bipartito complete vs complete
+
+
+	strncpy(instance_name, "bipartito_n750_c_1_vs_complete_n500", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 1.0f);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// arbol vs completo
+
+	strncpy(instance_name, "arbol_n750_vs_completo_n500", 80);
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n2);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// ciclo vs completo
+
+	strncpy(instance_name, "arbol_n750_vs_completo_n500", 80);
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	g1= graph_factory<int>::cycle_graph(e_gen, n2);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+
+
+	n1 = 500;
+	n2 = 1000;
+
+	k1 = 250;
+	k2 = 500;
+
+
+	strncpy(instance_name, "arbol_n500_vs_arbol_n1000", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n1);
+	e_gen.reset();
+	graph_factory<int>::add_n_tree_vertices(g2, e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// ciclo
+
+	strncpy(instance_name, "ciclo_n500_vs_ciclo_n1000", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	g1=graph_factory<int>::cycle_graph(e_gen, n1);
+	e_gen.reset();
+	g2= graph_factory<int>::cycle_graph(e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// arbol vs ciclo
+
+	strncpy(instance_name, "arbol_n500_vs_ciclo_n1000", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n1);
+	e_gen.reset();
+	g2= graph_factory<int>::cycle_graph(e_gen, n2);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+	// bipartito c 0.1
+
+	strncpy(instance_name, "bipartito_n1000_c_0_1_vs_bipartito_n500_c_0_1", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k1, 0.1f);
+	e_gen.reset();
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k2, k2, 0.1f);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// bipartito c 0.5
+
+	strncpy(instance_name, "bipartito_n500_c_0_5_vs_bipartito_n1000_c_0_5", 80);
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k1, 0.5f);
+	e_gen.reset();
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 0.5f);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// bipartito c 0.5 vs bipartito c 0.1
+
+	strncpy(instance_name, "bipartito_n500_c_0_5_vs_bipartito_n1000_c_0_1", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k1, 0.5f);
+	e_gen.reset();
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k1, k2, 0.1f);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// bipartito complete vs complete
+
+
+	strncpy(instance_name, "bipartito_n1000_c_0_5_vs_complete_n500", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k2, k2, 0.5f);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
+	e_gen.reset();
+
+	// bipartito complete vs complete
+
+
+	strncpy(instance_name, "bipartito_n1000_c_1_vs_complete_n500", 80);
+
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+
+	g1 = graph_factory<int>::random_bipartite_graph(e_gen, k2, k2, 1.0f);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// arbol vs completo
+
+	strncpy(instance_name, "arbol_n1000_vs_completo_n500", 80);
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	graph_factory<int>::add_n_tree_vertices(g1, e_gen, n2);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	// ciclo vs completo
+
+	strncpy(instance_name, "arbol_n1000_vs_completo_n500", 80);
+
+	g1.clear();
+	g2.clear();
+	srand(MAGIC_SEED);
+	g1= graph_factory<int>::cycle_graph(e_gen, n2);
+	e_gen.reset();
+	graph_factory<int>::add_n_vertices_and_all_edges(g2, e_gen, n1);
+	e_gen.reset();
+
+	save_instance(g1, g2, instance_name);
+
+	diferents_nodes_count_file.close();
+
+}
+
+
+
+
+void run_small_known_solution_instance_generation() {
+	ofstream optimal_solutions_file;
+	optimal_solutions_file.open("../exp/small_optimal_solutions");
 	// subgraph instances (incremental graphs)
 	// these instances are all scenarios were g1 is a subgraph of g2
 
@@ -650,10 +1155,13 @@ void run_small_known_solution_instance_generation() {
 }
 
 int main (int argc, char* argv[]) {
-	// instances were we know the optimum solution
-	// run_known_solution_instance_generation();
+/*	// instances were we know the optimum solution
+	run_known_solution_instance_generation();
 	// instances were we don't
-	// run_unknown_solution_instance_generation();
-	// small instances for ex6 were we know the optimum solution
-	run_small_known_solution_instance_generation();
+	run_unknown_solution_instance_generation();*/
+	// similar_nodes_count_instance
+	run_similar_nodes_count_instance_generation();
+	// diferents_nodes_count_instance
+	run_diferents_nodes_count_instance_generation();
+	//run_small_known_solution_instance_generation();
 }

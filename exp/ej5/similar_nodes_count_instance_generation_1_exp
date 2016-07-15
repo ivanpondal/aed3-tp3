@@ -1,0 +1,8 @@
+arbol_n501_vs_arbol_n500 3 0 525611 19445.9
+ciclo_n501_vs_ciclo_n500 480 0 524224 23711.9
+arbol_n501_vs_ciclo_n500 2 0 472336 5866.38
+bipartito_n501_c_0_1_vs_bipartito_n500_c_0_1 317.667 0.942809 2.04773e+06 48606.1
+bipartito_n501_c_0_5_vs_bipartito_n500_c_0_5 7776 0 9.51618e+06 120339
+bipartito_n501_c_0_5_vs_bipartito_n500_c_0_1 1560 0.816497 4.45243e+06 33707
+bipartito_n501_c_1_vs_complete_n500 62500 0 2.93713e+07 930080
+arbol_n501_vs_completo_n500 499 0 1.93584e+07 1.71524e+06

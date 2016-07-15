@@ -111,6 +111,45 @@ const std::vector<std::string> unknown_solution_instances = {
     "aleatorio_n1000_d10_c050_v025"
 };
 
+
+const std::vector<std::string> similar_nodes_count_instances = {
+    "arbol_n501_vs_arbol_n500",
+    "ciclo_n501_vs_ciclo_n500",
+    "arbol_n501_vs_ciclo_n500",
+    "bipartito_n501_c_0_1_vs_bipartito_n500_c_0_1",
+    "bipartito_n501_c_0_5_vs_bipartito_n500_c_0_5",
+    "bipartito_n501_c_0_5_vs_bipartito_n500_c_0_1",
+    "bipartito_n501_c_0_5_vs_complete_n500",
+    "bipartito_n501_c_1_vs_complete_n500",
+    "arbol_n501_vs_completo_n500"
+
+};
+
+const std::vector<std::string> diferents_nodes_count_instances = {
+    "arbol_n500_vs_arbol_n750",
+    "ciclo_n500_vs_ciclo_n750",
+    "arbol_n500_vs_ciclo_n750",
+    "bipartito_n750_c_0_1_vs_bipartito_n500_c_0_1",
+    "bipartito_n500_c_0_5_vs_bipartito_n750_c_0_5",
+    "bipartito_n750_c_0_5_vs_bipartito_n750_c_0_1",
+    "bipartito_n501_c_0_5_vs_complete_n500",
+    "bipartito_n750_c_1_vs_complete_n500",
+    "arbol_n750_vs_completo_n500",
+    "arbol_n500_vs_arbol_n1000",
+    "ciclo_n500_vs_ciclo_n1000",
+    "arbol_n500_vs_ciclo_n1000",
+    "bipartito_n1000_c_0_1_vs_bipartito_n500_c_0_1",
+    "bipartito_n500_c_0_5_vs_bipartito_n1000_c_0_5",
+    "bipartito_n500_c_0_5_vs_bipartito_n1000_c_0_1",
+    "bipartito_n1000_c_0_5_vs_complete_n500",
+    "bipartito_n1000_c_1_vs_complete_n500",
+    "arbol_n1000_vs_completo_n500"
+};
+
+const std::vector<std::string> greedy_solution_instances = {
+    "greedy_solution_instances"
+};
+
 const std::vector<std::string> small_known_solution_instances = {
     "cografo_n100_k50",
     "aleatorio_subgrafo_n150_c025",
@@ -124,4 +163,5 @@ const std::vector<std::string> small_known_solution_instances = {
     "aleatorio_vs_completo_n500_d10_c050",
     "aleatorio_vs_completo_n1000_d10_c050"
 };
+
 #endif  // AED3_TP3_MAIN_H

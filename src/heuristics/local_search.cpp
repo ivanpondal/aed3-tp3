@@ -83,6 +83,7 @@ graph<pair<int, int>>* solve_local_search(
     ret = start_point.clone();
 
     while (! stop && (iteration_limit < 0 || iteration_count < iteration_limit)) {
+        // cout<< "iteration_count: " << iteration_count << endl;
         bool any_improvement = improve_solution(
             ret,
             g1,
