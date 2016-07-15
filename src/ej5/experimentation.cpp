@@ -929,7 +929,7 @@ void run_experimentation(){
     *  Run experiments
     */
 
-	// quality_exp_suite.run();
+	quality_exp_suite.run();
 	// neighbourhood_proportion_calibrate_exp_suite.run();
 	// iteration_calibrate_exp_suite.run();
 

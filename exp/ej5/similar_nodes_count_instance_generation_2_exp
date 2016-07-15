@@ -1,8 +1,9 @@
-arbol_n501_vs_arbol_n500 35.3333 18.8739 5.08293e+07 2.77334e+07
-ciclo_n501_vs_ciclo_n500 480 0 2.2381e+06 171957
-arbol_n501_vs_ciclo_n500 23.6667 4.02768 3.7174e+07 6.51891e+06
-bipartito_n501_c_0_1_vs_bipartito_n500_c_0_1 596 4.24264 2.92552e+08 1.53083e+06
-bipartito_n501_c_0_5_vs_bipartito_n500_c_0_5 10048.3 10.3709 4.43891e+09 6.42825e+07
-bipartito_n501_c_0_5_vs_bipartito_n500_c_0_1 2078 27.1784 1.16037e+09 8.6452e+06
-bipartito_n501_c_1_vs_complete_n500 62500 0 4.30512e+08 2.83654e+06
-arbol_n501_vs_completo_n500 499 0 2.34106e+07 170923
+arbol_n501_vs_arbol_n500 38 0 5.79182e+07 0
+ciclo_n501_vs_ciclo_n500 480 0 2.38568e+06 0
+arbol_n501_vs_ciclo_n500 38 0 5.74879e+07 0
+bipartito_n501_c_0_1_vs_bipartito_n500_c_0_1 578 0 5.80828e+08 0
+bipartito_n501_c_0_5_vs_bipartito_n500_c_0_5 10083 0 1.09627e+10 0
+bipartito_n501_c_0_5_vs_bipartito_n500_c_0_1 2055 0 2.59054e+09 0
+bipartito_n501_c_0_5_vs_complete_n500 0 0 5.99758e+06 0
+bipartito_n501_c_1_vs_complete_n500 62500 0 1.03588e+09 0
+arbol_n501_vs_completo_n500 499 0 3.73731e+07 0
