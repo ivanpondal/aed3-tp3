@@ -11,6 +11,7 @@ class graph_factory{
 		static void add_n_random_vertices(graph<T> &g, element_generator<T>& e_gen, int n, float c);
 		static void add_n_tree_vertices(graph<T> &g, element_generator<T>& e_gen, int n);
 		static void add_n_vertices_and_all_edges(graph<T> &g, element_generator<T>& e_gen, int n);
+		static void add_n_path_vertices(graph<T> &g, element_generator<T>& e_gen, int n);
 
 		// full graph generators
 		static adj_list_graph<T> random_bipartite_graph(element_generator<T>& e_gen, int n, int k, float c);
@@ -75,6 +76,26 @@ void graph_factory<T>::add_n_vertices_and_all_edges(graph<T> &g, element_generat
 				g.add_edge(node, new_node);
 			}
 		}
+		n--;
+	}
+}
+
+template <typename T>
+void graph_factory<T>::add_n_path_vertices(graph<T> &g, element_generator<T>& e_gen, int n) {
+	T new_node;
+	T tail_node;
+
+	if (g.n() > 0) {
+		tail_node = g.get_vertices()[g.n() - 1];
+	}
+
+	while(n > 0){
+		new_node = e_gen.generate(g);
+		g.add_node(new_node);
+		if (g.n() > 1) {
+			g.add_edge(new_node, tail_node);
+		}
+		tail_node = new_node;
 		n--;
 	}
 }

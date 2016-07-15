@@ -1,8 +1,8 @@
-#include "./ejX.h"
+#include "./ej7.h"
 #include "../framework/structures/adj_list_graph.h"
 
 /*
-**  Exercise X
+**  Exercise 7
 **  Problem solver
 */
 
