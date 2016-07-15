@@ -409,7 +409,31 @@ complejidad total de una iteración de la vecindad II tiene un costo
 \ord \left( N_1^2 \times (1 + M_2) + N_1 \times N_2 + (N_2 - N_1)^2 \right)
 \]
 
+\subsection{Parámetros configurables}
+Un aspecto importante a considerar a la hora de emplear esta heurística es
+que, pese a ser polinomial, el tamaño de las vecindades definidas está lejos
+de ser pequeño, sino que por el contrario, crece rápidamente al aumentar la
+cantidad de nodos de los grafos de entrada. Por este motivo, recorrer la
+vecindad completa en cada iteración resulte muy poco eficiente.
 
-\subsection{Implementación}
+Teniendo en cuenta lo anterior, se decidió incorporar a la implementación de
+un mecanismo para explorar solo un subconjunto de los vecinos de cada solución,
+seleccionado al azar. Con este fin se recibe un parámetro $p \in [0, 1]$, que
+determina la proporción de la vecindad que será examinada. La implementación
+de esta mejora es sencilla: al iterar por cada uno de los movimientos posibles
+para generar un vecino de una solución dada, se genera un número al azar entre
+$0$ y $1$. Si este número resulta ser mayor que $p$, entonces la solución
+vecina es ignorada, evitando ejecutar para ella la parte más costosa del
+algoritmo, que es calcular la cantidad de aristas nuevas que serían aportadas
+por el movimiento en cuestión.
+
+Otro detalle que cabe mencionar es que, en su forma más básica, la heurística
+continúa iterando y evaluando soluciones vecinas hasta que se alcanza un
+máximo local,\footnote{En rigor, si solo se está evaluando una parte de la
+vecindad de cada solución, la heurística podría detenerse sin haber alcanzado
+un máximo local, en el caso de que existiera una solución vecina mejor que la
+solución actual que no se encontrara en el subconjunto elegido para ser
+explorado.} es decir, hasta que todas las soluciones vecinas exploradas
+resultan peores que la solución actual.
 
 \subsection{Experimentación}
