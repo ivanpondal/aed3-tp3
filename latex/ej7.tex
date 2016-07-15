@@ -59,14 +59,14 @@ una de las heurísticas implementadas.
 
 \begin{center}
 
-\begin{tabular}{c|c|c}
-Heurística                             & Cant. de aristas encontradas & Porcentaje de la sol. exacta \\ \hline
-Solución exacta                        &                              &                              \\
-Heurística golosa (G)                  &                              &                              \\
-Búsqueda local (Vecindad I) (LS1)      &                              &                              \\
-Búsqueda local (Vecindad II) (LS2)     &                              &                              \\
-\emph{Tabu search} (Vecindad I) (TS2)  &                              &                              \\
-\emph{Tabu search} (Vecindad II) (TS2) &                              &                              \\
+\begin{tabular}{c|c|c|c}
+Heurística                         & \# aristas encontradas (prom.) & \% sol. exacta & Tiempo insumido (ns) \\ \hline
+Solución exacta                    & 200                            & -              & -           \\
+Heurística golosa (G)              & 14                             & 7\%            & 2.43676e+06 \\
+Búsqueda local (Vec. I) (LS1)      & 187.2                          & 93.6\%         & 5.45212e+09 \\
+Búsqueda local (Vec. II) (LS2)     & 181.3                          & 90.65\%        & 5.44075e+09 \\
+\emph{Tabu search} (Vec. I) (TS2)  & 183.5                          & 91.75\%        & 1.84909e+09 \\
+\emph{Tabu search} (Vec. II) (TS2) & 189.6                          & 94.8\%         & 2.90887e+10 \\
 \end{tabular}
 
 \end{center}
@@ -87,12 +87,68 @@ Búsqueda local (Vecindad II) (LS2)     &                              &        
                 symbolic x coords={G,LS1,LS2,TS1,TS2,MCS},
             ]
             xtick=data]
-            \addplot[ybar,fill=green] coordinates {(G,42)};
-            \addplot[ybar,fill=blue] coordinates {(LS1,42)};
-            \addplot[ybar,fill=violet] coordinates {(LS2,42)};
-            \addplot[ybar,fill=orange] coordinates {(TS1,42)};
-            \addplot[ybar,fill=red] coordinates {(TS2,42)};
-            \addplot[ybar,fill=yellow] coordinates {(MCS,42)};
+            \addplot[ybar,fill=green] coordinates {(G,200)};
+            \addplot[ybar,fill=blue] coordinates {(LS1,14)};
+            \addplot[ybar,fill=violet] coordinates {(LS2,187.2)};
+            \addplot[ybar,fill=orange] coordinates {(TS1,181.3)};
+            \addplot[ybar,fill=red] coordinates {(TS2,183.5)};
+            \addplot[ybar,fill=yellow] coordinates {(MCS,189.6)};
         \end{axis}
     \end{tikzpicture}
+    \caption{Comparación entre la calidad de las soluciones halladas por cada
+    heurística}
 \end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[baseline]
+        \begin{axis}[
+                title={},
+                xlabel={Heurística utilizada},
+                ylabel={Tiempo de ejecución (nanosegundos)},
+                scaled x ticks=false,
+                scaled y ticks=false,
+                width=0.6\textwidth,
+                height=0.6\textwidth,
+                legend pos=outer north east,
+                legend cell align=left,
+                symbolic x coords={G,LS1,LS2,TS1,TS2},
+            ]
+            xtick=data]
+            \addplot[ybar,fill=green] coordinates {(G,2.43676e+06)};
+            \addplot[ybar,fill=blue] coordinates {(LS1,5.45212e+09)};
+            \addplot[ybar,fill=violet] coordinates {(LS2,5.44075e+09)};
+            \addplot[ybar,fill=orange] coordinates {(TS1,1.84909e+09)};
+            \addplot[ybar,fill=red] coordinates {(TS2,2.90887e+10)};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Comparación entre el tiempo de ejecución de cada heurística}
+\end{figure}
+
+Comparando los resultados obtenidos, la primera conclusión que salta a la
+vista es que la heurística golosa tiene un rendimiento muy pobre en cuanto
+a calidad comparada con las demás. Incluso a pesar de su gran rendimiento
+temporal, no es una opción utilizarla por sí sola cuando se necesitan
+resultados de calidad, ya que, como se mostró anteriormente, existen instancias
+donde los resultados pueden ser arbitrariamente malos. La instancia utilizada
+en esta prueba muestra un rendimiento especialmente bajo en comparación
+con las demás heurísticas y con la solución exacta.
+
+En cuanto a la metaheurística \emph{tabu search}, si bien es capaz de mejorar
+las soluciones obtenidas mediante la búsqueda local, en el caso aquí evaluado
+se ve que para que estas soluciones sean significativas se requiere un gran
+tiempo de ejecución. Un ejemplo claro puede verse con la utilización de la
+metaheurística con la vecindad II de la búsqueda local: si bien los resultados
+obtenidos son los más cercanos a la solución exacta, el tiempo insumido es
+también considerablemente mayor. Por otra parte, las soluciones obtenidas
+por las vecindades de la búsqueda local (sin utilizar la metaheurística) son
+también de gran calidad, hecho que ya se observaba en la experimentación
+realizada con anterioridad.
+
+Esto permite concluir que la utilización de la metaheurística \emph{tabu search}
+es conveniente cuando se requieren soluciones de la mayor calidad posible y
+no existen límites de eficiencia temporal estrictos. En cambio, si el tiempo
+es una restricción, las heurísticas de búsqueda local pueden resultar una
+solución con una calidad también muy buena, pero considerablemente más
+eficiente.
