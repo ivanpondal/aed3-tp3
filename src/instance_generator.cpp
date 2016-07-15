@@ -1147,14 +1147,69 @@ void run_diferents_nodes_count_instance_generation(){
 // 	optimal_solutions_file.close();
 // }
 
+void run_new_instance_generation(){
+	ofstream optimal_solutions_file;
+	optimal_solutions_file.open("../exp/new_optimal_solutions");
+	char instance_name[80];
+	element_generator_int e_gen;
+
+	adj_list_graph<int> g1, g2;
+
+	srand(MAGIC_SEED);
+
+	strncpy(instance_name, "camino_vs_bipartito_n100_k500", 80);
+
+	int n = 100;
+	int k = 500;
+	int r = 2*n + 2;
+
+	graph_factory<int>::add_n_path_vertices(g1, e_gen, r);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, 1.0);
+	e_gen.reset();
+
+	save_solution_entry(optimal_solutions_file, instance_name, 2*n + 1);
+	save_instance(g1, g2, instance_name);
+
+	strncpy(instance_name, "camino_vs_bipartito_n250_k500", 80);
+
+	n = 250;
+	g1.clear();
+
+	graph_factory<int>::add_n_path_vertices(g1, e_gen, r);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, 1.0);
+	e_gen.reset();
+
+	save_solution_entry(optimal_solutions_file, instance_name, 2*n + 1);
+	save_instance(g1, g2, instance_name);
+
+	strncpy(instance_name, "camino_vs_bipartito_n400_k500", 80);
+
+	n = 400;
+	g1.clear();
+
+	graph_factory<int>::add_n_path_vertices(g1, e_gen, r);
+	e_gen.reset();
+	g2 = graph_factory<int>::random_bipartite_graph(e_gen, n, k, 1.0);
+	e_gen.reset();
+
+	save_solution_entry(optimal_solutions_file, instance_name, 2*n + 1);
+	save_instance(g1, g2, instance_name);
+}
+
 int main (int argc, char* argv[]) {
-/*	// instances were we know the optimum solution
-	run_known_solution_instance_generation();
+	// instances were we know the optimum solution
+	//run_known_solution_instance_generation();
 	// instances were we don't
-	run_unknown_solution_instance_generation();*/
+	// run_unknown_solution_instance_generation();
 	// similar_nodes_count_instance
-	run_similar_nodes_count_instance_generation();
+	//run_similar_nodes_count_instance_generation();
 	// diferents_nodes_count_instance
-	run_diferents_nodes_count_instance_generation();
+	//run_diferents_nodes_count_instance_generation();
 	//run_small_known_solution_instance_generation();
+	// run_unknown_solution_instance_generation();
+	// small instances for ex6 were we know the optimum solution
+	// run_small_known_solution_instance_generation();
+	run_new_instance_generation();
 }
